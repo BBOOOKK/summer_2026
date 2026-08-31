@@ -1,0 +1,9 @@
+model_path: models/expanded_v1/best.pt
+camera_id: 0
+imgsz: 640
+confidence_threshold: 0.5
+iou_threshold: 0.45
+device: auto
+half: true
+save_video: false
+output_dir: outputs

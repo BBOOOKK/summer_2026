@@ -1,0 +1,13 @@
+# P05 YOLO dataset. Paths are resolved relative to this YAML file.
+train: ../dataset_view/images/train
+val: ../dataset_view/images/val
+test: ../dataset_view/images/test
+
+nc: 5
+names:
+  0: mouse
+  1: keyboard
+  2: laptop
+  3: cup
+  4: headphones
+

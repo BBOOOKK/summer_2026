@@ -1,0 +1,19 @@
+.DS_Store
+**/.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ROS2 and local build products
+desktop_object_detection/ros2_ws/build/
+desktop_object_detection/ros2_ws/install/
+desktop_object_detection/ros2_ws/log/
+
+# Re-downloadable Open Images cache (about 1.1 GB)
+desktop_object_detection/datasets/p05_expanded_v1/sources/
+desktop_object_detection/datasets/p05_expanded_v1/images/
+
+# Local-only scratch files
+work/
+
