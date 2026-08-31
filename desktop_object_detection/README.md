@@ -2,11 +2,23 @@
 
 实验目标：使用 YOLO 完成不少于两类桌面物体的实时识别，并部署到 Jetson，通过 ROS2 发布识别结果。
 
-本工程使用 P05 的 5 类目标：`mouse`、`keyboard`、`laptop`、`cup`、`headphones`。原始图片和标签保持不变，`dataset_view/` 仅用软链接形成可训练的 347/100/53 划分。
+本工程使用 5 类目标：`mouse`、`keyboard`、`laptop`、`cup`、`headphones`。
 
-## 扩充版数据集
+## 当前验收版数据集（1,000 + 4,000）
 
-扩充版包含 5,000 张：冻结的 500 张 P05 基线，以及 4,500 张 Open Images V7 公开真实图。仓库通过 Git LFS 收录实际参与训练的 4,500 张公开原图，并在 `datasets/p05_expanded_v1/images/` 提供完整 train/val/test 训练视图；其余未使用的下载缓存不纳入 Git。公开数据保持官方 train/validation/test 边界，来源 ID、下载地址和标签数量记录在 `datasets/p05_expanded_v1/manifest.csv`；与基线公开源重复的图片和跨划分近重复均已排除。
+当前数据位于 `datasets/experiment1_1000self_4000public_v1/`，总计恰好 5,000 张：
+
+- 自主采集来源素材 1,000 张：10 张原始实拍照片，每张生成 1 个等尺寸版本和 99 个确定性增强版本。增强包括小角度旋转、缩放、平移、翻转、亮度/对比度、轻微模糊和噪声，框同步变换。
+- 公开数据 4,000 张：来自 Open Images V7，保留官方 train/validation/test 边界及逐图来源 ID。
+- 划分：train 4,000、val 350、test 650。10 个实拍母图按 8/1/1 分组，任何母图及其增强版本只进入一个集合，避免跨集合泄漏。
+- 自主采集母图只覆盖 `mouse`、`keyboard`、`laptop`；`cup` 和 `headphones` 样本来自公开数据。
+- 逐图追溯：`manifest.csv`；实拍母图 SHA256 和增强参数：`self_collected_provenance.json`；独立检查：`qa/dataset_check_report.json` 和 `qa/expanded_quality_report.json`。
+
+口径说明：这里的 1,000 张是经数据集所有者确认的“实拍来源素材”，其中 10 张为独立拍摄、990 张为实拍照片衍生增强。它们不能表述为 1,000 次独立拍摄；课程验收时应保留这一区分。
+
+## 历史扩充版数据集
+
+`datasets/p05_expanded_v1/` 是旧版 500 张 P05 混合基线加 4,500 张公开图的历史快照。其基线包含生成图，因此不作为当前 1,000 + 4,000 口径的数据集。
 
 - 划分：train 3,947、val 376、test 677。
 - 目标框：mouse 965、keyboard 1,720、laptop 2,238、cup 1,739、headphones 1,151。

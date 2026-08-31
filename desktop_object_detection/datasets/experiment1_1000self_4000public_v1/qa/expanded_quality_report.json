@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "image_count": 5000,
+  "manifest_count": 5000,
+  "corrupt_images": [],
+  "images_below_200px": [],
+  "exact_file_duplicates": [],
+  "duplicate_source_ids": [],
+  "self_collected_source_group_count": 10,
+  "self_collected_source_group_split_leakage": [],
+  "cross_split_dhash_distance_le_1_review_candidates": [
+    {
+      "left": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/test/self_IMG_8306_v014.jpg",
+      "right": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/train/self_IMG_8304_v088.jpg",
+      "distance": 1
+    },
+    {
+      "left": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/test/self_IMG_8306_v098.jpg",
+      "right": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/train/self_IMG_8304_v001.jpg",
+      "distance": 1
+    },
+    {
+      "left": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/train/self_IMG_8304_v000.jpg",
+      "right": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/val/self_IMG_8305_v060.jpg",
+      "distance": 1
+    },
+    {
+      "left": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/train/self_IMG_8304_v041.jpg",
+      "right": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/val/self_IMG_8305_v037.jpg",
+      "distance": 1
+    }
+  ],
+  "box_counts": {
+    "mouse": 1724,
+    "keyboard": 1966,
+    "laptop": 2549,
+    "cup": 1397,
+    "headphones": 871
+  },
+  "small_box_counts_area_below_0_005": {
+    "mouse": 34,
+    "keyboard": 110,
+    "laptop": 149,
+    "cup": 29,
+    "headphones": 2
+  },
+  "mouse_public_image_count": 616,
+  "mouse_contact_sheet": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/qa/mouse_contact_sheet.jpg",
+  "self_derived_contact_sheet": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/qa/self_derived_contact_sheet.jpg",
+  "provenance": {
+    "status": "PASS",
+    "actual": {
+      "self_collected": 1000,
+      "public": 4000,
+      "generated": 0,
+      "unknown": 0,
+      "total": 5000
+    },
+    "target": {
+      "self_collected": 1000,
+      "public": 4000,
+      "generated": 0,
+      "unknown": 0,
+      "total": 5000
+    },
+    "delta_actual_minus_target": {
+      "self_collected": 0,
+      "public": 0,
+      "generated": 0,
+      "unknown": 0,
+      "total": 0
+    },
+    "required_actions": {
+      "add_self_collected": 0,
+      "remove_generated": 0,
+      "reduce_public": 0,
+      "resolve_unknown": 0
+    },
+    "unknown_manifest_rows": [],
+    "definition": {
+      "self_collected": "Images derived from real photos captured by the student/team. Under the dataset owner's authorized counting rule, deterministic transformed copies count as self-collected-source material only when they are separately disclosed and traceable; they are not independent captures.",
+      "public": "Images sourced from a named public dataset with per-image source identifiers."
+    }
+  },
+  "most_common_dimensions": [
+    [
+      "1024x768",
+      1191
+    ],
+    [
+      "1280x960",
+      1000
+    ],
+    [
+      "1024x683",
+      545
+    ],
+    [
+      "1024x1024",
+      348
+    ],
+    [
+      "1024x680",
+      303
+    ],
+    [
+      "768x1024",
+      202
+    ],
+    [
+      "1024x681",
+      147
+    ],
+    [
+      "1024x682",
+      107
+    ],
+    [
+      "683x1024",
+      90
+    ],
+    [
+      "1024x685",
+      69
+    ],
+    [
+      "1024x765",
+      55
+    ],
+    [
+      "1024x576",
+      55
+    ],
+    [
+      "1024x678",
+      41
+    ],
+    [
+      "1024x684",
+      37
+    ],
+    [
+      "768x768",
+      31
+    ],
+    [
+      "1024x679",
+      24
+    ],
+    [
+      "681x1024",
+      19
+    ],
+    [
+      "1024x577",
+      18
+    ],
+    [
+      "1024x686",
+      17
+    ],
+    [
+      "682x1024",
+      15
+    ]
+  ],
+  "review_boundary": "Contact sheet is an engineering sample; public annotations still require full human review before a formal ground-truth claim."
+}

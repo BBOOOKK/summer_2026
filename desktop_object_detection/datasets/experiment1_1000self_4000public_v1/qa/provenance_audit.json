@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "actual": {
+    "self_collected": 1000,
+    "public": 4000,
+    "generated": 0,
+    "unknown": 0,
+    "total": 5000
+  },
+  "target": {
+    "self_collected": 1000,
+    "public": 4000,
+    "generated": 0,
+    "unknown": 0,
+    "total": 5000
+  },
+  "delta_actual_minus_target": {
+    "self_collected": 0,
+    "public": 0,
+    "generated": 0,
+    "unknown": 0,
+    "total": 0
+  },
+  "required_actions": {
+    "add_self_collected": 0,
+    "remove_generated": 0,
+    "reduce_public": 0,
+    "resolve_unknown": 0
+  },
+  "unknown_manifest_rows": [],
+  "definition": {
+    "self_collected": "Images derived from real photos captured by the student/team. Under the dataset owner's authorized counting rule, deterministic transformed copies count as self-collected-source material only when they are separately disclosed and traceable; they are not independent captures.",
+    "public": "Images sourced from a named public dataset with per-image source identifiers."
+  }
+}

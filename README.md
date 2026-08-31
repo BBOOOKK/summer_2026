@@ -11,16 +11,17 @@
 | Jetson 实时速度 | 不低于 5 FPS | 仅完成 Mac MPS 测试 | 待 Jetson 实测 |
 | ROS2 发布 | 发布识别结果 | 节点及静态自检已完成 | 待 Jetson 实机验证 |
 
-本仓库的 500 张 P05 基线数据是混合来源：453 张 AI 生成图、10 张本地实拍图、37 张 Open Images V7 图片，并非 500 张自行实拍。逐图来源记录在 `data/provenance.json`。这一点可能不完全满足“自行采集”口径，验收前应由课程教师确认，或补充真实采集数据后重新训练和测试。
+当前验收版数据固定为 5,000 张：1,000 张自主采集来源素材和 4,000 张 Open Images V7 公开数据。自主采集来源素材由 10 张原始实拍照片生成 100 个可追溯版本，共 1,000 张，其中 990 张为确定性增强，并不等同于 1,000 次独立按快门。该计数方式已由数据集所有者确认；提交时仍须向教师如实说明。旧的 500 张 P05 混合基线（含生成图）仅保留为历史材料，不进入本验收版。
 
 ## 目录
 
-- `data/`：500 张 P05 基线原图、YOLO 标签、标注检查图和来源/质量报告。
+- `data/`：500 张 P05 历史基线原图、YOLO 标签和逐图来源记录。
 - `desktop_object_detection/`：训练、推理、评估、ROS2、模型、结果和文档。
+- `desktop_object_detection/datasets/experiment1_1000self_4000public_v1/`：当前 1,000 + 4,000 验收版数据。
 - `desktop_object_detection/docs/RUN_GUIDE.md`：完整运行说明。
 - `desktop_object_detection/docs/EXPERIMENT_REPORT.md`：实验报告。
 
-扩充版训练集共 5,000 张：500 张 P05 基线图和 4,500 张 Open Images V7 图。4,500 张公开原图由 Git LFS 管理，`datasets/p05_expanded_v1/images/` 提供 train/val/test 的 5,000 张训练视图。首次克隆前请安装 Git LFS，克隆后运行 `git lfs pull`。
+当前训练集的 1,000 张实拍衍生图以及复用的公开原图由 Git LFS/软链接管理。首次克隆前请安装 Git LFS，克隆后运行 `git lfs pull`。逐图来源、母图 SHA256、增强参数和划分信息均随仓库提交。
 
 ## 提交约定
 

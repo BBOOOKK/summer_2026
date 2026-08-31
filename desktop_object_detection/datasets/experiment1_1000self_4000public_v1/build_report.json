@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "image_count": 5000,
+  "label_count": 5000,
+  "source_counts": {
+    "self_collected_derived": 1000,
+    "open_images_v7": 4000
+  },
+  "split_counts": {
+    "train": 4000,
+    "val": 350,
+    "test": 650
+  },
+  "self_original_capture_count": 10,
+  "self_derived_count": 1000,
+  "public_count": 4000,
+  "broken_links": [],
+  "disclosure": "1,000 self-collected-source images comprise 10 original captures and 990 deterministic derived augmentations, as authorized by the dataset owner; they are not 1,000 independent shutter events."
+}
