@@ -2,8 +2,12 @@
 **/.DS_Store
 __pycache__/
 *.py[cod]
+*.cache
 .venv/
 venv/
+
+# iCloud conflict copies; canonical YOLO labels have no numeric suffix.
+data/annotated/labels/**/* 2.txt
 
 # ROS2 and local build products
 desktop_object_detection/ros2_ws/build/
@@ -16,4 +20,3 @@ desktop_object_detection/datasets/p05_expanded_v1/images/
 
 # Local-only scratch files
 work/
-
