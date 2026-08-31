@@ -20,9 +20,8 @@
 - `desktop_object_detection/docs/RUN_GUIDE.md`：完整运行说明。
 - `desktop_object_detection/docs/EXPERIMENT_REPORT.md`：实验报告。
 
-扩充版 Open Images 下载缓存约 1.1 GB，可由仓库内脚本和清单重建，因此不纳入 Git；课程验收所需的 500 张基线数据已直接收录。
+扩充版训练集共 5,000 张：500 张 P05 基线图和 4,500 张 Open Images V7 图。4,500 张公开原图由 Git LFS 管理，`datasets/p05_expanded_v1/images/` 提供 train/val/test 的 5,000 张训练视图。首次克隆前请安装 Git LFS，克隆后运行 `git lfs pull`。
 
 ## 提交约定
 
 后续修改继续按一个可验证里程碑一个提交：数据变更、训练管线、推理功能、ROS2、验收结果和文档分别提交。提交信息使用 `data:`、`feat:`、`test:`、`model:`、`docs:`、`fix:` 等前缀，不把无关修改混在同一提交中。
-

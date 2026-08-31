@@ -6,7 +6,7 @@
 
 ## 扩充版数据集
 
-本地扩充版包含 5,000 张：冻结的 500 张 P05 基线，以及 4,500 张 Open Images V7 公开真实图。仓库收录构建脚本、标签、清单和质量报告；约 1.1 GB 的 Open Images 下载缓存及由其生成的图片链接不纳入 Git，可按清单重建。公开数据保持官方 train/validation/test 边界，来源 ID、下载地址和标签数量记录在 `datasets/p05_expanded_v1/manifest.csv`；与基线公开源重复的图片和跨划分近重复均已排除。
+扩充版包含 5,000 张：冻结的 500 张 P05 基线，以及 4,500 张 Open Images V7 公开真实图。仓库通过 Git LFS 收录实际参与训练的 4,500 张公开原图，并在 `datasets/p05_expanded_v1/images/` 提供完整 train/val/test 训练视图；其余未使用的下载缓存不纳入 Git。公开数据保持官方 train/validation/test 边界，来源 ID、下载地址和标签数量记录在 `datasets/p05_expanded_v1/manifest.csv`；与基线公开源重复的图片和跨划分近重复均已排除。
 
 - 划分：train 3,947、val 376、test 677。
 - 目标框：mouse 965、keyboard 1,720、laptop 2,238、cup 1,739、headphones 1,151。

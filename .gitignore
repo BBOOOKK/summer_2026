@@ -14,9 +14,9 @@ desktop_object_detection/ros2_ws/build/
 desktop_object_detection/ros2_ws/install/
 desktop_object_detection/ros2_ws/log/
 
-# Re-downloadable Open Images cache (about 1.1 GB)
+# Unreferenced Open Images download cache. The 4,500 images used by the
+# expanded dataset are explicitly tracked with Git LFS.
 desktop_object_detection/datasets/p05_expanded_v1/sources/
-desktop_object_detection/datasets/p05_expanded_v1/images/
 
 # Local-only scratch files
 work/
