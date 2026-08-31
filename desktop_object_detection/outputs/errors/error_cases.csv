@@ -1,0 +1,5 @@
+image,ground_truth,prediction,confidence,error_type
+/Users/book./Desktop/训练集/desktop_object_detection/outputs/errors/sample_10_low_confidence.jpg,laptop,laptop,0.583989,low_confidence
+/Users/book./Desktop/训练集/desktop_object_detection/outputs/errors/sample_13_missed_detection.jpg,cup,none,0.000000,missed_detection
+/Users/book./Desktop/训练集/desktop_object_detection/outputs/errors/sample_15_missed_detection.jpg,cup,none,0.000000,missed_detection
+/Users/book./Desktop/训练集/desktop_object_detection/outputs/errors/sample_16_low_confidence.jpg,cup,cup,0.506125,low_confidence

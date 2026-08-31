@@ -1,0 +1,60 @@
+{
+  "status": "PASS_WITH_HARDWARE_PENDING",
+  "checks": [
+    {
+      "name": "required_files",
+      "status": "PASS",
+      "detail": "all present"
+    },
+    {
+      "name": "python_syntax",
+      "status": "PASS",
+      "detail": "all Python files compile"
+    },
+    {
+      "name": "cli_entrypoints",
+      "status": "PASS",
+      "detail": "all --help commands pass"
+    },
+    {
+      "name": "dataset",
+      "status": "PASS",
+      "detail": "status=PASS totals={'images': 500, 'labels': 500, 'empty_labels': 50, 'objects': 841}"
+    },
+    {
+      "name": "evaluation_metrics",
+      "status": "PASS",
+      "detail": "precision=0.8992628616501179 recall=0.8997910036264674 mAP50=0.9371604030130772"
+    },
+    {
+      "name": "twenty_object_test",
+      "status": "PASS",
+      "detail": "18/20 = 90.00%"
+    },
+    {
+      "name": "result_video",
+      "status": "PASS",
+      "detail": "1 non-empty video(s)"
+    },
+    {
+      "name": "error_cases",
+      "status": "PASS",
+      "detail": "/Users/book./Desktop/训练集/desktop_object_detection/outputs/errors/error_cases.csv"
+    },
+    {
+      "name": "ros2_package_static",
+      "status": "PASS",
+      "detail": "package=object_detector, required topics/parameters present"
+    },
+    {
+      "name": "benchmark_software_flow",
+      "status": "PASS",
+      "detail": "local MPS average_fps=58.311; not Jetson evidence"
+    }
+  ],
+  "hardware_pending": [
+    "Jetson camera and TensorRT benchmark >= 5 FPS",
+    "ROS2 colcon build and live topic verification",
+    "Jetson result video and screenshots"
+  ]
+}

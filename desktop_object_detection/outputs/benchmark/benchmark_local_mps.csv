@@ -1,0 +1,2 @@
+model,device,image_size,frames,average_inference_ms,average_end_to_end_ms,average_fps,min_fps,max_inference_ms,requirement_fps,result
+/Users/book./Desktop/训练集/desktop_object_detection/models/best.pt,mps,640,50,10.242,17.149,58.311,39.874,15.559,5.000,PASS

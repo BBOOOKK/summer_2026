@@ -1,0 +1,60 @@
+{
+  "model": "models/best.pt",
+  "split": "test",
+  "metrics": [
+    {
+      "scope": "overall",
+      "class_id": "all",
+      "class_name": "all",
+      "precision": 0.526775395667036,
+      "recall": 0.38520187980138537,
+      "mAP50": 0.382218288309625,
+      "mAP50-95": 0.19637244407482707
+    },
+    {
+      "scope": "class",
+      "class_id": 0,
+      "class_name": "mouse",
+      "precision": 0.44090619198279435,
+      "recall": 0.5471698113207547,
+      "mAP50": 0.46711870640198516,
+      "mAP50-95": 0.27215513684674486
+    },
+    {
+      "scope": "class",
+      "class_id": 1,
+      "class_name": "keyboard",
+      "precision": 0.5237748078439917,
+      "recall": 0.46411483253588515,
+      "mAP50": 0.4240514431992405,
+      "mAP50-95": 0.190861628987353
+    },
+    {
+      "scope": "class",
+      "class_id": 2,
+      "class_name": "laptop",
+      "precision": 0.48546557344591895,
+      "recall": 0.1276595744680851,
+      "mAP50": 0.17554506402751918,
+      "mAP50-95": 0.0940744959437049
+    },
+    {
+      "scope": "class",
+      "class_id": 3,
+      "class_name": "cup",
+      "precision": 0.521463461842342,
+      "recall": 0.3981762917933131,
+      "mAP50": 0.3730348235663741,
+      "mAP50-95": 0.1741092608423661
+    },
+    {
+      "scope": "class",
+      "class_id": 4,
+      "class_name": "headphones",
+      "precision": 0.6622669432201334,
+      "recall": 0.3888888888888889,
+      "mAP50": 0.4713414043530063,
+      "mAP50-95": 0.2506616977539667
+    }
+  ]
+}
