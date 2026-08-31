@@ -1,0 +1,432 @@
+{
+  "overall_assessment": "PASS_WITH_PROVENANCE_LIMITATIONS",
+  "counts": {
+    "records": 500,
+    "raw": 500,
+    "review_images": 500,
+    "labels": 500,
+    "sources": {
+      "generated_image": 453,
+      "local_capture": 10,
+      "open_images_v7": 37
+    }
+  },
+  "combination_counts_by_condition": {
+    "S01": {
+      "cup": 25,
+      "headphones": 25,
+      "keyboard": 25,
+      "laptop": 25,
+      "mouse": 25
+    },
+    "S02": {
+      "cup+mouse": 5,
+      "headphones+mouse": 5,
+      "cup+keyboard": 5,
+      "cup+laptop": 5,
+      "headphones+laptop": 5,
+      "cup+headphones": 5,
+      "headphones+keyboard": 5,
+      "keyboard+mouse": 5,
+      "laptop+mouse": 5,
+      "cup+keyboard+mouse": 5,
+      "headphones+keyboard+mouse": 5,
+      "cup+laptop+mouse": 5,
+      "headphones+laptop+mouse": 5,
+      "cup+headphones+mouse": 5,
+      "cup+keyboard+laptop": 5,
+      "headphones+keyboard+laptop": 5,
+      "cup+headphones+keyboard": 5,
+      "cup+headphones+laptop": 5,
+      "keyboard+laptop+mouse": 5,
+      "cup+headphones+keyboard+laptop+mouse": 5,
+      "keyboard+laptop": 4,
+      "cup+keyboard+laptop+mouse": 4,
+      "headphones+keyboard+laptop+mouse": 4,
+      "cup+headphones+keyboard+mouse": 4,
+      "cup+headphones+laptop+mouse": 4,
+      "cup+headphones+keyboard+laptop": 4,
+      "keyboard+laptop+laptop": 1
+    },
+    "S03": {
+      "cup": 10,
+      "headphones": 10,
+      "keyboard": 10,
+      "laptop": 10,
+      "mouse": 10,
+      "keyboard+mouse": 3,
+      "laptop+mouse": 3,
+      "cup+mouse": 3,
+      "headphones+mouse": 3,
+      "keyboard+laptop": 3,
+      "cup+keyboard": 3,
+      "headphones+keyboard": 3,
+      "cup+laptop": 3,
+      "headphones+laptop": 3,
+      "cup+headphones": 3,
+      "keyboard+laptop+mouse": 2,
+      "cup+keyboard+mouse": 2,
+      "headphones+keyboard+mouse": 2,
+      "cup+laptop+mouse": 2,
+      "headphones+laptop+mouse": 2,
+      "cup+headphones+mouse": 2,
+      "cup+keyboard+laptop": 2,
+      "headphones+keyboard+laptop": 2,
+      "cup+headphones+keyboard": 2,
+      "cup+headphones+laptop": 2
+    },
+    "S04": {
+      "cup": 10,
+      "headphones": 10,
+      "keyboard": 10,
+      "laptop": 10,
+      "mouse": 10,
+      "keyboard+mouse": 2,
+      "laptop+mouse": 2,
+      "cup+mouse": 2,
+      "headphones+mouse": 2,
+      "keyboard+laptop": 2,
+      "cup+keyboard": 2,
+      "headphones+keyboard": 2,
+      "cup+laptop": 2,
+      "headphones+laptop": 2,
+      "cup+headphones": 2,
+      "keyboard+laptop+mouse": 2,
+      "cup+keyboard+mouse": 2,
+      "headphones+keyboard+mouse": 2,
+      "cup+laptop+mouse": 2,
+      "headphones+laptop+mouse": 2,
+      "cup+headphones+mouse": 2,
+      "cup+keyboard+laptop": 2,
+      "headphones+keyboard+laptop": 2,
+      "cup+headphones+keyboard": 2,
+      "cup+headphones+laptop": 2,
+      "cup+keyboard+laptop+mouse": 2,
+      "headphones+keyboard+laptop+mouse": 2,
+      "cup+headphones+keyboard+mouse": 2,
+      "cup+headphones+laptop+mouse": 2,
+      "cup+headphones+keyboard+laptop": 2
+    },
+    "S05": {
+      "NEG": 50
+    }
+  },
+  "s02_required_combination_mismatches": {},
+  "semantic_proof": {
+    "S01": {
+      "metadata_complete": true,
+      "angle_distance_counts": {
+        "low_angle|far": 13,
+        "low_angle|medium": 14,
+        "low_angle|near": 14,
+        "oblique|far": 14,
+        "oblique|medium": 14,
+        "oblique|near": 14,
+        "top_down|far": 14,
+        "top_down|medium": 14,
+        "top_down|near": 14
+      },
+      "angle_distance_balanced": true,
+      "single_class_counts": {
+        "cup": 25,
+        "headphones": 25,
+        "keyboard": 25,
+        "laptop": 25,
+        "mouse": 25
+      },
+      "single_class_exact": true,
+      "adjacent_metadata_min_changes": 2,
+      "adjacent_metadata_two_factor_pass": true
+    },
+    "S03": {
+      "metadata_complete": true,
+      "angle_distance_counts": {
+        "low_angle|far": 11,
+        "low_angle|medium": 11,
+        "low_angle|near": 11,
+        "oblique|far": 11,
+        "oblique|medium": 11,
+        "oblique|near": 11,
+        "top_down|far": 11,
+        "top_down|medium": 11,
+        "top_down|near": 12
+      },
+      "angle_distance_balanced": true,
+      "background_lighting_counts": {
+        "blue_matte|cool_window": 5,
+        "blue_matte|daylight": 5,
+        "blue_matte|fluorescent": 5,
+        "blue_matte|mixed_warm_cool": 5,
+        "blue_matte|warm_lamp": 5,
+        "dark_wood|cool_window": 5,
+        "dark_wood|daylight": 5,
+        "dark_wood|fluorescent": 5,
+        "dark_wood|mixed_warm_cool": 5,
+        "dark_wood|warm_lamp": 5,
+        "light_wood|cool_window": 5,
+        "light_wood|daylight": 5,
+        "light_wood|fluorescent": 5,
+        "light_wood|mixed_warm_cool": 5,
+        "light_wood|warm_lamp": 5,
+        "white_matte|cool_window": 5,
+        "white_matte|daylight": 5,
+        "white_matte|fluorescent": 5,
+        "white_matte|mixed_warm_cool": 5,
+        "white_matte|warm_lamp": 5
+      },
+      "background_lighting_exact": true
+    },
+    "S04": {
+      "metadata_complete": true,
+      "angle_distance_counts": {
+        "low_angle|far": 11,
+        "low_angle|medium": 11,
+        "low_angle|near": 11,
+        "oblique|far": 11,
+        "oblique|medium": 11,
+        "oblique|near": 11,
+        "top_down|far": 11,
+        "top_down|medium": 11,
+        "top_down|near": 12
+      },
+      "angle_distance_balanced": true,
+      "challenge_counts": {
+        "non_target_occlusion": 25,
+        "clutter": 25,
+        "edge_truncation": 25,
+        "target_occlusion": 25
+      },
+      "challenge_exact": true,
+      "target_occlusion_has_multiple_targets": true
+    },
+    "S02": {
+      "metadata_complete": true,
+      "angle_distance_counts": {
+        "low_angle|far": 13,
+        "low_angle|medium": 14,
+        "low_angle|near": 14,
+        "oblique|far": 14,
+        "oblique|medium": 14,
+        "oblique|near": 14,
+        "top_down|far": 14,
+        "top_down|medium": 14,
+        "top_down|near": 14
+      },
+      "angle_distance_balanced": true,
+      "contact_sheets_reviewed": true
+    },
+    "S05": {
+      "negative_category_counts": {
+        "empty_desk": 10,
+        "ordinary_clutter": 20,
+        "hard_negative": 20
+      },
+      "negative_category_exact": true,
+      "all_empty_labels": true,
+      "all_visual_reviewed": true
+    }
+  },
+  "unverifiable_requirements": [
+    "S02 adjacent accepted images change at least two capture factors is based on contact-sheet review rather than complete per-factor metadata",
+    "all target instances exhaustively annotated in Open Images-sourced photos",
+    "independent second human review has not been performed; visual review in this package is model-assisted"
+  ],
+  "quality_heuristics": {
+    "low_blur_metric_count": 30,
+    "extreme_exposure_count": 1,
+    "suspicious_box_count": 0,
+    "near_duplicate_pair_count": 0,
+    "low_blur_metric": [
+      {
+        "file": "P05_S01_CUP_0081.jpg",
+        "laplacian_variance": 23.27
+      },
+      {
+        "file": "P05_S01_CUP_0090.jpg",
+        "laplacian_variance": 19.71
+      },
+      {
+        "file": "P05_S01_CUP_0099.jpg",
+        "laplacian_variance": 15.13
+      },
+      {
+        "file": "P05_S01_HDP_0111.jpg",
+        "laplacian_variance": 24.27
+      },
+      {
+        "file": "P05_S01_HDP_0117.jpg",
+        "laplacian_variance": 21.98
+      },
+      {
+        "file": "P05_S01_LAP_0055.jpg",
+        "laplacian_variance": 16.84
+      },
+      {
+        "file": "P05_S01_LAP_0072.jpg",
+        "laplacian_variance": 21.22
+      },
+      {
+        "file": "P05_S01_LAP_0073.jpg",
+        "laplacian_variance": 19.16
+      },
+      {
+        "file": "P05_S01_LAP_0074.jpg",
+        "laplacian_variance": 24.4
+      },
+      {
+        "file": "P05_S01_MOU_0004.jpg",
+        "laplacian_variance": 24.57
+      },
+      {
+        "file": "P05_S02_MIX_0039.jpg",
+        "laplacian_variance": 19.58
+      },
+      {
+        "file": "P05_S02_MIX_0040.jpg",
+        "laplacian_variance": 20.31
+      },
+      {
+        "file": "P05_S02_MIX_0042.jpg",
+        "laplacian_variance": 9.34
+      },
+      {
+        "file": "P05_S02_MIX_0043.jpg",
+        "laplacian_variance": 10.14
+      },
+      {
+        "file": "P05_S02_MIX_0048.jpg",
+        "laplacian_variance": 19.07
+      },
+      {
+        "file": "P05_S02_MIX_0097.jpg",
+        "laplacian_variance": 23.85
+      },
+      {
+        "file": "P05_S03_CUP_0031.jpg",
+        "laplacian_variance": 23.34
+      },
+      {
+        "file": "P05_S03_CUP_0038.jpg",
+        "laplacian_variance": 17.01
+      },
+      {
+        "file": "P05_S03_CUP_0039.jpg",
+        "laplacian_variance": 19.62
+      },
+      {
+        "file": "P05_S03_MIX_0074.jpg",
+        "laplacian_variance": 21.89
+      },
+      {
+        "file": "P05_S03_MIX_0078.jpg",
+        "laplacian_variance": 14.86
+      },
+      {
+        "file": "P05_S04_CUP_0033.jpg",
+        "laplacian_variance": 17.57
+      },
+      {
+        "file": "P05_S04_CUP_0036.jpg",
+        "laplacian_variance": 14.77
+      },
+      {
+        "file": "P05_S04_LAP_0027.jpg",
+        "laplacian_variance": 18.76
+      },
+      {
+        "file": "P05_S04_MIX_0053.jpg",
+        "laplacian_variance": 23.8
+      },
+      {
+        "file": "P05_S04_MIX_0072.jpg",
+        "laplacian_variance": 13.96
+      },
+      {
+        "file": "P05_S05_NEG_0003.jpg",
+        "laplacian_variance": 19.73
+      },
+      {
+        "file": "P05_S05_NEG_0010.jpg",
+        "laplacian_variance": 4.27
+      },
+      {
+        "file": "P05_S05_NEG_0024.jpg",
+        "laplacian_variance": 24.62
+      },
+      {
+        "file": "P05_S05_NEG_0047.jpg",
+        "laplacian_variance": 24.81
+      }
+    ],
+    "extreme_exposure": [
+      {
+        "file": "P05_S05_NEG_0033.jpg",
+        "dark_fraction": 0.0,
+        "bright_fraction": 0.607
+      }
+    ],
+    "suspicious_boxes": [],
+    "near_duplicate_pairs_first_200": [],
+    "visual_disposition": {
+      "review_method": "model_assisted_contact_sheet_review",
+      "low_blur_metric_reviewed": 30,
+      "low_blur_metric_rejected": 0,
+      "extreme_exposure_reviewed": 1,
+      "extreme_exposure_rejected": 0,
+      "note": "All heuristic flags remained visually recognizable; the exposure flag is an intentional bright hard negative."
+    }
+  },
+  "logical_dimension_counts": {
+    "1448x1086": 247,
+    "1536x1024": 95,
+    "1402x1122": 61,
+    "1254x1254": 15,
+    "1024x768": 9,
+    "1086x1448": 8,
+    "1024x683": 6,
+    "4284x5712": 5,
+    "1672x941": 3,
+    "3024x4032": 3,
+    "768x1024": 3,
+    "1024x1024": 3,
+    "1188x1324": 2,
+    "1608x978": 2,
+    "1024x682": 2,
+    "1184x1328": 1,
+    "1364x1153": 1,
+    "1468x1071": 1,
+    "1438x1093": 1,
+    "1484x1060": 1,
+    "1844x853": 1,
+    "1619x972": 1,
+    "1215x1295": 1,
+    "1189x1323": 1,
+    "1375x1144": 1,
+    "1369x1149": 1,
+    "1360x1157": 1,
+    "3666x2750": 1,
+    "5712x4284": 1,
+    "1024x762": 1,
+    "1331x1181": 1,
+    "1535x1024": 1,
+    "1351x1164": 1,
+    "1415x1112": 1,
+    "1385x1136": 1,
+    "1333x1180": 1,
+    "1383x1137": 1,
+    "1312x1199": 1,
+    "1024x681": 1,
+    "1024x765": 1,
+    "1024x742": 1,
+    "1023x1024": 1,
+    "1024x678": 1,
+    "1024x764": 1,
+    "686x1024": 1,
+    "683x1024": 1,
+    "1024x614": 1,
+    "775x768": 1,
+    "517x1024": 1,
+    "681x1024": 1,
+    "1024x732": 1
+  }
+}

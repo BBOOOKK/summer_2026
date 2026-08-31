@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "file_code_counts": {
+    "MOU": 45,
+    "KEY": 45,
+    "LAP": 45,
+    "CUP": 45,
+    "HDP": 45,
+    "MIX": 225,
+    "NEG": 50
+  },
+  "box_class_counts": {
+    "0": 168,
+    "1": 168,
+    "2": 169,
+    "3": 168,
+    "4": 168
+  },
+  "provenance_counts": {
+    "generated_image": 453,
+    "local_capture": 10,
+    "open_images_v7": 37
+  }
+}
