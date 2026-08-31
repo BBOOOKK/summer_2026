@@ -1,0 +1,2 @@
+image,ground_truth,prediction,confidence,error_type
+desktop_object_detection/outputs/errors/experiment1_1000self_4000public_v1/sample_10_missed_detection.jpg,laptop,none,0.000000,missed_detection

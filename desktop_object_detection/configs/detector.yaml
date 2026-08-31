@@ -1,4 +1,4 @@
-model_path: models/expanded_v1/best.pt
+model_path: models/experiment1_1000self_4000public_v1/best.pt
 camera_id: 0
 imgsz: 640
 confidence_threshold: 0.5
