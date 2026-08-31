@@ -23,7 +23,7 @@ source install/setup.bash
 
 ```bash
 ros2 run object_detector detector_node --ros-args \
-  -p model_path:=$(pwd)/../models/best.pt \
+  -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt \
   -p source_mode:=camera \
   -p camera_id:=0 \
   -p confidence_threshold:=0.5 \
@@ -38,7 +38,7 @@ ros2 run object_detector detector_node --ros-args \
 
 ```bash
 ros2 run object_detector detector_node --ros-args \
-  -p model_path:=$(pwd)/../models/best.pt \
+  -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt \
   -p source_mode:=topic \
   -p input_topic:=/camera/image_raw \
   -p device:=0
@@ -61,4 +61,3 @@ JSON 示例：
 ```json
 {"timestamp":1234567890.0,"frame_id":100,"fps":12.5,"detections":[{"class_id":0,"class_name":"mouse","confidence":0.92,"bbox":{"x1":100.0,"y1":80.0,"x2":260.0,"y2":400.0}}]}
 ```
-

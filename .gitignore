@@ -20,3 +20,6 @@ desktop_object_detection/datasets/p05_expanded_v1/sources/
 
 # Local-only scratch files
 work/
+
+# Training runs duplicate the canonical weights stored under models/.
+desktop_object_detection/outputs/training/*/weights/

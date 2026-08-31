@@ -14,41 +14,40 @@
 
 | 集合 | 图片 | 标签 | 空标签 | 目标框 |
 | --- | ---: | ---: | ---: | ---: |
-| train | 347 | 347 | 35 | 577 |
-| val | 100 | 100 | 10 | 170 |
-| test | 53 | 53 | 5 | 94 |
-| 合计 | 500 | 500 | 50 | 841 |
+| train | 4,000 | 4,000 | 0 | 6,773 |
+| val | 350 | 350 | 0 | 627 |
+| test | 650 | 650 | 0 | 1,107 |
+| 合计 | 5,000 | 5,000 | 0 | 8,507 |
 
-各类框数为 mouse 168、keyboard 168、laptop 169、cup 168、headphones 168。
+各类框数为 mouse 1,724、keyboard 1,966、laptop 2,549、cup 1,397、headphones 871。
 
-来源必须如实披露：453 张 AI 生成图、10 张本地采集图、37 张 Open Images V7 图片。该数据集通过数量、命名、标签格式和模型辅助视觉复核，但不是 500 张全实拍，也没有独立第二人工复核。因此训练结果只能作为课程实验与混合来源数据验证，不能宣称为纯实拍泛化性能。
+来源必须如实披露：1,000 张自主采集来源素材由 10 张独立实拍照片和 990 张确定性增强图组成；另有 4,000 张 Open Images V7 公开图片。该计数口径由数据集所有者确认，但不能表述为 1,000 次独立拍摄。10 个实拍母图按 8/1/1 分组，所有衍生版本只进入同一划分，避免母图跨 train/val/test 泄漏。旧 P05 基线中的生成图不进入当前验收版。
 
 ## 4 模型与训练
 
-模型采用 YOLO11n，原因是网络轻量、6.4 GFLOPs，适合 Jetson 的实时场景。训练输入 640，batch 16，AdamW 自动优化器，使用有限旋转、平移、缩放、水平翻转和 Mosaic，禁用 MixUp。
+模型采用 YOLO11n，原因是网络轻量、6.4 GFLOPs，适合 Jetson 的实时场景。训练输入 640，batch 32，AdamW 自动优化器，使用有限旋转、平移、缩放、水平翻转和 Mosaic，禁用 MixUp。
 
-训练完成 31 个完整 epoch 后停止，最佳 checkpoint 来自第 27 个 epoch（checkpoint 内部 epoch 索引为 26）。最终提供：
+从历史扩充模型继续迁移学习，共完成 12 个 epoch，最佳 checkpoint 来自第 12 个 epoch。最终提供：
 
-- `models/best.pt`
-- `models/last.pt`
-- `models/best.onnx`
-- 训练曲线、PR 曲线、混淆矩阵：`outputs/training/yolo11n_p05/`
+- `models/experiment1_1000self_4000public_v1/best.pt`
+- `models/experiment1_1000self_4000public_v1/last.pt`
+- 训练曲线、PR 曲线、混淆矩阵：`outputs/training/experiment1_1000self_4000public_v1/`
 
 ## 5 独立测试集结果
 
 | Precision | Recall | mAP50 | mAP50-95 |
 | ---: | ---: | ---: | ---: |
-| 0.8993 | 0.8998 | 0.9372 | 0.5605 |
+| 0.8385 | 0.7697 | 0.8386 | 0.5735 |
 
 | 类别 | Precision | Recall | mAP50 | mAP50-95 |
 | --- | ---: | ---: | ---: | ---: |
-| mouse | 0.829 | 0.889 | 0.927 | 0.477 |
-| keyboard | 0.884 | 0.882 | 0.927 | 0.551 |
-| laptop | 0.881 | 0.822 | 0.848 | 0.551 |
-| cup | 0.947 | 0.942 | 0.990 | 0.548 |
-| headphones | 0.955 | 0.964 | 0.993 | 0.676 |
+| mouse | 0.933 | 0.910 | 0.950 | 0.755 |
+| keyboard | 0.835 | 0.847 | 0.901 | 0.636 |
+| laptop | 0.912 | 0.753 | 0.864 | 0.460 |
+| cup | 0.909 | 0.741 | 0.857 | 0.675 |
+| headphones | 0.604 | 0.598 | 0.620 | 0.342 |
 
-详细 CSV：`outputs/evaluation/evaluation_results.csv`。
+详细 CSV：`outputs/evaluation/experiment1_1000self_4000public_v1_test/evaluation_results.csv`。
 
 ## 6 多类别同时识别
 
@@ -60,13 +59,13 @@
 
 | 测试数量 | 正确 | 错误 | 正确率 | 要求 | 结果 |
 | ---: | ---: | ---: | ---: | ---: | --- |
-| 20 | 18 | 2 | 90.00% | ≥ 80% | PASS |
+| 20 | 19 | 1 | 95.00% | ≥ 80% | PASS |
 
-两个错误均为 cup 漏检；此外记录了两个正确但置信度偏低的样本。相关文件为 `outputs/evaluation/20_object_test_results.csv` 和 `outputs/errors/error_cases.csv`。
+唯一错误为 laptop 漏检。相关文件为 `outputs/evaluation/experiment1_1000self_4000public_v1_test/20_object_test_results.csv` 和 `outputs/errors/experiment1_1000self_4000public_v1/error_cases.csv`。
 
 ## 8 实时性能
 
-本机 MPS 使用 640 输入、50 个计时帧的端到端平均速度为 58.311 FPS，最低 39.874 FPS，证明 benchmark 软件链路可运行，但该结果不能替代 Jetson 验收。
+本机 MPS 使用 640 输入、130 个计时帧的端到端平均速度为 60.409 FPS，最低 34.733 FPS，证明 benchmark 软件链路可运行，但该结果不能替代 Jetson 验收。
 
 Jetson 必须另行填写：型号、功耗模式、PyTorch/ONNX/TensorRT 后端、平均 FPS、最低 FPS和温度。验收要求为平均 ≥ 5 FPS。
 
@@ -88,11 +87,10 @@ ROS2 包、消息结构和参数已通过静态自检。由于开发机没有 RO
 | 验收项 | 要求 | 当前结果 | 状态 |
 | --- | ---: | ---: | --- |
 | A. 同时识别类别 | ≥ 2 类 | 5 类 | PASS |
-| B. 20 目标正确率 | ≥ 80% | 90.00% | PASS |
-| C. Jetson 平均 FPS | ≥ 5 | 本机 58.311；Jetson 未测 | PENDING |
+| B. 20 目标正确率 | ≥ 80% | 95.00% | PASS |
+| C. Jetson 平均 FPS | ≥ 5 | 本机 60.409；Jetson 未测 | PENDING |
 | D. ROS2 实时发布 | 正常 | 软件完成，实机未测 | PENDING |
 
 ## 12 总结
 
-本实验已完成数据接入、YOLO11n 训练、独立评估、图片/视频/摄像头推理、ONNX 导出、20 样本统计、错误案例保存、benchmark 和 ROS2 节点开发。软件侧自检结论为 `PASS_WITH_HARDWARE_PENDING`。最终课程验收仍需在指定 Jetson 与摄像头上生成 TensorRT Engine、记录平均 FPS、保存现场视频，并补充 ROS2 topic 截图。
-
+本实验已完成数据接入、YOLO11n 训练、独立评估、图片/视频/摄像头推理程序、20 样本统计、错误案例保存、benchmark 和 ROS2 节点开发。当前验收模型以 PyTorch 权重交付，ONNX/TensorRT 可通过导出脚本生成。软件侧自检结论为 `PASS_WITH_HARDWARE_PENDING`。最终课程验收仍需在指定 Jetson 与摄像头上生成 TensorRT Engine、记录平均 FPS、保存现场视频，并补充 ROS2 topic 截图。

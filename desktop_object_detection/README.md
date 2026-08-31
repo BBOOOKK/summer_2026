@@ -26,7 +26,7 @@
 - 自动质量报告：`datasets/p05_expanded_v1/dataset_check_report.json` 和 `datasets/p05_expanded_v1/qa/expanded_quality_report.json`。
 - 鼠标抽样标框联系表：`datasets/p05_expanded_v1/qa/mouse_contact_sheet.jpg`。
 
-双击 `训练扩充模型.command` 可从当前 `models/best.pt` 开始微调；新权重写入 `models/expanded_v1/`，不会覆盖当前摄像头模型。公开框已经完成格式、完整性、重复和抽样可视检查，但尚未逐张人工复标，正式 ground-truth 声明前仍需全量人工复核。
+历史脚本 `训练扩充模型.command` 从当时的 `models/best.pt` 开始微调，并把权重写入 `models/expanded_v1/`。公开框完成过格式、完整性、重复和抽样可视检查，但尚未逐张人工复标，正式 ground-truth 声明前仍需全量人工复核。
 
 当前旧模型在扩充版独立 test 上的微调前基线为：Precision 0.5309、Recall 0.3840、mAP50 0.3851、mAP50-95 0.1971；其中 mouse mAP50 0.464、Recall 0.547。结果保存在 `outputs/evaluation/expanded_v1_baseline_final/`，用于与微调后的模型作同集对比。
 
@@ -35,8 +35,8 @@
 | 验收项 | 要求 | 验证工具 | 当前状态 |
 | --- | ---: | --- | --- |
 | A. 同时识别类别 | ≥ 2 类 | 图片/视频/摄像头检测 | PASS：独立 MIX 图同时检出 5 类 |
-| B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：18/20，90.00% |
-| C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | 本机 MPS 58.31 FPS；Jetson 待实测 |
+| B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：19/20，95.00% |
+| C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | 本机 MPS 60.409 FPS；Jetson 待实测 |
 | D. ROS2 结果发布 | 实时 JSON + 图像 | `detector_node` | 静态自检 PASS；ROS2/Jetson 实机待运行 |
 
 ## 最简运行流程
@@ -47,16 +47,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python scripts/prepare_dataset.py
-python scripts/check_dataset.py --data configs/dataset.yaml
-python scripts/train.py --data configs/dataset.yaml --model yolo11n.pt --epochs 100 --batch 16 --imgsz 640 --device 0
-python scripts/detect_camera.py --model models/best.pt --camera 0 --device 0 --half --save-video
-python scripts/benchmark.py --model models/best.pt --source 0 --device 0 --half
+python scripts/check_dataset.py --data datasets/experiment1_1000self_4000public_v1/dataset.yaml
+python scripts/detect_camera.py --model models/experiment1_1000self_4000public_v1/best.pt --camera 0 --device 0 --half --save-video
+python scripts/benchmark.py --model models/experiment1_1000self_4000public_v1/best.pt --source 0 --device 0 --half
 
 cd ros2_ws
 colcon build --symlink-install
 source install/setup.bash
-ros2 run object_detector detector_node --ros-args -p model_path:=$(pwd)/../models/best.pt -p camera_id:=0
+ros2 run object_detector detector_node --ros-args -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt -p camera_id:=0
 ```
 
 Jetson 的 PyTorch 必须按 JetPack 版本单独安装，不能直接依赖通用 pip wheel。完整步骤见 [运行指南](docs/RUN_GUIDE.md)、[Jetson 部署](docs/JETSON_DEPLOYMENT.md)和 [ROS2 指南](docs/ROS2_GUIDE.md)。
@@ -119,9 +117,9 @@ desktop_object_detection/
 
 ## 当前实测摘要
 
-- YOLO11n 最佳权重：`models/best.pt`，并提供 `models/best.onnx`。
-- 独立 test：Precision 0.8993、Recall 0.8998、mAP50 0.9372、mAP50-95 0.5605。
-- 20 样本：18/20，90.00%，错误案例已保存。
+- 当前 1,000 + 4,000 数据训练的 YOLO11n 最佳权重：`models/experiment1_1000self_4000public_v1/best.pt`。
+- 650 张独立 test：Precision 0.8385、Recall 0.7697、mAP50 0.8386、mAP50-95 0.5735。
+- 20 样本：19/20，95.00%；唯一错误为 laptop 漏检，错误图已保存。
 - MIX 示例 `P05_S02_MIX_0121.jpg`：阈值 0.5 下同时检出 5 类。
-- 本机 MPS 临时视频 benchmark：58.311 FPS；该结果不是 Jetson 证据。
+- 本机 MPS 结果视频 benchmark：60.409 FPS；该结果不是 Jetson 证据。
 - 项目审计：`outputs/evaluation/project_self_check.json` 为 `PASS_WITH_HARDWARE_PENDING`。

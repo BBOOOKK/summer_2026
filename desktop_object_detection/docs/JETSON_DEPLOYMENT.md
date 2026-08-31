@@ -25,8 +25,8 @@ python3 -m pip install ultralytics PyYAML pandas
 把整个 `desktop_object_detection` 目录复制到 Jetson，确认：
 
 ```bash
-ls -lh models/best.pt
-python scripts/detect_camera.py --model models/best.pt --camera 0 --device 0 --half --save-video
+ls -lh models/experiment1_1000self_4000public_v1/best.pt
+python scripts/detect_camera.py --model models/experiment1_1000self_4000public_v1/best.pt --camera 0 --device 0 --half --save-video
 ```
 
 摄像头检查：
@@ -46,9 +46,9 @@ PY
 Engine 与 Jetson 的 TensorRT 版本和硬件架构绑定，应在目标设备本地导出：
 
 ```bash
-python scripts/export_model.py --model models/best.pt --format engine --imgsz 640 --device 0 --half
-mv models/best.engine models/best_fp16.engine 2>/dev/null || true
-python scripts/detect_camera.py --model models/best_fp16.engine --camera 0 --device 0 --save-video
+python scripts/export_model.py --model models/experiment1_1000self_4000public_v1/best.pt --format engine --imgsz 640 --device 0 --half
+mv models/experiment1_1000self_4000public_v1/best.engine models/experiment1_1000self_4000public_v1/best_fp16.engine 2>/dev/null || true
+python scripts/detect_camera.py --model models/experiment1_1000self_4000public_v1/best_fp16.engine --camera 0 --device 0 --save-video
 ```
 
 若导出文件生成在权重旁边但名称不同，以命令实际输出路径为准。
@@ -58,7 +58,7 @@ python scripts/detect_camera.py --model models/best_fp16.engine --camera 0 --dev
 ```bash
 sudo nvpmodel -m 0
 sudo jetson_clocks
-python scripts/benchmark.py --model models/best_fp16.engine --source 0 --device 0 --imgsz 640 --warmup-frames 20 --test-frames 200
+python scripts/benchmark.py --model models/experiment1_1000self_4000public_v1/best_fp16.engine --source 0 --device 0 --imgsz 640 --warmup-frames 20 --test-frames 200
 ```
 
 记录 Jetson 型号、电源模式、推理后端和温度。测试时保持同一摄像头分辨率与场景。
@@ -78,4 +78,3 @@ python scripts/benchmark.py --model models/best_fp16.engine --source 0 --device 
 ## ROS2
 
 按 `docs/ROS2_GUIDE.md` 编译。Jetson 若存在多个 Python 环境，确保 `colcon`、`rclpy`、Ultralytics 和 CUDA PyTorch 位于同一个可见环境。
-
