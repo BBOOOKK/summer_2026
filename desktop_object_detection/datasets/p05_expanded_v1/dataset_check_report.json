@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "config": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/p05_expanded_v1/dataset.yaml",
+  "names": {
+    "0": "mouse",
+    "1": "keyboard",
+    "2": "laptop",
+    "3": "cup",
+    "4": "headphones"
+  },
+  "splits": {
+    "train": {
+      "split": "train",
+      "image_count": 3947,
+      "label_count": 3947,
+      "empty_labels": 35,
+      "object_count": 6276,
+      "class_counts": {
+        "0": 798,
+        "1": 1410,
+        "2": 1955,
+        "3": 1158,
+        "4": 955
+      },
+      "missing_labels": [],
+      "orphan_labels": [],
+      "errors": []
+    },
+    "val": {
+      "split": "val",
+      "image_count": 376,
+      "label_count": 376,
+      "empty_labels": 10,
+      "object_count": 528,
+      "class_counts": {
+        "0": 61,
+        "1": 90,
+        "2": 87,
+        "3": 220,
+        "4": 70
+      },
+      "missing_labels": [],
+      "orphan_labels": [],
+      "errors": []
+    },
+    "test": {
+      "split": "test",
+      "image_count": 677,
+      "label_count": 677,
+      "empty_labels": 5,
+      "object_count": 1009,
+      "class_counts": {
+        "0": 106,
+        "1": 220,
+        "2": 196,
+        "3": 361,
+        "4": 126
+      },
+      "missing_labels": [],
+      "orphan_labels": [],
+      "errors": []
+    }
+  },
+  "totals": {
+    "images": 5000,
+    "labels": 5000,
+    "empty_labels": 50,
+    "objects": 7813
+  },
+  "class_counts": {
+    "0": 965,
+    "1": 1720,
+    "2": 2238,
+    "3": 1739,
+    "4": 1151
+  },
+  "errors": []
+}

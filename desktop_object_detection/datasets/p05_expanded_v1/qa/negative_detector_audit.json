@@ -1,0 +1,18 @@
+{
+  "threshold": 0.1,
+  "total_public_negatives": 300,
+  "flagged_count": 1,
+  "flagged": [
+    {
+      "split": "test",
+      "file": "oi_test_0ca790da12c776d6.jpg",
+      "source_id": "0ca790da12c776d6",
+      "detections": [
+        {
+          "class": "keyboard",
+          "confidence": 0.19422
+        }
+      ]
+    }
+  ]
+}

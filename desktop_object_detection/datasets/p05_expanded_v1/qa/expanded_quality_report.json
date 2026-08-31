@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "image_count": 5000,
+  "manifest_count": 5000,
+  "corrupt_images": [],
+  "images_below_200px": [],
+  "exact_file_duplicates": [],
+  "duplicate_source_ids": [],
+  "cross_split_dhash_distance_le_1_review_candidates": [],
+  "box_counts": {
+    "mouse": 965,
+    "keyboard": 1720,
+    "laptop": 2238,
+    "cup": 1739,
+    "headphones": 1151
+  },
+  "small_box_counts_area_below_0_005": {
+    "mouse": 36,
+    "keyboard": 119,
+    "laptop": 169,
+    "cup": 32,
+    "headphones": 2
+  },
+  "mouse_public_image_count": 680,
+  "mouse_contact_sheet": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/p05_expanded_v1/qa/mouse_contact_sheet.jpg",
+  "most_common_dimensions": [
+    [
+      "1024x768",
+      1371
+    ],
+    [
+      "1024x683",
+      607
+    ],
+    [
+      "1024x1024",
+      388
+    ],
+    [
+      "1024x680",
+      335
+    ],
+    [
+      "1448x1086",
+      247
+    ],
+    [
+      "768x1024",
+      246
+    ],
+    [
+      "1024x681",
+      162
+    ],
+    [
+      "1024x682",
+      123
+    ],
+    [
+      "683x1024",
+      102
+    ],
+    [
+      "1536x1024",
+      95
+    ],
+    [
+      "1024x685",
+      76
+    ],
+    [
+      "1024x765",
+      65
+    ],
+    [
+      "1024x576",
+      62
+    ],
+    [
+      "1402x1122",
+      61
+    ],
+    [
+      "1024x678",
+      49
+    ],
+    [
+      "1024x684",
+      44
+    ],
+    [
+      "768x768",
+      33
+    ],
+    [
+      "681x1024",
+      25
+    ],
+    [
+      "1024x679",
+      25
+    ],
+    [
+      "1024x577",
+      18
+    ]
+  ],
+  "review_boundary": "Contact sheet is an engineering sample; public annotations still require full human review before a formal ground-truth claim."
+}

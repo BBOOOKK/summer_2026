@@ -1,0 +1,32 @@
+{
+  "status": "BUILT_NOT_HUMAN_REVIEWED",
+  "total_images": 5000,
+  "split_counts": {
+    "train": 3947,
+    "val": 376,
+    "test": 677
+  },
+  "source_counts": {
+    "p05_baseline_mixed": 500,
+    "open_images_v7": 4500
+  },
+  "images_containing_class": {
+    "cup": 1309,
+    "headphones": 1023,
+    "keyboard": 1337,
+    "laptop": 1484,
+    "mouse": 848
+  },
+  "empty_labels": 50,
+  "target_total": 5000,
+  "public_selection": {
+    "train": 3600,
+    "val": 276,
+    "test": 624
+  },
+  "limitations": [
+    "Open Images boxes are converted automatically and have not yet received full per-image human review.",
+    "The frozen baseline is mixed-source and includes generated images; provenance is preserved.",
+    "Real handheld white-mouse captures from the deployment camera are still required for domain-specific fine-tuning."
+  ]
+}
