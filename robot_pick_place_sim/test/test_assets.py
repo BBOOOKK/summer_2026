@@ -14,6 +14,14 @@ def test_xml_assets_are_well_formed():
     ET.parse(ROOT / 'urdf' / 'mecharm270.urdf.xacro')
 
 
+def test_robot_has_inertia_free_kdl_root():
+    root = ET.parse(ROOT / 'urdf' / 'mecharm270.urdf.xacro').getroot()
+    footprint = root.find("link[@name='base_footprint']")
+    fixed = root.find("joint[@name='base_fixed']")
+    assert footprint is not None and footprint.find('inertial') is None
+    assert fixed is not None and fixed.attrib['type'] == 'fixed'
+
+
 def test_pick_place_configuration_is_safe_and_complete():
     data = yaml.safe_load((ROOT / 'config' / 'pick_place.yaml').read_text())
     params = data['pick_place']['ros__parameters']

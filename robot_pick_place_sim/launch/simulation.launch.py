@@ -50,7 +50,11 @@ def generate_launch_description():
         Node(
             package='tf2_ros', executable='static_transform_publisher',
             name='world_to_base',
-            arguments=['0', '0', '0.75', '0', '0', '0', 'world', 'base_link']),
+            arguments=[
+                '--x', '0', '--y', '0', '--z', '0.75',
+                '--roll', '0', '--pitch', '0', '--yaw', '0',
+                '--frame-id', 'world', '--child-frame-id', 'base_footprint',
+            ]),
         Node(
             package='gazebo_ros', executable='spawn_entity.py',
             arguments=['-entity', 'mecharm270', '-topic', 'robot_description',

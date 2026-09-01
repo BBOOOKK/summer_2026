@@ -7,6 +7,12 @@
   <material name="blue"><color rgba="0.10 0.35 0.80 1"/></material>
   <material name="dark"><color rgba="0.08 0.08 0.10 1"/></material>
 
+  <!-- Inertia-free root keeps KDL compatible; Gazebo spawns this at table height. -->
+  <link name="base_footprint"/>
+  <joint name="base_fixed" type="fixed">
+    <parent link="base_footprint"/><child link="base_link"/>
+  </joint>
+
   <xacro:macro name="cylinder_link" params="name length radius material mass:=0.25">
     <link name="${name}">
       <inertial><origin xyz="0 0 ${length/2}"/><mass value="${mass}"/><inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/></inertial>
