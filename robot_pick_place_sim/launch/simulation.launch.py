@@ -67,6 +67,12 @@ def generate_launch_description():
                  output='screen'),
         ]),
         TimerAction(period=7.0, actions=[
+            Node(package='robot_pick_place_sim', executable='collision_monitor',
+                 name='collision_monitor', output='screen',
+                 parameters=[{
+                     'use_sim_time': use_sim_time,
+                     'log_directory': log_directory,
+                 }]),
             Node(package='robot_pick_place_sim', executable='object_manager',
                  name='object_manager', output='screen',
                  parameters=[{

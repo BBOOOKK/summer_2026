@@ -34,10 +34,10 @@ def main():
             failures.append(f'{name}: {exc}')
 
     suite = unittest.defaultTestLoader.discover(
-        str(ROOT / 'test'), pattern='test_safety.py')
+        str(ROOT / 'test'), pattern='test_*.py')
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     if not result.wasSuccessful():
-        failures.append('safety unit tests failed')
+        failures.append('pure Python unit tests failed')
 
     if failures:
         print('\n'.join(f'FAIL {item}' for item in failures), file=sys.stderr)

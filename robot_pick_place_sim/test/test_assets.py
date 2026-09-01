@@ -40,6 +40,7 @@ def test_pick_place_configuration_is_safe_and_complete():
                 params[key], params['joint_lower_limits'], params['joint_upper_limits']):
             assert lower <= value <= upper
     assert params['reach_min_m'] < params['reach_max_m']
+    assert params['require_collision_monitor'] is True
 
 
 def test_world_contains_acceptance_entities():
@@ -52,6 +53,15 @@ def test_world_contains_acceptance_entities():
     assert 'librobot_grasp_joint.so' in text
     for topic in ('contacts/table', 'contacts/target'):
         assert topic in text
+
+
+def test_launch_starts_runtime_collision_supervisor():
+    launch = (ROOT / 'launch' / 'simulation.launch.py').read_text()
+    setup = (ROOT / 'setup.py').read_text()
+    package = (ROOT / 'package.xml').read_text()
+    assert "executable='collision_monitor'" in launch
+    assert 'collision_monitor = robot_pick_place_sim.collision_monitor:main' in setup
+    assert '<exec_depend>diagnostic_msgs</exec_depend>' in package
 
 
 def test_physical_grasp_replaces_transport_pose_writes():

@@ -11,7 +11,9 @@ from action_msgs.msg import GoalStatus
 from control_msgs.action import FollowJointTrajectory
 import rclpy
 from rclpy.action import ActionClient
+from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.duration import Duration
+from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Bool, String
@@ -41,6 +43,10 @@ class PickPlaceNode(Node):
             'attach_service': '/grasp/attach',
             'detach_service': '/grasp/detach',
             'grasp_service_timeout_sec': 3.0,
+            'require_collision_monitor': True,
+            'collision_readiness_service': '/collision_monitor/readiness',
+            'collision_reset_service': '/collision_monitor/reset',
+            'collision_readiness_timeout_sec': 10.0,
             'pick_point_xyz': [0.22, 0.12, 0.02],
             'place_point_xyz': [0.20, -0.16, 0.02],
             'home_joints': [0.0] * 6,
@@ -68,13 +74,27 @@ class PickPlaceNode(Node):
             Trigger, str(self._config['attach_service']))
         self._detach = self.create_client(
             Trigger, str(self._config['detach_service']))
+        self._collision_readiness = self.create_client(
+            Trigger, str(self._config['collision_readiness_service']))
+        self._safety_callbacks = ReentrantCallbackGroup()
+        self._collision_reset = self.create_client(
+            Trigger, str(self._config['collision_reset_service']),
+            callback_group=self._safety_callbacks)
         self._state_pub = self.create_publisher(String, '/pick_place/state', 10)
         self._grasp_pub = self.create_publisher(Bool, '/pick_place/grasped', 10)
         self.create_subscription(JointState, '/joint_states', self._joint_state, 20)
         self.create_service(Trigger, '/pick_place/start', self._start_service)
         self.create_service(Trigger, '/pick_place/stop', self._stop_service)
+        self.create_service(
+            Trigger, '/pick_place/collision_stop',
+            self._collision_stop_service)
+        self.create_service(
+            Trigger, '/pick_place/reset_safety', self._reset_safety_service,
+            callback_group=self._safety_callbacks)
         self._lock = threading.Lock()
         self._running = False
+        self._safety_latched = False
+        self._safety_reason = ''
         self._stop_requested = threading.Event()
         self._active_goal = None
         self._run_id = ''
@@ -97,20 +117,71 @@ class PickPlaceNode(Node):
         return response
 
     def _stop_service(self, _request, response):
-        if not self._running:
+        self._request_safety_stop('operator safe stop requested')
+        response.success = True
+        response.message = 'safety stop latched; explicit reset is required'
+        return response
+
+    def _collision_stop_service(self, _request, response):
+        self._request_safety_stop('collision monitor requested safe stop')
+        response.success = True
+        response.message = 'collision safety stop latched'
+        return response
+
+    def _reset_safety_service(self, _request, response):
+        with self._lock:
+            if self._running:
+                response.success = False
+                response.message = 'cannot reset safety while task is running'
+                return response
+        timeout = float(self._config['collision_readiness_timeout_sec'])
+        if not self._collision_reset.wait_for_service(timeout_sec=timeout):
             response.success = False
-            response.message = 'no task is running'
+            response.message = 'collision monitor reset service unavailable'
             return response
+        try:
+            monitor_response = self._await(
+                self._collision_reset.call_async(Trigger.Request()), timeout,
+                'collision monitor reset timed out')
+        except (RuntimeError, TimeoutError) as exc:
+            response.success = False
+            response.message = str(exc)
+            return response
+        if monitor_response is None or not monitor_response.success:
+            response.success = False
+            response.message = (
+                'collision monitor rejected reset: '
+                + ('empty response' if monitor_response is None
+                   else monitor_response.message))
+            return response
+        with self._lock:
+            self._safety_latched = False
+            self._safety_reason = ''
+            self._stop_requested.clear()
+        self._publish_state('IDLE', 'safety latch reset by operator')
+        response.success = True
+        response.message = 'safety latch reset; verify workcell before restart'
+        return response
+
+    def _request_safety_stop(self, reason):
+        with self._lock:
+            self._safety_latched = True
+            self._safety_reason = reason
+            running = self._running
         self._stop_requested.set()
         if self._active_goal is not None:
             self._active_goal.cancel_goal_async()
-        self._publish_state('STOPPING', 'safe stop requested')
-        response.success = True
-        response.message = 'stop requested'
-        return response
+        if self._detach.service_is_ready():
+            self._detach.call_async(Trigger.Request())
+        state = 'STOPPING' if running else 'SAFE_STOP'
+        self._publish_state(state, reason)
 
     def _begin_run(self):
         with self._lock:
+            if self._safety_latched:
+                return False, (
+                    'safety stop is latched; call /pick_place/reset_safety: '
+                    f'{self._safety_reason}')
             if self._running:
                 return False, 'task is already running'
             self._running = True
@@ -131,6 +202,7 @@ class PickPlaceNode(Node):
             for client, label in ((self._arm, 'arm'), (self._gripper, 'gripper')):
                 if not client.wait_for_server(timeout_sec=5.0):
                     raise RuntimeError(f'{label} trajectory action is unavailable')
+            self._require_collision_readiness()
             sequence = (
                 ('OPEN_GRIPPER', self._gripper_move, self._config['gripper_open_rad']),
                 ('HOME', self._arm_move, self._config['home_joints']),
@@ -177,12 +249,38 @@ class PickPlaceNode(Node):
                 self._running = False
 
     def _fail_safe(self, detail):
+        with self._lock:
+            self._safety_latched = True
+            self._safety_reason = detail
         self._grasp_pub.publish(Bool(data=False))
         if self._detach.service_is_ready():
             self._detach.call_async(Trigger.Request())
         self._publish_state('SAFE_STOP', detail)
         self._write_jsonl('errors.jsonl', {'error': detail})
         self.get_logger().error(detail)
+
+    def _require_collision_readiness(self):
+        if not bool(self._config['require_collision_monitor']):
+            return
+        if not self._collision_readiness.wait_for_service(timeout_sec=5.0):
+            raise RuntimeError('collision monitor readiness service unavailable')
+        deadline = time.monotonic() + float(
+            self._config['collision_readiness_timeout_sec'])
+        detail = 'no readiness response'
+        while time.monotonic() < deadline:
+            response = self._await(
+                self._collision_readiness.call_async(Trigger.Request()), 2.0,
+                'collision monitor readiness timed out')
+            if response is not None and response.success:
+                return
+            detail = 'empty response' if response is None else response.message
+            try:
+                if json.loads(detail).get('unsafe_latched'):
+                    break
+            except (json.JSONDecodeError, AttributeError):
+                pass
+            time.sleep(0.2)
+        raise RuntimeError(f'collision monitor not ready: {detail}')
 
     def _arm_move(self, positions):
         self._send_trajectory(
@@ -226,10 +324,21 @@ class PickPlaceNode(Node):
         if not goal_handle.accepted:
             raise RuntimeError(f'trajectory rejected for {names}')
         self._active_goal = goal_handle
-        wrapped = self._await(
-            goal_handle.get_result_async(),
-            float(self._config['action_timeout_sec']),
-            f'trajectory timeout for {names}')
+        result_future = goal_handle.get_result_async()
+        deadline = time.monotonic() + float(self._config['action_timeout_sec'])
+        while not result_future.done():
+            if self._stop_requested.wait(0.05):
+                goal_handle.cancel_goal_async()
+                self._active_goal = None
+                raise RuntimeError('trajectory interrupted by latched safety stop')
+            if time.monotonic() >= deadline:
+                self._active_goal = None
+                raise TimeoutError(f'trajectory timeout for {names}')
+        exception = result_future.exception()
+        if exception is not None:
+            self._active_goal = None
+            raise RuntimeError(str(exception))
+        wrapped = result_future.result()
         self._active_goal = None
         if wrapped.status != GoalStatus.STATUS_SUCCEEDED:
             raise RuntimeError(
@@ -278,12 +387,15 @@ class PickPlaceNode(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = PickPlaceNode()
+    executor = MultiThreadedExecutor(num_threads=3)
+    executor.add_node(node)
     try:
-        rclpy.spin(node)
+        executor.spin()
     except KeyboardInterrupt:
         pass
     finally:
         try:
+            executor.shutdown()
             node.destroy_node()
             if rclpy.ok():
                 rclpy.shutdown()

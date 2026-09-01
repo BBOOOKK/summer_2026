@@ -20,6 +20,10 @@ pick_place:
     attach_service: /grasp/attach
     detach_service: /grasp/detach
     grasp_service_timeout_sec: 3.0
+    require_collision_monitor: true
+    collision_readiness_service: /collision_monitor/readiness
+    collision_reset_service: /collision_monitor/reset
+    collision_readiness_timeout_sec: 10.0
     log_directory: logs
 
     # A/B are expressed in base_link. Joint targets are calibrated teaching poses.
