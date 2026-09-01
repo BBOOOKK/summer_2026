@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -14,6 +14,7 @@ fi
 
 source /opt/ros/humble/setup.bash
 source "$WORKSPACE/install/setup.bash"
+set -u
 
 STAMP="$(date +%Y%m%d_%H%M%S)"
 LOG_DIR="${1:-$WORKSPACE/acceptance_logs/$STAMP}"
