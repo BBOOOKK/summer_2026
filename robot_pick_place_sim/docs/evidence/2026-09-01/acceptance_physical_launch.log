@@ -1,0 +1,366 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-01-02-50-12-373545-93f34fd7bf2a-57
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gzserver-1]: process started with pid [59]
+[INFO] [robot_state_publisher-2]: process started with pid [61]
+[INFO] [static_transform_publisher-3]: process started with pid [63]
+[INFO] [spawn_entity.py-4]: process started with pid [65]
+[static_transform_publisher-3] [INFO] [1788231012.905601166] [world_to_base]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.750000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'world' to 'base_footprint'
+[robot_state_publisher-2] [INFO] [1788231012.982259826] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-2] [INFO] [1788231012.983913411] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1788231012.983930946] [robot_state_publisher]: got segment left_finger
+[robot_state_publisher-2] [INFO] [1788231012.983936181] [robot_state_publisher]: got segment link1
+[robot_state_publisher-2] [INFO] [1788231012.983940182] [robot_state_publisher]: got segment link2
+[robot_state_publisher-2] [INFO] [1788231012.983943672] [robot_state_publisher]: got segment link3
+[robot_state_publisher-2] [INFO] [1788231012.983946822] [robot_state_publisher]: got segment link4
+[robot_state_publisher-2] [INFO] [1788231012.983950014] [robot_state_publisher]: got segment link5
+[robot_state_publisher-2] [INFO] [1788231012.983953121] [robot_state_publisher]: got segment link6
+[robot_state_publisher-2] [INFO] [1788231012.983956185] [robot_state_publisher]: got segment right_finger
+[robot_state_publisher-2] [INFO] [1788231012.983960654] [robot_state_publisher]: got segment tool0
+[spawn_entity.py-4] [INFO] [1788231013.228508427] [spawn_entity]: Spawn Entity started
+[spawn_entity.py-4] [INFO] [1788231013.231480571] [spawn_entity]: Loading entity published on topic robot_description
+[spawn_entity.py-4] [INFO] [1788231013.235647863] [spawn_entity]: Waiting for entity xml on robot_description
+[spawn_entity.py-4] [INFO] [1788231013.346285835] [spawn_entity]: Waiting for service /spawn_entity, timeout = 30
+[spawn_entity.py-4] [INFO] [1788231013.346582234] [spawn_entity]: Waiting for service /spawn_entity
+[gzserver-1] ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+[gzserver-1] ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+[gzserver-1] ALSA lib confmisc.c:1334:(snd_func_refer) error evaluating name
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+[gzserver-1] ALSA lib conf.c:5705:(snd_config_expand) Evaluate error: No such file or directory
+[gzserver-1] ALSA lib pcm.c:2664:(snd_pcm_open_noupdate) Unknown PCM default
+[gzserver-1] AL lib: (EE) ALCplaybackAlsa_open: Could not open playback device 'default': No such file or directory
+[gzserver-1] [INFO] [1788231013.670389531] [gazebo.gazebo_ros_state]: Publishing states of gazebo models at [/gazebo/model_states]
+[gzserver-1] [INFO] [1788231013.672290188] [gazebo.gazebo_ros_state]: Publishing states of gazebo links at [/gazebo/link_states]
+[spawn_entity.py-4] [INFO] [1788231013.857048951] [spawn_entity]: Calling service /spawn_entity
+[spawn_entity.py-4] [INFO] [1788231014.006821955] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [mecharm270]
+[gzserver-1] [INFO] [1788231014.018734513] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin
+[gzserver-1] [INFO] [1788231014.028321199] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in namespace: /
+[gzserver-1] [INFO] [1788231014.028397186] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in ros 2 node: gazebo_ros2_control
+[gzserver-1] [INFO] [1788231014.035440456] [gazebo_ros2_control]: connected to service!! robot_state_publisher
+[gzserver-1] [INFO] [1788231014.041664639] [gazebo_ros2_control]: Received urdf from param server, parsing...
+[gzserver-1] [INFO] [1788231014.042897803] [gazebo_ros2_control]: Loading parameter files /ws/install/robot_pick_place_sim/share/robot_pick_place_sim/config/controllers.yaml
+[gzserver-1] [INFO] [1788231014.063583931] [gazebo_ros2_control]: Loading joint: joint1
+[gzserver-1] [INFO] [1788231014.063718793] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.063786564] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.064169380] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.064476083] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.064663595] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.064686552] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067573943] [gazebo_ros2_control]: Loading joint: joint2
+[gzserver-1] [INFO] [1788231014.067600966] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.067608082] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067615918] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.067627058] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.067632691] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.067637138] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067712872] [gazebo_ros2_control]: Loading joint: joint3
+[gzserver-1] [INFO] [1788231014.067719945] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.067724308] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067728925] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.067734134] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.067738412] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.067742352] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067785682] [gazebo_ros2_control]: Loading joint: joint4
+[gzserver-1] [INFO] [1788231014.067793222] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.067798643] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067802752] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.067807707] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.067811816] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.067815501] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067853961] [gazebo_ros2_control]: Loading joint: joint5
+[gzserver-1] [INFO] [1788231014.067859594] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.067863660] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067872259] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.067877214] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.067881280] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.067885262] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067922451] [gazebo_ros2_control]: Loading joint: joint6
+[gzserver-1] [INFO] [1788231014.067927788] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.067931981] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067935708] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231014.067940071] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.067943968] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.067947526] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.067993398] [gazebo_ros2_control]: Loading joint: gripper_joint
+[gzserver-1] [INFO] [1788231014.067998735] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231014.068002674] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.068008392] [gazebo_ros2_control]: 			 found initial value: 0.032000
+[gzserver-1] [INFO] [1788231014.068178919] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231014.068199758] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231014.068204587] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231014.069344142] [resource_manager]: Initialize hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.070618815] [resource_manager]: Successful initialization of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.072108912] [resource_manager]: 'configure' hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.072167914] [resource_manager]: Successful 'configure' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.072232762] [resource_manager]: 'activate' hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.072263173] [resource_manager]: Successful 'activate' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231014.072369191] [gazebo_ros2_control]: Loading controller_manager
+[gzserver-1] [WARN] [1788231014.086832916] [gazebo_ros2_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gzserver-1] [INFO] [1788231014.087098702] [gazebo_ros2_control]: Loaded gazebo_ros2_control.
+[INFO] [spawn_entity.py-4]: process has finished cleanly [pid 65]
+[INFO] [spawner-5]: process started with pid [136]
+[INFO] [spawner-6]: process started with pid [138]
+[INFO] [spawner-7]: process started with pid [140]
+[gzserver-1] [INFO] [1788231016.237322751] [controller_manager]: Loading controller 'gripper_controller'
+[gzserver-1] [INFO] [1788231016.271353141] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-7] [INFO] [1788231016.282951406] [spawner_gripper_controller]: [94mLoaded [1mgripper_controller[0m
+[gzserver-1] [INFO] [1788231016.284368384] [controller_manager]: Loading controller 'arm_controller'
+[gzserver-1] [INFO] [1788231016.293991833] [controller_manager]: Configuring controller 'gripper_controller'
+[gzserver-1] [INFO] [1788231016.295557396] [gripper_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gzserver-1] [INFO] [1788231016.296124812] [gripper_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gzserver-1] [INFO] [1788231016.297108569] [gripper_controller]: Using 'splines' interpolation method.
+[gzserver-1] [INFO] [1788231016.300037137] [gripper_controller]: Controller state will be published at 50.00 Hz.
+[spawner-5] [INFO] [1788231016.300941559] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[gzserver-1] [INFO] [1788231016.309227070] [gripper_controller]: Action status changes will be monitored at 20.00 Hz.
+[spawner-6] [INFO] [1788231016.310702832] [spawner_arm_controller]: [94mLoaded [1marm_controller[0m
+[gzserver-1] [INFO] [1788231016.324522484] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[gzserver-1] [INFO] [1788231016.324762515] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[gzserver-1] [INFO] [1788231016.333934893] [controller_manager]: Configuring controller 'arm_controller'
+[gzserver-1] [INFO] [1788231016.334663596] [arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gzserver-1] [INFO] [1788231016.335000053] [arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gzserver-1] [INFO] [1788231016.335322627] [arm_controller]: Using 'splines' interpolation method.
+[gzserver-1] [INFO] [1788231016.336001788] [arm_controller]: Controller state will be published at 50.00 Hz.
+[gzserver-1] [INFO] [1788231016.337437882] [arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[spawner-7] [INFO] [1788231016.366900039] [spawner_gripper_controller]: [92mConfigured and activated [1mgripper_controller[0m
+[spawner-5] [INFO] [1788231016.379588277] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[spawner-6] [INFO] [1788231016.389438001] [spawner_arm_controller]: [92mConfigured and activated [1marm_controller[0m
+[INFO] [spawner-7]: process has finished cleanly [pid 140]
+[INFO] [spawner-5]: process has finished cleanly [pid 136]
+[INFO] [spawner-6]: process has finished cleanly [pid 138]
+[INFO] [object_manager-8]: process started with pid [181]
+[INFO] [pick_place_node-9]: process started with pid [183]
+[pick_place_node-9] [INFO] [1788231020.067155398] [pick_place]: [IDLE] ready; call /pick_place/start
+[pick_place_node-9] [INFO] [1788231053.581083254] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231053.583155206] [pick_place]: [OPEN_GRIPPER] executing
+[gzserver-1] [INFO] [1788231053.589459232] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231053.590282977] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231054.398931974] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231054.448975859] [pick_place]: [HOME] executing
+[gzserver-1] [INFO] [1788231054.450705056] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231054.450814653] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231056.466931875] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231056.504947749] [pick_place]: [ABOVE_PICK] executing
+[gzserver-1] [INFO] [1788231056.506149808] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231056.506270201] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231058.513063014] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231058.562478668] [pick_place]: [DESCEND_PICK] executing
+[gzserver-1] [INFO] [1788231058.563505056] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231058.563608149] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231060.576088470] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231060.619485950] [pick_place]: [GRASP] executing
+[gzserver-1] [INFO] [1788231060.620642028] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231060.620763797] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231061.428477911] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231061.474928833] [pick_place]: [LIFT_OBJECT] executing
+[gzserver-1] [INFO] [1788231061.476319153] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231061.476476148] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231063.480974689] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231063.530486933] [pick_place]: [ABOVE_PLACE] executing
+[gzserver-1] [INFO] [1788231063.531159269] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231063.531238684] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231065.572559793] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231065.586553745] [pick_place]: [DESCEND_PLACE] executing
+[gzserver-1] [INFO] [1788231065.588150502] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231065.588248884] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231067.596368276] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231067.643250456] [pick_place]: [RELEASE] executing
+[gzserver-1] [INFO] [1788231067.644142526] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231067.644247245] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231068.447382529] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231068.498489320] [pick_place]: [RETREAT] executing
+[gzserver-1] [INFO] [1788231068.499874137] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231068.499979648] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231070.511882348] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231070.553794168] [pick_place]: [RETURN_HOME] executing
+[gzserver-1] [INFO] [1788231070.554288832] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231070.554357241] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231072.564948160] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231072.609646665] [pick_place]: [SUCCEEDED] pick-and-place sequence completed
+[pick_place_node-9] [INFO] [1788231073.648348674] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231073.652036683] [pick_place]: [OPEN_GRIPPER] executing
+[gzserver-1] [INFO] [1788231073.653049690] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231073.653165289] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231074.459291485] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231074.506817194] [pick_place]: [HOME] executing
+[gzserver-1] [INFO] [1788231074.507806939] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231074.507926873] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231076.515413616] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231076.561109828] [pick_place]: [ABOVE_PICK] executing
+[gzserver-1] [INFO] [1788231076.561562638] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231076.561621375] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231078.568417273] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231078.615778983] [pick_place]: [DESCEND_PICK] executing
+[gzserver-1] [INFO] [1788231078.616964326] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231078.617125365] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231080.622498468] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231080.671073326] [pick_place]: [GRASP] executing
+[gzserver-1] [INFO] [1788231080.671768674] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231080.671859928] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231081.475089217] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231081.525138646] [pick_place]: [LIFT_OBJECT] executing
+[gzserver-1] [INFO] [1788231081.525947133] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231081.526041139] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231083.538867175] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231083.581125835] [pick_place]: [ABOVE_PLACE] executing
+[gzserver-1] [INFO] [1788231083.581894219] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231083.581994561] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231085.592286039] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231085.636648542] [pick_place]: [DESCEND_PLACE] executing
+[gzserver-1] [INFO] [1788231085.637517852] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231085.637611732] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231087.645425972] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231087.692602340] [pick_place]: [RELEASE] executing
+[gzserver-1] [INFO] [1788231087.693496912] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231087.693616555] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231088.497257008] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231088.547318360] [pick_place]: [RETREAT] executing
+[gzserver-1] [INFO] [1788231088.548583492] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231088.548705011] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231090.560372801] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231090.605084604] [pick_place]: [RETURN_HOME] executing
+[gzserver-1] [INFO] [1788231090.606340982] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231090.606485513] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231092.615962250] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231092.660776604] [pick_place]: [SUCCEEDED] pick-and-place sequence completed
+[pick_place_node-9] [INFO] [1788231093.670603516] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231093.671641618] [pick_place]: [OPEN_GRIPPER] executing
+[gzserver-1] [INFO] [1788231093.672649497] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231093.672768723] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231094.478239924] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231094.527920211] [pick_place]: [HOME] executing
+[gzserver-1] [INFO] [1788231094.529060989] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231094.529191679] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231096.542047063] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231096.583300221] [pick_place]: [ABOVE_PICK] executing
+[gzserver-1] [INFO] [1788231096.584519622] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231096.584639974] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231098.597101161] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231098.640662764] [pick_place]: [DESCEND_PICK] executing
+[gzserver-1] [INFO] [1788231098.641716666] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231098.641830181] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231100.667435229] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231100.697486455] [pick_place]: [GRASP] executing
+[gzserver-1] [INFO] [1788231100.698941099] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231100.699068412] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231101.507132493] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231101.551942512] [pick_place]: [LIFT_OBJECT] executing
+[gzserver-1] [INFO] [1788231101.552758628] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231101.552847130] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231103.562006209] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231103.608927866] [pick_place]: [ABOVE_PLACE] executing
+[gzserver-1] [INFO] [1788231103.609768828] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231103.609855038] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231105.616051427] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231105.663571592] [pick_place]: [DESCEND_PLACE] executing
+[gzserver-1] [INFO] [1788231105.664148256] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231105.664251724] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231107.667846105] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231107.718860141] [pick_place]: [RELEASE] executing
+[gzserver-1] [INFO] [1788231107.719477616] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231107.719546067] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231108.529057621] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231108.572785515] [pick_place]: [RETREAT] executing
+[gzserver-1] [INFO] [1788231108.573614805] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231108.573712562] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231110.581761377] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231110.627967677] [pick_place]: [RETURN_HOME] executing
+[gzserver-1] [INFO] [1788231110.628534961] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231110.628604371] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231112.635362249] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231112.682786783] [pick_place]: [SUCCEEDED] pick-and-place sequence completed
+[pick_place_node-9] [INFO] [1788231113.689335723] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231113.690542076] [pick_place]: [OPEN_GRIPPER] executing
+[gzserver-1] [INFO] [1788231113.691190233] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231113.691286281] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231114.496558883] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231114.543295865] [pick_place]: [HOME] executing
+[gzserver-1] [INFO] [1788231114.543794489] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231114.543870194] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231116.551645706] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231116.597596003] [pick_place]: [ABOVE_PICK] executing
+[gzserver-1] [INFO] [1788231116.598129269] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231116.598197345] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231118.604206432] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231118.651981391] [pick_place]: [DESCEND_PICK] executing
+[gzserver-1] [INFO] [1788231118.652679824] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231118.652757237] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231120.657456712] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231120.708292326] [pick_place]: [GRASP] executing
+[gzserver-1] [INFO] [1788231120.708963745] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231120.709068589] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231121.518900678] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231121.562240920] [pick_place]: [LIFT_OBJECT] executing
+[gzserver-1] [INFO] [1788231121.563415882] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231121.563592512] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231123.571648206] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231123.618869096] [pick_place]: [ABOVE_PLACE] executing
+[gzserver-1] [INFO] [1788231123.619747869] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231123.619835663] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231125.626983820] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231125.674838652] [pick_place]: [DESCEND_PLACE] executing
+[gzserver-1] [INFO] [1788231125.676221343] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231125.676306302] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231127.690769448] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231127.732679351] [pick_place]: [RELEASE] executing
+[gzserver-1] [INFO] [1788231127.733846476] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231127.733955697] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231128.542757188] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231128.586583632] [pick_place]: [RETREAT] executing
+[gzserver-1] [INFO] [1788231128.587139201] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231128.587205776] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231130.600269264] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231130.643807189] [pick_place]: [RETURN_HOME] executing
+[gzserver-1] [INFO] [1788231130.645001119] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231130.645164033] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231132.652787594] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231132.699000189] [pick_place]: [SUCCEEDED] pick-and-place sequence completed
+[pick_place_node-9] [INFO] [1788231133.706798462] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231133.709070181] [pick_place]: [OPEN_GRIPPER] executing
+[gzserver-1] [INFO] [1788231133.709958666] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231133.710100195] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231134.517614960] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231134.563627746] [pick_place]: [HOME] executing
+[gzserver-1] [INFO] [1788231134.564426437] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231134.564519150] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231136.571385041] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231136.618472698] [pick_place]: [ABOVE_PICK] executing
+[gzserver-1] [INFO] [1788231136.618910250] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231136.618972073] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231138.624552529] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231138.674352792] [pick_place]: [DESCEND_PICK] executing
+[gzserver-1] [INFO] [1788231138.675095246] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231138.675170200] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231140.690316104] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231140.732875623] [pick_place]: [GRASP] executing
+[gzserver-1] [INFO] [1788231140.733797167] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231140.733901219] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231141.541816600] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231141.587003808] [pick_place]: [LIFT_OBJECT] executing
+[gzserver-1] [INFO] [1788231141.588111903] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231141.588223459] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231143.596976293] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231143.641896241] [pick_place]: [ABOVE_PLACE] executing
+[gzserver-1] [INFO] [1788231143.642594841] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231143.642737037] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231145.651089254] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231145.696146563] [pick_place]: [DESCEND_PLACE] executing
+[gzserver-1] [INFO] [1788231145.696717681] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231145.696781463] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231147.704176702] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231147.751891214] [pick_place]: [RELEASE] executing
+[gzserver-1] [INFO] [1788231147.752979716] [gripper_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231147.753229674] [gripper_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231148.556151185] [gripper_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231148.609070131] [pick_place]: [RETREAT] executing
+[gzserver-1] [INFO] [1788231148.610090808] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231148.610208450] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231150.621072297] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231150.666489119] [pick_place]: [RETURN_HOME] executing
+[gzserver-1] [INFO] [1788231150.667363390] [arm_controller]: Received new action goal
+[gzserver-1] [INFO] [1788231150.667476321] [arm_controller]: Accepted new action goal
+[gzserver-1] [INFO] [1788231152.677069366] [arm_controller]: Goal reached, success!
+[pick_place_node-9] [INFO] [1788231152.721373132] [pick_place]: [SUCCEEDED] pick-and-place sequence completed

@@ -1,0 +1,63 @@
+{
+  "time": "2026-09-01T02:52:33+0000",
+  "required_runs": 5,
+  "succeeded": 5,
+  "passed": true,
+  "runs": [
+    {
+      "run": 1,
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "duration_sec": 19.05,
+      "object_position_world": [
+        0.2044,
+        -0.135,
+        0.7675
+      ]
+    },
+    {
+      "run": 2,
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "duration_sec": 19.02,
+      "object_position_world": [
+        0.2044,
+        -0.135,
+        0.7675
+      ]
+    },
+    {
+      "run": 3,
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "duration_sec": 19.018,
+      "object_position_world": [
+        0.2044,
+        -0.135,
+        0.7675
+      ]
+    },
+    {
+      "run": 4,
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "duration_sec": 19.014,
+      "object_position_world": [
+        0.2044,
+        -0.135,
+        0.7675
+      ]
+    },
+    {
+      "run": 5,
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "duration_sec": 19.021,
+      "object_position_world": [
+        0.2044,
+        -0.135,
+        0.7675
+      ]
+    }
+  ]
+}

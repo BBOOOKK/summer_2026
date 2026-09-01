@@ -1,0 +1,1 @@
+{"time": "2026-09-01T02:56:12+0000", "run_id": "20260901_025607_e57034", "result": "FAILED", "detail": "trajectory failed for ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']; action status=5", "duration_sec": 5.41, "trajectory": "/ws/anomaly_operator_stop_20260901/trajectory_20260901_025607_e57034.csv"}

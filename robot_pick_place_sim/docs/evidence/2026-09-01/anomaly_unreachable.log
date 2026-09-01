@@ -1,0 +1,139 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-01-02-54-03-255951-93f34fd7bf2a-59
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gzserver-1]: process started with pid [61]
+[INFO] [robot_state_publisher-2]: process started with pid [63]
+[INFO] [static_transform_publisher-3]: process started with pid [65]
+[INFO] [spawn_entity.py-4]: process started with pid [67]
+[static_transform_publisher-3] [INFO] [1788231243.908922397] [world_to_base]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.750000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'world' to 'base_footprint'
+[robot_state_publisher-2] [INFO] [1788231244.023224394] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-2] [INFO] [1788231244.026492152] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1788231244.026604625] [robot_state_publisher]: got segment left_finger
+[robot_state_publisher-2] [INFO] [1788231244.026625886] [robot_state_publisher]: got segment link1
+[robot_state_publisher-2] [INFO] [1788231244.026634890] [robot_state_publisher]: got segment link2
+[robot_state_publisher-2] [INFO] [1788231244.026644103] [robot_state_publisher]: got segment link3
+[robot_state_publisher-2] [INFO] [1788231244.026663029] [robot_state_publisher]: got segment link4
+[robot_state_publisher-2] [INFO] [1788231244.026671700] [robot_state_publisher]: got segment link5
+[robot_state_publisher-2] [INFO] [1788231244.026679746] [robot_state_publisher]: got segment link6
+[robot_state_publisher-2] [INFO] [1788231244.026687875] [robot_state_publisher]: got segment right_finger
+[robot_state_publisher-2] [INFO] [1788231244.026699506] [robot_state_publisher]: got segment tool0
+[spawn_entity.py-4] [INFO] [1788231244.361062104] [spawn_entity]: Spawn Entity started
+[spawn_entity.py-4] [INFO] [1788231244.363061228] [spawn_entity]: Loading entity published on topic robot_description
+[spawn_entity.py-4] [INFO] [1788231244.369426200] [spawn_entity]: Waiting for entity xml on robot_description
+[spawn_entity.py-4] [INFO] [1788231244.392576770] [spawn_entity]: Waiting for service /spawn_entity, timeout = 30
+[spawn_entity.py-4] [INFO] [1788231244.392905142] [spawn_entity]: Waiting for service /spawn_entity
+[gzserver-1] ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+[gzserver-1] ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+[gzserver-1] ALSA lib confmisc.c:1334:(snd_func_refer) error evaluating name
+[gzserver-1] ALSA lib conf.c:5182:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+[gzserver-1] ALSA lib conf.c:5705:(snd_config_expand) Evaluate error: No such file or directory
+[gzserver-1] ALSA lib pcm.c:2664:(snd_pcm_open_noupdate) Unknown PCM default
+[gzserver-1] AL lib: (EE) ALCplaybackAlsa_open: Could not open playback device 'default': No such file or directory
+[gzserver-1] [INFO] [1788231244.738697786] [gazebo.gazebo_ros_state]: Publishing states of gazebo models at [/gazebo/model_states]
+[gzserver-1] [INFO] [1788231244.741047502] [gazebo.gazebo_ros_state]: Publishing states of gazebo links at [/gazebo/link_states]
+[spawn_entity.py-4] [INFO] [1788231244.905967546] [spawn_entity]: Calling service /spawn_entity
+[spawn_entity.py-4] [INFO] [1788231245.111431882] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [mecharm270]
+[gzserver-1] [INFO] [1788231245.132360721] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin
+[gzserver-1] [INFO] [1788231245.147504297] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in namespace: /
+[gzserver-1] [INFO] [1788231245.147730896] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in ros 2 node: gazebo_ros2_control
+[gzserver-1] [INFO] [1788231245.165573288] [gazebo_ros2_control]: connected to service!! robot_state_publisher
+[gzserver-1] [INFO] [1788231245.173502167] [gazebo_ros2_control]: Received urdf from param server, parsing...
+[gzserver-1] [INFO] [1788231245.175160634] [gazebo_ros2_control]: Loading parameter files /ws/install/robot_pick_place_sim/share/robot_pick_place_sim/config/controllers.yaml
+[gzserver-1] [INFO] [1788231245.206527004] [gazebo_ros2_control]: Loading joint: joint1
+[gzserver-1] [INFO] [1788231245.206947954] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.207133846] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.207533993] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.207759824] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.207947468] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.207957121] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.211717685] [gazebo_ros2_control]: Loading joint: joint2
+[gzserver-1] [INFO] [1788231245.211815287] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.211825752] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.211839592] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.211862487] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.211876070] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.211881153] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212295780] [gazebo_ros2_control]: Loading joint: joint3
+[gzserver-1] [INFO] [1788231245.212320811] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.212326107] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212331361] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.212339434] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.212344047] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.212348276] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212406453] [gazebo_ros2_control]: Loading joint: joint4
+[gzserver-1] [INFO] [1788231245.212414825] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.212420890] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212425076] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.212430458] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.212434388] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.212438660] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212481075] [gazebo_ros2_control]: Loading joint: joint5
+[gzserver-1] [INFO] [1788231245.212486927] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.212494530] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212544249] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.212586024] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.212591918] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.212595805] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212643133] [gazebo_ros2_control]: Loading joint: joint6
+[gzserver-1] [INFO] [1788231245.212648643] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.212653000] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212657143] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1788231245.212662055] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.212727408] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.212746800] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212787550] [gazebo_ros2_control]: Loading joint: gripper_joint
+[gzserver-1] [INFO] [1788231245.212793273] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1788231245.212797758] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.212804422] [gazebo_ros2_control]: 			 found initial value: 0.032000
+[gzserver-1] [INFO] [1788231245.213036830] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1788231245.213109658] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1788231245.213117005] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1788231245.214941673] [resource_manager]: Initialize hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.217439262] [resource_manager]: Successful initialization of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.219257822] [resource_manager]: 'configure' hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.219389083] [resource_manager]: Successful 'configure' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.219448413] [resource_manager]: 'activate' hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.219484507] [resource_manager]: Successful 'activate' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1788231245.219661216] [gazebo_ros2_control]: Loading controller_manager
+[gzserver-1] [WARN] [1788231245.241094767] [gazebo_ros2_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gzserver-1] [INFO] [1788231245.241444212] [gazebo_ros2_control]: Loaded gazebo_ros2_control.
+[INFO] [spawn_entity.py-4]: process has finished cleanly [pid 67]
+[INFO] [spawner-5]: process started with pid [144]
+[INFO] [spawner-6]: process started with pid [146]
+[INFO] [spawner-7]: process started with pid [148]
+[gzserver-1] [INFO] [1788231247.452745670] [controller_manager]: Loading controller 'gripper_controller'
+[gzserver-1] [INFO] [1788231247.525602457] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-7] [INFO] [1788231247.538984366] [spawner_gripper_controller]: [94mLoaded [1mgripper_controller[0m
+[gzserver-1] [INFO] [1788231247.550222164] [controller_manager]: Loading controller 'arm_controller'
+[gzserver-1] [INFO] [1788231247.568720148] [controller_manager]: Configuring controller 'gripper_controller'
+[gzserver-1] [INFO] [1788231247.571189182] [gripper_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gzserver-1] [INFO] [1788231247.571948738] [gripper_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gzserver-1] [INFO] [1788231247.572441645] [gripper_controller]: Using 'splines' interpolation method.
+[spawner-5] [INFO] [1788231247.573475920] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[gzserver-1] [INFO] [1788231247.576652055] [gripper_controller]: Controller state will be published at 50.00 Hz.
+[gzserver-1] [INFO] [1788231247.588589054] [gripper_controller]: Action status changes will be monitored at 20.00 Hz.
+[spawner-6] [INFO] [1788231247.589585102] [spawner_arm_controller]: [94mLoaded [1marm_controller[0m
+[gzserver-1] [INFO] [1788231247.608231319] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[gzserver-1] [INFO] [1788231247.608944239] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[gzserver-1] [INFO] [1788231247.618696650] [controller_manager]: Configuring controller 'arm_controller'
+[gzserver-1] [INFO] [1788231247.619242861] [arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gzserver-1] [INFO] [1788231247.619287246] [arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gzserver-1] [INFO] [1788231247.619344075] [arm_controller]: Using 'splines' interpolation method.
+[gzserver-1] [INFO] [1788231247.620106647] [arm_controller]: Controller state will be published at 50.00 Hz.
+[gzserver-1] [INFO] [1788231247.622234065] [arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[spawner-7] [INFO] [1788231247.660628987] [spawner_gripper_controller]: [92mConfigured and activated [1mgripper_controller[0m
+[spawner-5] [INFO] [1788231247.672391590] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[spawner-6] [INFO] [1788231247.688989007] [spawner_arm_controller]: [92mConfigured and activated [1marm_controller[0m
+[INFO] [spawner-7]: process has finished cleanly [pid 148]
+[INFO] [spawner-5]: process has finished cleanly [pid 144]
+[INFO] [spawner-6]: process has finished cleanly [pid 146]
+[INFO] [object_manager-8]: process started with pid [197]
+[INFO] [pick_place_node-9]: process started with pid [199]
+[pick_place_node-9] [INFO] [1788231251.489701047] [pick_place]: [IDLE] ready; call /pick_place/start
+[pick_place_node-9] [INFO] [1788231251.505120838] [pick_place]: [VALIDATING] checking reach and joint limits
+[pick_place_node-9] [INFO] [1788231251.511161955] [pick_place]: [SAFE_STOP] pick_point_xyz: unreachable radius 0.800 m; allowed [0.080, 0.380] m
+[pick_place_node-9] [ERROR] [1788231251.511949580] [pick_place]: pick_point_xyz: unreachable radius 0.800 m; allowed [0.080, 0.380] m

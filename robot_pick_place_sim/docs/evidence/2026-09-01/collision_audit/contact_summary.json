@@ -1,0 +1,27 @@
+{
+  "time": "2026-09-01T02:59:11+0000",
+  "gazebo_run_id": "20260901_025852_6fa313",
+  "capture_duration_sec": 28,
+  "raw_contact_stream": {
+    "container_path": "/ws/collision_audit_20260901/contacts.txt",
+    "size_bytes": 139003842,
+    "line_count": 7079568,
+    "sha256": "cb2df2f39f0189fa345bc579ffab3fcde24b7251e916c878e0fba8473b4bbd43",
+    "committed_to_git": false
+  },
+  "contact_messages": 29292,
+  "allowed_pairs": [
+    {
+      "collision1": "target_object::object::collision",
+      "collision2": "work_table::table::collision",
+      "count": 15437
+    },
+    {
+      "collision1": "mecharm270::base_footprint::base_footprint_fixed_joint_lump__base_link_collision",
+      "collision2": "work_table::table::collision",
+      "count": 13855
+    }
+  ],
+  "unexpected_pairs": [],
+  "passed": true
+}

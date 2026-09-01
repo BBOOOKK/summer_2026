@@ -88,3 +88,14 @@ ros2 launch robot_pick_place_sim simulation.launch.py \
 - `acceptance_summary.json`：5 次验收汇总。
 
 不要把未实际运行的记录填写为成功；视频、日志和报告中的运行编号应一致。
+
+## 6. 从真实轨迹生成演示视频
+
+```bash
+sudo apt install -y python3-pil ffmpeg
+python3 scripts/render_trajectory_video.py \
+  --input acceptance_logs/trajectory_<run_id>.csv \
+  --output acceptance_logs/demo_<run_id>.mp4
+```
+
+回放画面会明确标注其数据来源为 Gazebo `/joint_states`，不应描述成 Gazebo GUI 录屏。

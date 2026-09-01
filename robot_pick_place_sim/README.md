@@ -26,6 +26,8 @@ ros2 launch robot_pick_place_sim simulation.launch.py
 
 默认等待控制器就绪后自动执行一次。完整依赖、手动运行、连续 5 次验收和异常注入见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)，实验记录见 [docs/SIMULATION_REPORT.md](docs/SIMULATION_REPORT.md)。
 
+2026-09-01 动态验收结果为 5/5，包含物理落点检查、碰撞接触审计、四类异常和真实轨迹回放视频；见 [docs/DYNAMIC_QA.md](docs/DYNAMIC_QA.md)。
+
 非 ROS 主机可执行：
 
 ```bash
