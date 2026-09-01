@@ -1,0 +1,4 @@
+robot_grasp_joint is adapted from the contact-gated detachable grasp-joint
+implementation contained in the user-provided mecharm_pick_place_ws reference
+archive.  The adapted package retains the Apache-2.0 license declaration and
+uses project-specific model, link, collision, and service names.

@@ -48,17 +48,9 @@ def generate_launch_description():
                 'use_sim_time': use_sim_time,
             }]),
         Node(
-            package='tf2_ros', executable='static_transform_publisher',
-            name='world_to_base',
-            arguments=[
-                '--x', '0', '--y', '0', '--z', '0.75',
-                '--roll', '0', '--pitch', '0', '--yaw', '0',
-                '--frame-id', 'world', '--child-frame-id', 'base_footprint',
-            ]),
-        Node(
             package='gazebo_ros', executable='spawn_entity.py',
             arguments=['-entity', 'mecharm270', '-topic', 'robot_description',
-                       '-x', '0', '-y', '0', '-z', '0.75'],
+                       '-x', '0', '-y', '0', '-z', '0'],
             output='screen'),
         TimerAction(period=3.0, actions=[
             Node(package='controller_manager', executable='spawner',
@@ -77,7 +69,10 @@ def generate_launch_description():
         TimerAction(period=7.0, actions=[
             Node(package='robot_pick_place_sim', executable='object_manager',
                  name='object_manager', output='screen',
-                 parameters=[{'use_sim_time': use_sim_time}]),
+                 parameters=[{
+                     'use_sim_time': use_sim_time,
+                     'log_directory': log_directory,
+                 }]),
             Node(package='robot_pick_place_sim', executable='pick_place_node',
                  name='pick_place', output='screen',
                  parameters=[task_config, {

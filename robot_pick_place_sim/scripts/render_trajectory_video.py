@@ -12,7 +12,9 @@ import tempfile
 from PIL import Image, ImageDraw, ImageFont
 
 
-JOINTS = [f'joint{i}' for i in range(1, 7)] + ['gripper_joint']
+JOINTS = [f'joint{i}' for i in range(1, 7)] + [
+    'left_finger_joint', 'right_finger_joint', 'gripper_joint',
+]
 POSES = {
     'HOME': [0.0] * 6,
     'ABOVE A': [0.499, -0.418, 2.196, 0.0, 0.0, -0.499],

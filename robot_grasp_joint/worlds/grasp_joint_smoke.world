@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <world name="grasp_joint_smoke">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="ode_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <include><uri>model://ground_plane</uri></include>
+
+    <model name="test_fixture">
+      <static>true</static>
+      <pose>0 0 1 0 0 0</pose>
+      <link name="palm">
+        <visual name="visual">
+          <geometry><box><size>0.08 0.08 0.08</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="test_payload">
+      <pose>0 0 0.80 0 0 0</pose>
+      <link name="payload_link">
+        <inertial>
+          <mass>0.08</mass>
+          <inertia>
+            <ixx>0.0000333</ixx><iyy>0.0000333</iyy><izz>0.0000333</izz>
+          </inertia>
+        </inertial>
+        <collision name="payload_collision">
+          <geometry><box><size>0.05 0.05 0.05</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.05 0.05 0.05</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="grasp_joint_smoke_carrier">
+      <static>true</static>
+      <pose>0 0 -10 0 0 0</pose>
+      <link name="carrier_link"/>
+      <plugin name="grasp_joint_smoke_plugin" filename="librobot_grasp_joint.so">
+        <ros><namespace>/</namespace></ros>
+        <robot_model>test_fixture</robot_model>
+        <parent_link>palm</parent_link>
+        <target_model>test_payload</target_model>
+        <target_link>payload_link</target_link>
+        <joint_name>smoke_fixed_joint</joint_name>
+        <require_bilateral_contact>false</require_bilateral_contact>
+        <max_attach_distance>0.30</max_attach_distance>
+        <auto_attach>true</auto_attach>
+        <attach_service>/grasp/attach</attach_service>
+        <detach_service>/grasp/detach</detach_service>
+        <status_service>/grasp/status</status_service>
+        <state_topic>/grasp/state</state_topic>
+      </plugin>
+    </model>
+
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros><namespace>/gazebo</namespace></ros>
+      <update_rate>50.0</update_rate>
+    </plugin>
+  </world>
+</sdf>

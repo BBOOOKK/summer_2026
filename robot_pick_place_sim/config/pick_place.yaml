@@ -14,17 +14,23 @@ pick_place:
     table_z_m: 0.0
     object_height_m: 0.04
     gripper_open_rad: 0.032
-    gripper_closed_rad: 0.006
+    # Symmetric inner gap is 2*q; 0.0165 gives 1 mm total preload on 35 mm cube.
+    gripper_closed_rad: 0.0165
+    attachment_mode: service
+    attach_service: /grasp/attach
+    detach_service: /grasp/detach
+    grasp_service_timeout_sec: 3.0
     log_directory: logs
 
     # A/B are expressed in base_link. Joint targets are calibrated teaching poses.
     pick_point_xyz: [0.22, 0.12, 0.02]
     place_point_xyz: [0.20, -0.16, 0.02]
     home_joints: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    pick_above_joints: [0.499, -0.418, 2.196, 0.0, 0.0, -0.499]
-    pick_joints: [0.499, 0.072, 2.178, 0.0, 0.0, -0.499]
-    place_above_joints: [-0.675, -0.367, 2.154, 0.0, 0.0, 0.675]
-    place_joints: [-0.675, 0.112, 2.136, 0.0, 0.0, 0.675]
+    # The fixed gripper mount compensates the 2.25 rad nominal wrist pitch.
+    pick_above_joints: [0.499, -0.418, 2.196, 0.0, 0.0, 0.0]
+    pick_joints: [0.499, 0.072, 2.178, 0.0, 0.0, 0.0]
+    place_above_joints: [-0.675, -0.367, 2.154, 0.0, 0.0, 0.0]
+    place_joints: [-0.675, 0.112, 2.136, 0.0, 0.0, 0.0]
 
     joint_lower_limits: [-2.88, -2.05, -2.88, -2.05, -2.88, -3.14]
     joint_upper_limits: [2.88, 2.05, 2.88, 2.05, 2.88, 3.14]

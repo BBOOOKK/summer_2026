@@ -4,18 +4,21 @@
 
 ## 已实现
 
-- 6 关节机械臂、平行夹爪、桌面、目标物和放置区；
+- 6 关节机械臂、双指对称平行夹爪、固定底座、桌面、A/B 标记与目标物；
 - 回零 → A 点上方 → 下降 → 夹取 → 抬升 → B 点上方 → 下降 → 释放 → 抬升 → 回零；
 - 单一 `simulation.launch.py` 启动 Gazebo、模型、控制器、状态和任务节点；
 - 不可达、缺少示教/逆解、关节超限、Action 超时/拒绝、人工停止的安全停止；
 - `/joint_states` 轨迹 CSV、每次执行结果 JSONL、错误 JSONL；
 - 自动连续 5 次验收及 `acceptance_summary.json`。
+- 左右指新鲜接触门控的 Gazebo 可拆 `fixed joint`；运输期间目标物位姿写入为 0；
+- 每轮独立记录目标物的位置、姿态和速度轨迹。
 
 ## Ubuntu 22.04 快速启动
 
 ```bash
 mkdir -p ~/robot_ws/src
 cp -r robot_pick_place_sim ~/robot_ws/src/
+cp -r robot_grasp_joint ~/robot_ws/src/
 cd ~/robot_ws
 source /opt/ros/humble/setup.bash
 rosdep install --from-paths src --ignore-src -r -y
@@ -27,6 +30,8 @@ ros2 launch robot_pick_place_sim simulation.launch.py
 默认等待控制器就绪后自动执行一次。完整依赖、手动运行、连续 5 次验收和异常注入见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)，实验记录见 [docs/SIMULATION_REPORT.md](docs/SIMULATION_REPORT.md)。
 
 2026-09-01 动态验收结果为 5/5，包含物理落点检查、碰撞接触审计、四类异常和真实轨迹回放视频；见 [docs/DYNAMIC_QA.md](docs/DYNAMIC_QA.md)。
+
+> 注意：上述 5/5 是旧版位姿跟随机制的历史证据，不再作为当前物理抓取版本的最终验收依据。新版权威 5 轮证据必须在运行时碰撞闭环和自动分析器完成后重新生成。
 
 非 ROS 主机可执行：
 

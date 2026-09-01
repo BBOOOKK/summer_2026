@@ -23,7 +23,7 @@ arm_controller:
 
 gripper_controller:
   ros__parameters:
-    joints: [gripper_joint]
+    joints: [left_finger_joint, right_finger_joint]
     command_interfaces: [position]
     state_interfaces: [position, velocity]
     state_publish_rate: 50.0

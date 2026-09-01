@@ -1,86 +1,137 @@
-"""Deterministic Gazebo object reset and grasp following for the teaching demo."""
+"""Reset and independently record the Gazebo target object.
 
+The node deliberately never writes the object pose during transport.  A single
+``SetEntityState`` call is allowed at the beginning of each run to restore the
+repeatable A-point initial condition; physical carrying is owned by the
+contact-gated detachable-joint plugin.
+"""
+
+import csv
 import json
+from pathlib import Path
+import time
 
 from gazebo_msgs.msg import EntityState
-from gazebo_msgs.srv import SetEntityState
+from gazebo_msgs.srv import GetEntityState, SetEntityState
 import rclpy
 from rclpy.node import Node
-from rclpy.time import Time
-from std_msgs.msg import Bool, String
-from tf2_ros import Buffer, TransformException, TransformListener
+from std_msgs.msg import String
 
 
 class ObjectManager(Node):
-    """Reset the cube at A and make it follow tool0 while grasped."""
+    """Reset the cube once per run and log its measured world trajectory."""
 
     def __init__(self):
         super().__init__('object_manager')
         self.declare_parameter('entity_name', 'target_object')
-        self.declare_parameter('tool_frame', 'tool0')
         self.declare_parameter('world_frame', 'world')
         self.declare_parameter('initial_pose', [0.22, 0.12, 0.77])
-        self.declare_parameter('grasp_offset_z', -0.07)
+        self.declare_parameter('sample_rate_hz', 50.0)
+        self.declare_parameter('log_directory', 'logs')
         self._entity = self.get_parameter('entity_name').value
-        self._tool = self.get_parameter('tool_frame').value
         self._world = self.get_parameter('world_frame').value
         self._initial = self.get_parameter('initial_pose').value
-        self._offset_z = float(self.get_parameter('grasp_offset_z').value)
-        self._grasped = False
-        self._tf_buffer = Buffer()
-        self._tf_listener = TransformListener(self._tf_buffer, self)
-        self._set_state = self.create_client(SetEntityState, '/gazebo/set_entity_state')
-        self.create_subscription(Bool, '/pick_place/grasped', self._grasp, 10)
-        self.create_subscription(String, '/pick_place/state', self._task_state, 10)
-        self.create_timer(0.05, self._follow)
-
-    def _grasp(self, message):
-        self._grasped = message.data
+        self._log_dir = Path(
+            str(self.get_parameter('log_directory').value)).expanduser()
+        self._log_dir.mkdir(parents=True, exist_ok=True)
+        self._set_state = self.create_client(
+            SetEntityState, '/gazebo/set_entity_state')
+        self._get_state = self.create_client(
+            GetEntityState, '/gazebo/get_entity_state')
+        self._status_pub = self.create_publisher(
+            String, '/object_manager/state', 10)
+        self.create_subscription(
+            String, '/pick_place/state', self._task_state, 20)
+        self._stage = 'IDLE'
+        self._run_id = ''
+        self._trajectory_path = None
+        self._query_pending = False
+        self._reset_writes = 0
+        self._transport_writes = 0
+        rate = max(1.0, float(self.get_parameter('sample_rate_hz').value))
+        self.create_timer(1.0 / rate, self._sample)
 
     def _task_state(self, message):
         try:
-            state = json.loads(message.data).get('state')
+            payload = json.loads(message.data)
         except (json.JSONDecodeError, AttributeError):
             return
-        if state == 'VALIDATING':
-            self._grasped = False
-            self._place(self._initial[0], self._initial[1], self._initial[2])
+        self._stage = str(payload.get('state', 'UNKNOWN'))
+        run_id = str(payload.get('run_id', ''))
+        if self._stage == 'VALIDATING' and run_id and run_id != self._run_id:
+            self._run_id = run_id
+            self._trajectory_path = (
+                self._log_dir / f'object_trajectory_{run_id}.csv')
+            with self._trajectory_path.open(
+                    'w', newline='', encoding='utf-8') as stream:
+                csv.writer(stream).writerow([
+                    'wall_time', 'ros_time', 'run_id', 'stage',
+                    'x', 'y', 'z', 'qx', 'qy', 'qz', 'qw',
+                    'vx', 'vy', 'vz',
+                ])
+            self._reset_once()
 
-    def _follow(self):
-        if not self._grasped or not self._set_state.service_is_ready():
-            return
-        try:
-            transform = self._tf_buffer.lookup_transform(
-                self._world, self._tool, Time())
-        except TransformException as exc:
-            self.get_logger().warning(
-                f'waiting for {self._world}->{self._tool}: {exc}',
-                throttle_duration_sec=2.0)
-            return
-        translation = transform.transform.translation
-        rotation = transform.transform.rotation
-        self._place(
-            translation.x, translation.y, translation.z + self._offset_z,
-            (rotation.x, rotation.y, rotation.z, rotation.w))
-
-    def _place(self, x, y, z, quaternion=(0.0, 0.0, 0.0, 1.0)):
+    def _reset_once(self):
         if not self._set_state.service_is_ready():
+            self.get_logger().error('Gazebo SetEntityState is unavailable')
             return
         request = SetEntityState.Request()
         request.state = EntityState()
         request.state.name = self._entity
         request.state.reference_frame = self._world
-        request.state.pose.position.x = float(x)
-        request.state.pose.position.y = float(y)
-        request.state.pose.position.z = float(z)
-        request.state.pose.orientation.x = float(quaternion[0])
-        request.state.pose.orientation.y = float(quaternion[1])
-        request.state.pose.orientation.z = float(quaternion[2])
-        request.state.pose.orientation.w = float(quaternion[3])
-        request.state.twist.linear.x = 0.0
-        request.state.twist.linear.y = 0.0
-        request.state.twist.linear.z = 0.0
-        self._set_state.call_async(request)
+        request.state.pose.position.x = float(self._initial[0])
+        request.state.pose.position.y = float(self._initial[1])
+        request.state.pose.position.z = float(self._initial[2])
+        request.state.pose.orientation.w = 1.0
+        self._reset_writes += 1
+        future = self._set_state.call_async(request)
+        future.add_done_callback(self._reset_complete)
+
+    def _reset_complete(self, future):
+        response = future.result()
+        ok = response is not None and response.success
+        payload = {
+            'time': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
+            'run_id': self._run_id,
+            'event': 'RESET_AT_A',
+            'success': ok,
+            'reset_writes': self._reset_writes,
+            'transport_set_state_writes': self._transport_writes,
+        }
+        self._status_pub.publish(String(data=json.dumps(payload)))
+        if not ok:
+            self.get_logger().error('failed to reset target object at A')
+
+    def _sample(self):
+        if not self._run_id or self._trajectory_path is None:
+            return
+        if self._query_pending or not self._get_state.service_is_ready():
+            return
+        request = GetEntityState.Request()
+        request.name = self._entity
+        request.reference_frame = self._world
+        self._query_pending = True
+        future = self._get_state.call_async(request)
+        future.add_done_callback(self._sample_complete)
+
+    def _sample_complete(self, future):
+        self._query_pending = False
+        response = future.result()
+        if response is None or not response.success or self._trajectory_path is None:
+            return
+        pose = response.state.pose
+        twist = response.state.twist
+        with self._trajectory_path.open(
+                'a', newline='', encoding='utf-8') as stream:
+            csv.writer(stream).writerow([
+                f'{time.time():.6f}',
+                f'{self.get_clock().now().nanoseconds / 1e9:.6f}',
+                self._run_id, self._stage,
+                pose.position.x, pose.position.y, pose.position.z,
+                pose.orientation.x, pose.orientation.y,
+                pose.orientation.z, pose.orientation.w,
+                twist.linear.x, twist.linear.y, twist.linear.z,
+            ])
 
 
 def main(args=None):
@@ -91,12 +142,9 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-        try:
-            node.destroy_node()
-            if rclpy.ok():
-                rclpy.shutdown()
-        except KeyboardInterrupt:
-            pass
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

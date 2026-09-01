@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="grasp_plugin_carrier">
+    <static>true</static>
+    <pose>0 0 -10 0 0 0</pose>
+    <link name="carrier_link"/>
+    <plugin name="robot_grasp_joint" filename="librobot_grasp_joint.so">
+      <ros>
+        <namespace>/</namespace>
+      </ros>
+      <robot_model>mecharm270</robot_model>
+      <parent_link>tool0</parent_link>
+      <target_model>target_object</target_model>
+      <target_link>object</target_link>
+      <joint_name>physical_grasp_joint</joint_name>
+      <contact_topic>/gazebo/contacts/target</contact_topic>
+      <target_collision_token>target_object::</target_collision_token>
+      <left_finger_collision_token>left_finger::</left_finger_collision_token>
+      <right_finger_collision_token>right_finger::</right_finger_collision_token>
+      <require_bilateral_contact>true</require_bilateral_contact>
+      <contact_timeout>0.35</contact_timeout>
+      <max_attach_distance>0.10</max_attach_distance>
+      <command_timeout>1.0</command_timeout>
+      <attach_service>/grasp/attach</attach_service>
+      <detach_service>/grasp/detach</detach_service>
+      <status_service>/grasp/status</status_service>
+      <state_topic>/grasp/state</state_topic>
+    </plugin>
+  </model>
+</sdf>

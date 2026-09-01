@@ -36,14 +36,22 @@ class PickPlaceNode(Node):
             'safe_height_m': 0.12, 'reach_min_m': 0.08,
             'reach_max_m': 0.38, 'table_z_m': 0.0,
             'object_height_m': 0.04, 'gripper_open_rad': 0.032,
-            'gripper_closed_rad': 0.006, 'log_directory': 'logs',
+            'gripper_closed_rad': 0.0165, 'log_directory': 'logs',
+            'attachment_mode': 'service',
+            'attach_service': '/grasp/attach',
+            'detach_service': '/grasp/detach',
+            'grasp_service_timeout_sec': 3.0,
             'pick_point_xyz': [0.22, 0.12, 0.02],
             'place_point_xyz': [0.20, -0.16, 0.02],
             'home_joints': [0.0] * 6,
-            'pick_above_joints': [0.499, -0.418, 2.196, 0.0, 0.0, -0.499],
-            'pick_joints': [0.499, 0.072, 2.178, 0.0, 0.0, -0.499],
-            'place_above_joints': [-0.675, -0.367, 2.154, 0.0, 0.0, 0.675],
-            'place_joints': [-0.675, 0.112, 2.136, 0.0, 0.0, 0.675],
+            'pick_above_joints': [
+                0.499, -0.418, 2.196, 0.0, 0.0, 0.0],
+            'pick_joints': [
+                0.499, 0.072, 2.178, 0.0, 0.0, 0.0],
+            'place_above_joints': [
+                -0.675, -0.367, 2.154, 0.0, 0.0, 0.0],
+            'place_joints': [
+                -0.675, 0.112, 2.136, 0.0, 0.0, 0.0],
             'joint_lower_limits': [-2.88, -2.05, -2.88, -2.05, -2.88, -3.14],
             'joint_upper_limits': [2.88, 2.05, 2.88, 2.05, 2.88, 3.14],
         }
@@ -56,6 +64,10 @@ class PickPlaceNode(Node):
         self._gripper = ActionClient(
             self, FollowJointTrajectory,
             '/gripper_controller/follow_joint_trajectory')
+        self._attach = self.create_client(
+            Trigger, str(self._config['attach_service']))
+        self._detach = self.create_client(
+            Trigger, str(self._config['detach_service']))
         self._state_pub = self.create_publisher(String, '/pick_place/state', 10)
         self._grasp_pub = self.create_publisher(Bool, '/pick_place/grasped', 10)
         self.create_subscription(JointState, '/joint_states', self._joint_state, 20)
@@ -125,9 +137,11 @@ class PickPlaceNode(Node):
                 ('ABOVE_PICK', self._arm_move, self._config['pick_above_joints']),
                 ('DESCEND_PICK', self._arm_move, self._config['pick_joints']),
                 ('GRASP', self._gripper_move, self._config['gripper_closed_rad']),
+                ('ATTACH_OBJECT', self._attach_object, None),
                 ('LIFT_OBJECT', self._arm_move, self._config['pick_above_joints']),
                 ('ABOVE_PLACE', self._arm_move, self._config['place_above_joints']),
                 ('DESCEND_PLACE', self._arm_move, self._config['place_joints']),
+                ('DETACH_OBJECT', self._detach_object, None),
                 ('RELEASE', self._gripper_move, self._config['gripper_open_rad']),
                 ('RETREAT', self._arm_move, self._config['place_above_joints']),
                 ('RETURN_HOME', self._arm_move, self._config['home_joints']),
@@ -137,9 +151,12 @@ class PickPlaceNode(Node):
                     raise RuntimeError('task stopped by operator')
                 self._publish_state(state, 'executing')
                 operation(target)
-                if state == 'GRASP':
+                if state == 'ATTACH_OBJECT':
                     self._grasp_pub.publish(Bool(data=True))
-                elif state == 'RELEASE':
+                    self._publish_state(
+                        'GRASP_CONFIRMED',
+                        'bilateral contact accepted; physical joint attached')
+                elif state == 'DETACH_OBJECT':
                     self._grasp_pub.publish(Bool(data=False))
             result, detail = 'SUCCEEDED', 'pick-and-place sequence completed'
             self._publish_state(result, detail)
@@ -161,6 +178,8 @@ class PickPlaceNode(Node):
 
     def _fail_safe(self, detail):
         self._grasp_pub.publish(Bool(data=False))
+        if self._detach.service_is_ready():
+            self._detach.call_async(Trigger.Request())
         self._publish_state('SAFE_STOP', detail)
         self._write_jsonl('errors.jsonl', {'error': detail})
         self.get_logger().error(detail)
@@ -172,8 +191,28 @@ class PickPlaceNode(Node):
 
     def _gripper_move(self, position):
         self._send_trajectory(
-            self._gripper, ['gripper_joint'], [float(position)],
+            self._gripper, ['left_finger_joint', 'right_finger_joint'],
+            [float(position), float(position)],
             float(self._config['gripper_duration_sec']))
+
+    def _attach_object(self, _unused=None):
+        if str(self._config['attachment_mode']).lower() != 'service':
+            raise RuntimeError('physical service attachment is required')
+        self._call_grasp_service(self._attach, 'attach')
+
+    def _detach_object(self, _unused=None):
+        self._call_grasp_service(self._detach, 'detach')
+
+    def _call_grasp_service(self, client, operation):
+        timeout = float(self._config['grasp_service_timeout_sec'])
+        if not client.wait_for_service(timeout_sec=timeout):
+            raise RuntimeError(f'grasp {operation} service is unavailable')
+        response = self._await(
+            client.call_async(Trigger.Request()), timeout,
+            f'grasp {operation} service timed out')
+        if response is None or not response.success:
+            reason = 'empty response' if response is None else response.message
+            raise RuntimeError(f'physical grasp {operation} failed: {reason}')
 
     def _send_trajectory(self, client, names, positions, duration):
         goal = FollowJointTrajectory.Goal()
@@ -224,6 +263,7 @@ class PickPlaceNode(Node):
             'run_id': self._run_id, 'state': state, 'detail': detail,
         }
         self._state_pub.publish(String(data=json.dumps(payload, ensure_ascii=False)))
+        self._write_jsonl('events.jsonl', payload)
         self.get_logger().info(f'[{state}] {detail}')
 
     def _write_jsonl(self, filename, values):
