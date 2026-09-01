@@ -1,3 +1,4 @@
+from math import cos, hypot, sin
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -32,3 +33,22 @@ def test_world_contains_acceptance_entities():
     text = (ROOT / 'worlds' / 'pick_place.world').read_text()
     for entity in ('work_table', 'target_object', 'place_zone'):
         assert f'name="{entity}"' in text
+
+
+def test_taught_poses_match_a_b_and_safe_height():
+    data = yaml.safe_load((ROOT / 'config' / 'pick_place.yaml').read_text())
+    params = data['pick_place']['ros__parameters']
+
+    def tool_position(joints):
+        q1, q2, q3, q4, q5, _q6 = joints
+        assert q4 == 0.0 and q5 == 0.0
+        radial = 0.130 * sin(q2) + 0.310 * sin(q2 + q3)
+        z = 0.165 + 0.130 * cos(q2) + 0.310 * cos(q2 + q3)
+        return radial * cos(q1), radial * sin(q1), z
+
+    for prefix in ('pick', 'place'):
+        point = params[f'{prefix}_point_xyz']
+        low = tool_position(params[f'{prefix}_joints'])
+        above = tool_position(params[f'{prefix}_above_joints'])
+        assert abs(hypot(low[0], low[1]) - hypot(point[0], point[1])) < 0.003
+        assert abs(above[2] - low[2] - params['safe_height_m']) < 0.003
