@@ -1,12 +1,33 @@
 # 机械臂定点抓取仿真
 
-ROS 2 Humble + Gazebo Classic 教学包，面向 mechArm 270 固定 A 点抓取、B 区放置实验。任务逻辑不依赖视觉；真机阶段沿用相同控制接口，只替换设备与参数。
+面向“机器人集成小组项目 I”的 ROS 2 Humble + Gazebo Classic 仿真包。系统使用 mechArm 270 教学模型，在固定 A 点抓取 50 g 方块并放入固定 B 区，不使用视觉定位。真机阶段可保留 `/arm_controller/follow_joint_trajectory`、`/gripper_controller/follow_joint_trajectory`、`/pick_place/start`、`/pick_place/stop` 和 `/pick_place/state` 接口，只替换硬件及参数。
 
-## 当前内容
+## 已实现
 
-- `urdf/mecharm270.urdf.xacro`：6 关节机械臂、平行夹爪、`gazebo_ros2_control`。
-- `worlds/pick_place.world`：桌面、50 g 目标方块、绿色放置区。
-- `config/pick_place.yaml`：A/B 点、安全高度、示教关节位姿、限位与超时。
-- `config/controllers.yaml`：机械臂和夹爪轨迹控制器。
+- 6 关节机械臂、平行夹爪、桌面、目标物和放置区；
+- 回零 → A 点上方 → 下降 → 夹取 → 抬升 → B 点上方 → 下降 → 释放 → 抬升 → 回零；
+- 单一 `simulation.launch.py` 启动 Gazebo、模型、控制器、状态和任务节点；
+- 不可达、缺少示教/逆解、关节超限、Action 超时/拒绝、人工停止的安全停止；
+- `/joint_states` 轨迹 CSV、每次执行结果 JSONL、错误 JSONL；
+- 自动连续 5 次验收及 `acceptance_summary.json`。
 
-完整启动、异常测试和 5 次验收命令将在后续步骤补齐。
+## Ubuntu 22.04 快速启动
+
+```bash
+mkdir -p ~/robot_ws/src
+cp -r robot_pick_place_sim ~/robot_ws/src/
+cd ~/robot_ws
+source /opt/ros/humble/setup.bash
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
+ros2 launch robot_pick_place_sim simulation.launch.py
+```
+
+默认等待控制器就绪后自动执行一次。完整依赖、手动运行、连续 5 次验收和异常注入见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)，实验记录见 [docs/SIMULATION_REPORT.md](docs/SIMULATION_REPORT.md)。
+
+非 ROS 主机可执行：
+
+```bash
+python3 scripts/static_validate.py
+```

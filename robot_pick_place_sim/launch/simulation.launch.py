@@ -17,18 +17,22 @@ def generate_launch_description():
     world = package_share / 'worlds' / 'pick_place.world'
     xacro = package_share / 'urdf' / 'mecharm270.urdf.xacro'
     controllers = package_share / 'config' / 'controllers.yaml'
-    task_config = package_share / 'config' / 'pick_place.yaml'
+    default_task_config = package_share / 'config' / 'pick_place.yaml'
     robot_description = ParameterValue(
         Command(['xacro ', str(xacro), ' controllers_file:=', str(controllers)]),
         value_type=str)
     use_sim_time = LaunchConfiguration('use_sim_time')
     auto_start = LaunchConfiguration('auto_start')
     log_directory = LaunchConfiguration('log_directory')
+    task_config = LaunchConfiguration('task_config')
 
     return LaunchDescription([
         DeclareLaunchArgument('gui', default_value='true'),
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         DeclareLaunchArgument('auto_start', default_value='true'),
+        DeclareLaunchArgument(
+            'task_config', default_value=str(default_task_config),
+            description='ROS 2 parameter YAML for task and safety settings'),
         DeclareLaunchArgument(
             'log_directory',
             default_value=str(Path.cwd() / 'logs' / 'robot_pick_place')),
@@ -72,7 +76,7 @@ def generate_launch_description():
                  parameters=[{'use_sim_time': use_sim_time}]),
             Node(package='robot_pick_place_sim', executable='pick_place_node',
                  name='pick_place', output='screen',
-                 parameters=[str(task_config), {
+                 parameters=[task_config, {
                      'auto_start': ParameterValue(auto_start, value_type=bool),
                      'use_sim_time': use_sim_time,
                      'log_directory': log_directory,

@@ -16,6 +16,7 @@ setup(
         ('share/' + package_name + '/worlds', glob('worlds/*')),
     ],
     install_requires=['setuptools'],
+    tests_require=['pytest'],
     zip_safe=True,
     maintainer='Robot Integration Group',
     maintainer_email='student@example.com',
