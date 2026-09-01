@@ -3,6 +3,10 @@
   <world name="pick_place_world">
     <gravity>0 0 -9.81</gravity>
     <physics type="ode"><real_time_update_rate>1000</real_time_update_rate><max_step_size>0.001</max_step_size></physics>
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros><namespace>/gazebo</namespace></ros>
+      <update_rate>100.0</update_rate>
+    </plugin>
     <include><uri>model://sun</uri></include>
     <include><uri>model://ground_plane</uri></include>
     <model name="work_table">

@@ -41,6 +41,7 @@ def test_world_contains_acceptance_entities():
     text = (ROOT / 'worlds' / 'pick_place.world').read_text()
     for entity in ('work_table', 'target_object', 'place_zone'):
         assert f'name="{entity}"' in text
+    assert 'libgazebo_ros_state.so' in text
 
 
 def test_taught_poses_match_a_b_and_safe_height():
