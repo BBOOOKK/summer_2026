@@ -12,6 +12,8 @@ from rclpy.node import Node
 from std_msgs.msg import String
 from std_srvs.srv import Trigger
 
+from .evidence import analyze_acceptance
+
 
 class AcceptanceRunner(Node):
     """Sequentially request runs and count terminal states."""
@@ -40,6 +42,7 @@ class AcceptanceRunner(Node):
             self.get_parameter('place_tolerance_m').value)
         self._condition = threading.Condition()
         self._terminal = None
+        self._terminal_run_id = ''
         self._detail = ''
         self.create_subscription(String, '/pick_place/state', self._state, 20)
         threading.Thread(target=self._run, daemon=True).start()
@@ -52,6 +55,7 @@ class AcceptanceRunner(Node):
         if payload.get('state') in ('SUCCEEDED', 'SAFE_STOP'):
             with self._condition:
                 self._terminal = payload['state']
+                self._terminal_run_id = str(payload.get('run_id', ''))
                 self._detail = payload.get('detail', '')
                 self._condition.notify_all()
 
@@ -70,6 +74,7 @@ class AcceptanceRunner(Node):
         for index in range(1, self._repeat_count + 1):
             with self._condition:
                 self._terminal = None
+                self._terminal_run_id = ''
                 self._detail = ''
             started = time.time()
             future = self._start.call_async(Trigger.Request())
@@ -86,6 +91,7 @@ class AcceptanceRunner(Node):
                     lambda: self._terminal is not None, timeout=self._timeout)
                 result = self._terminal if completed else 'TIMEOUT'
                 detail = self._detail if completed else 'task timeout'
+                run_id = self._terminal_run_id if completed else ''
             position = None
             if result == 'SUCCEEDED':
                 position, placement_detail = self._verify_placement()
@@ -93,6 +99,7 @@ class AcceptanceRunner(Node):
                     result, detail = 'FAILED_PLACEMENT', placement_detail
             records.append({
                 'run': index, 'result': result, 'detail': detail,
+                'run_id': run_id,
                 'duration_sec': round(time.time() - started, 3),
                 'object_position_world': position,
             })
@@ -126,12 +133,22 @@ class AcceptanceRunner(Node):
 
     def _finish(self, records):
         succeeded = sum(item['result'] == 'SUCCEEDED' for item in records)
+        time.sleep(1.0)
+        evidence = analyze_acceptance(
+            self._log_dir,
+            [item['run_id'] for item in records
+             if item['result'] == 'SUCCEEDED' and item.get('run_id')],
+            place_xyz=tuple(self._place_world),
+            place_tolerance=self._place_tolerance)
         summary = {
             'time': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
             'required_runs': self._repeat_count,
             'succeeded': succeeded,
-            'passed': succeeded >= max(1, self._repeat_count - 1),
+            'passed': (
+                succeeded >= max(1, self._repeat_count - 1)
+                and evidence['passed']),
             'runs': records,
+            'evidence': evidence,
         }
         path = self._log_dir / 'acceptance_summary.json'
         path.write_text(

@@ -48,6 +48,17 @@ ros2 service call /pick_place/stop std_srvs/srv/Trigger '{}'
 
 ## 3. 连续 5 次验收
 
+推荐使用一键脚本；它会创建独立时间戳目录、启动仿真、执行 5 轮、生成证据审计并清理进程：
+
+```bash
+cd ~/robot_ws
+ROBOT_WS=$PWD src/robot_pick_place_sim/scripts/run_acceptance.sh
+```
+
+`passed: true` 需要同时满足：至少 4/5 轮任务成功、完整状态序列、双指接触、目标物物理轨迹和落点合格、关节轨迹存在、三路接触源健康且禁止碰撞为 0。
+
+也可分两个终端手动执行：
+
 终端 A 禁用自动单次任务：
 
 ```bash
@@ -65,7 +76,7 @@ ros2 run robot_pick_place_sim acceptance_runner --ros-args \
   -p log_directory:=$HOME/robot_ws/acceptance_logs
 ```
 
-合格条件是 `acceptance_summary.json` 中 `succeeded >= 4` 且 `passed: true`。同时目视确认无桌面、自碰撞或超限，并保留演示视频。
+合格条件是 `acceptance_summary.json` 中 `succeeded >= 4`、`evidence.passed: true` 且总体 `passed: true`。同时保留 Gazebo 演示视频。
 
 ## 4. 不可达与关节超限
 
