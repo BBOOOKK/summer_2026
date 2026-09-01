@@ -1,6 +1,8 @@
 pick_place:
   ros__parameters:
     simulation: true
+    auto_start: true
+    auto_start_delay_sec: 5.0
     base_frame: base_link
     tool_frame: tool0
     action_timeout_sec: 12.0

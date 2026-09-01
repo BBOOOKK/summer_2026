@@ -21,5 +21,9 @@ setup(
     maintainer_email='student@example.com',
     description='mechArm 270 fixed-point pick-and-place simulation',
     license='Apache-2.0',
-    entry_points={'console_scripts': []},
+    entry_points={
+        'console_scripts': [
+            'pick_place_node = robot_pick_place_sim.pick_place_node:main',
+        ],
+    },
 )
