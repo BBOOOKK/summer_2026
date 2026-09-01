@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mecharm270_sim">
+  <xacro:arg name="controllers_file" default=""/>
+  <xacro:property name="pi" value="3.141592653589793"/>
+  <xacro:property name="arm_radius" value="0.026"/>
+
+  <material name="white"><color rgba="0.92 0.92 0.92 1"/></material>
+  <material name="blue"><color rgba="0.10 0.35 0.80 1"/></material>
+  <material name="dark"><color rgba="0.08 0.08 0.10 1"/></material>
+
+  <xacro:macro name="cylinder_link" params="name length radius material mass:=0.25">
+    <link name="${name}">
+      <inertial><origin xyz="0 0 ${length/2}"/><mass value="${mass}"/><inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/></inertial>
+      <visual><origin xyz="0 0 ${length/2}"/><geometry><cylinder radius="${radius}" length="${length}"/></geometry><material name="${material}"/></visual>
+      <collision><origin xyz="0 0 ${length/2}"/><geometry><cylinder radius="${radius}" length="${length}"/></geometry></collision>
+    </link>
+  </xacro:macro>
+
+  <link name="base_link">
+    <inertial><mass value="1.0"/><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/></inertial>
+    <visual><origin xyz="0 0 0.035"/><geometry><cylinder radius="0.075" length="0.07"/></geometry><material name="dark"/></visual>
+    <collision><origin xyz="0 0 0.035"/><geometry><cylinder radius="0.075" length="0.07"/></geometry></collision>
+  </link>
+  <xacro:cylinder_link name="link1" length="0.095" radius="0.035" material="white" mass="0.5"/>
+  <xacro:cylinder_link name="link2" length="0.130" radius="${arm_radius}" material="blue"/>
+  <xacro:cylinder_link name="link3" length="0.120" radius="${arm_radius}" material="white"/>
+  <xacro:cylinder_link name="link4" length="0.075" radius="0.023" material="blue"/>
+  <xacro:cylinder_link name="link5" length="0.060" radius="0.022" material="white"/>
+  <xacro:cylinder_link name="link6" length="0.045" radius="0.021" material="dark"/>
+
+  <xacro:macro name="revolute" params="name parent child xyz axis lower upper effort:=30 velocity:=1.5">
+    <joint name="${name}" type="revolute">
+      <parent link="${parent}"/><child link="${child}"/><origin xyz="${xyz}"/><axis xyz="${axis}"/>
+      <limit lower="${lower}" upper="${upper}" effort="${effort}" velocity="${velocity}"/><dynamics damping="0.15" friction="0.05"/>
+    </joint>
+  </xacro:macro>
+  <xacro:revolute name="joint1" parent="base_link" child="link1" xyz="0 0 0.07" axis="0 0 1" lower="-2.88" upper="2.88"/>
+  <xacro:revolute name="joint2" parent="link1" child="link2" xyz="0 0 0.095" axis="0 1 0" lower="-2.05" upper="2.05"/>
+  <xacro:revolute name="joint3" parent="link2" child="link3" xyz="0 0 0.13" axis="0 1 0" lower="-2.88" upper="2.88"/>
+  <xacro:revolute name="joint4" parent="link3" child="link4" xyz="0 0 0.12" axis="1 0 0" lower="-2.05" upper="2.05"/>
+  <xacro:revolute name="joint5" parent="link4" child="link5" xyz="0 0 0.075" axis="0 1 0" lower="-2.88" upper="2.88"/>
+  <xacro:revolute name="joint6" parent="link5" child="link6" xyz="0 0 0.06" axis="0 0 1" lower="-${pi}" upper="${pi}"/>
+
+  <link name="tool0"><visual><geometry><box size="0.055 0.025 0.025"/></geometry><material name="dark"/></visual><collision><geometry><box size="0.055 0.025 0.025"/></geometry></collision><inertial><mass value="0.08"/><inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/></inertial></link>
+  <joint name="tool_fixed" type="fixed"><parent link="link6"/><child link="tool0"/><origin xyz="0 0 0.055"/></joint>
+  <link name="left_finger"><visual><origin xyz="0 0 -0.035"/><geometry><box size="0.012 0.012 0.07"/></geometry><material name="blue"/></visual><collision><origin xyz="0 0 -0.035"/><geometry><box size="0.012 0.012 0.07"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
+  <joint name="gripper_joint" type="prismatic"><parent link="tool0"/><child link="left_finger"/><origin xyz="0 0 0"/><axis xyz="0 1 0"/><limit lower="0.004" upper="0.035" effort="15" velocity="0.08"/><dynamics damping="0.2"/></joint>
+  <link name="right_finger"><visual><origin xyz="0 0 -0.035"/><geometry><box size="0.012 0.012 0.07"/></geometry><material name="blue"/></visual><collision><origin xyz="0 0 -0.035"/><geometry><box size="0.012 0.012 0.07"/></geometry></collision></link>
+  <joint name="right_finger_fixed" type="fixed"><parent link="tool0"/><child link="right_finger"/><origin xyz="0 -0.035 0"/></joint>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware><plugin>gazebo_ros2_control/GazeboSystem</plugin></hardware>
+    <xacro:macro name="controlled_joint" params="name initial:=0.0">
+      <joint name="${name}"><command_interface name="position"><param name="min">-3.14</param><param name="max">3.14</param></command_interface><state_interface name="position"><param name="initial_value">${initial}</param></state_interface><state_interface name="velocity"/></joint>
+    </xacro:macro>
+    <xacro:controlled_joint name="joint1"/><xacro:controlled_joint name="joint2"/><xacro:controlled_joint name="joint3"/>
+    <xacro:controlled_joint name="joint4"/><xacro:controlled_joint name="joint5"/><xacro:controlled_joint name="joint6"/>
+    <joint name="gripper_joint"><command_interface name="position"><param name="min">0.004</param><param name="max">0.035</param></command_interface><state_interface name="position"><param name="initial_value">0.032</param></state_interface><state_interface name="velocity"/></joint>
+  </ros2_control>
+  <gazebo><plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control"><parameters>$(arg controllers_file)</parameters></plugin></gazebo>
+</robot>
