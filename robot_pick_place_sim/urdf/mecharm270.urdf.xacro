@@ -27,6 +27,8 @@
   <material name="white"><color rgba="0.92 0.92 0.92 1"/></material>
   <material name="blue"><color rgba="0.10 0.35 0.80 1"/></material>
   <material name="dark"><color rgba="0.08 0.08 0.10 1"/></material>
+  <xacro:property name="cad_mesh_root"
+                  value="package://robot_pick_place_sim/meshes/mecharm_270_m5"/>
 
   <!-- The world joint represents the bolted base required by the experiment.
        Its 0.75 m offset is shared by Gazebo and TF, avoiding a second transform. -->
@@ -41,48 +43,54 @@
     <parent link="base_footprint"/><child link="base_link"/>
   </joint>
 
-  <xacro:macro name="cylinder_link" params="name length radius material mass:=0.25">
+  <xacro:macro name="cad_link"
+               params="name visual_xyz visual_rpy collision_xyz collision_size mass:=0.25">
     <link name="${name}">
-      <inertial><origin xyz="0 0 ${length/2}"/><mass value="${mass}"/><inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/></inertial>
-      <visual><origin xyz="0 0 ${length/2}"/><geometry><cylinder radius="${radius}" length="${length}"/></geometry><material name="${material}"/></visual>
-      <collision name="${name}_collision"><origin xyz="0 0 ${length/2}"/><geometry><cylinder radius="${radius}" length="${length}"/></geometry></collision>
+      <inertial><origin xyz="${collision_xyz}"/><mass value="${mass}"/><inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/></inertial>
+      <visual><origin xyz="${visual_xyz}" rpy="${visual_rpy}"/><geometry><mesh filename="${cad_mesh_root}/${name}.dae"/></geometry></visual>
+      <collision name="${name}_collision"><origin xyz="${collision_xyz}"/><geometry><box size="${collision_size}"/></geometry></collision>
     </link>
   </xacro:macro>
 
   <link name="base_link">
     <inertial><mass value="1.0"/><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/></inertial>
-    <visual><origin xyz="0 0 0.035"/><geometry><cylinder radius="0.075" length="0.07"/></geometry><material name="dark"/></visual>
+    <visual><origin xyz="0 0 0" rpy="0 0 -${pi}"/><geometry><mesh filename="${cad_mesh_root}/base.dae"/></geometry></visual>
     <collision name="base_link_collision"><origin xyz="0 0 0.035"/><geometry><cylinder radius="0.075" length="0.07"/></geometry></collision>
   </link>
-  <xacro:cylinder_link name="link1" length="0.095" radius="0.035" material="white" mass="0.5"/>
-  <xacro:cylinder_link name="link2" length="0.130" radius="${arm_radius}" material="blue"/>
-  <xacro:cylinder_link name="link3" length="0.120" radius="${arm_radius}" material="white"/>
-  <xacro:cylinder_link name="link4" length="0.075" radius="0.023" material="blue"/>
-  <xacro:cylinder_link name="link5" length="0.060" radius="0.022" material="white"/>
-  <xacro:cylinder_link name="link6" length="0.045" radius="0.021" material="dark"/>
+  <xacro:cad_link name="link1" visual_xyz="0 0 -0.132" visual_rpy="0 0 0"
+                  collision_xyz="0 0 0.019" collision_size="0.08 0.08 0.07" mass="0.5"/>
+  <xacro:cad_link name="link2" visual_xyz="-0.005 0.21 0.002" visual_rpy="1.5708 -${pi} 0"
+                  collision_xyz="0 -0.05 0" collision_size="0.06 0.11 0.06"/>
+  <xacro:cad_link name="link3" visual_xyz="-0.09 0.306 0.005" visual_rpy="1.5708 ${pi} 0"
+                  collision_xyz="0.054 -0.0025 0" collision_size="0.12 0.06 0.06"/>
+  <xacro:cad_link name="link4" visual_xyz="0.009 -0.311 -0.228" visual_rpy="0 1.5708 1.5708"
+                  collision_xyz="0 0 0" collision_size="0.07 0.07 0.07"/>
+  <xacro:cad_link name="link5" visual_xyz="-0.292 -0.318 -0.007" visual_rpy="1.5708 0 ${pi}"
+                  collision_xyz="0.03 0 0" collision_size="0.07 0.06 0.06"/>
+  <xacro:cad_link name="link6" visual_xyz="-0.1645 0.0536 -0.211" visual_rpy="0 1.5708 0"
+                  collision_xyz="0 0 0.019" collision_size="0.06 0.06 0.07"/>
 
-  <xacro:macro name="revolute" params="name parent child xyz axis lower upper effort:=30 velocity:=1.5">
-    <joint name="${name}" type="revolute">
-      <parent link="${parent}"/><child link="${child}"/><origin xyz="${xyz}"/><axis xyz="${axis}"/>
-      <limit lower="${lower}" upper="${upper}" effort="${effort}" velocity="${velocity}"/><dynamics damping="0.15" friction="0.05"/>
-    </joint>
+  <xacro:macro name="arm_joint" params="name parent child xyz rpy lower upper">
+    <joint name="${name}" type="revolute"><parent link="${parent}"/><child link="${child}"/><origin xyz="${xyz}" rpy="${rpy}"/><axis xyz="0 0 1"/><limit lower="${lower}" upper="${upper}" effort="30" velocity="1.5"/><dynamics damping="0.15" friction="0.05"/></joint>
   </xacro:macro>
-  <xacro:revolute name="joint1" parent="base_link" child="link1" xyz="0 0 0.07" axis="0 0 1" lower="-2.88" upper="2.88"/>
-  <xacro:revolute name="joint2" parent="link1" child="link2" xyz="0 0 0.095" axis="0 1 0" lower="-2.05" upper="2.05"/>
-  <xacro:revolute name="joint3" parent="link2" child="link3" xyz="0 0 0.13" axis="0 1 0" lower="-2.88" upper="2.88"/>
-  <xacro:revolute name="joint4" parent="link3" child="link4" xyz="0 0 0.12" axis="1 0 0" lower="-2.05" upper="2.05"/>
-  <xacro:revolute name="joint5" parent="link4" child="link5" xyz="0 0 0.075" axis="0 1 0" lower="-2.88" upper="2.88"/>
-  <xacro:revolute name="joint6" parent="link5" child="link6" xyz="0 0 0.06" axis="0 0 1" lower="-${pi}" upper="${pi}"/>
+  <xacro:arm_joint name="joint1" parent="base_link" child="link1" xyz="0 0 0.1" rpy="0 0 0" lower="-2.792527" upper="2.792527"/>
+  <xacro:arm_joint name="joint2" parent="link1" child="link2" xyz="0 0 0.038" rpy="-${pi/2} 0 0" lower="-1.3089" upper="2.0943"/>
+  <xacro:arm_joint name="joint3" parent="link2" child="link3" xyz="0 -0.1 0" rpy="0 0 0" lower="-3.0543" upper="1.1344"/>
+  <xacro:arm_joint name="joint4" parent="link3" child="link4" xyz="0.108 -0.005 -0.001" rpy="0 ${pi/2} 0" lower="-2.7052" upper="2.7052"/>
+  <xacro:arm_joint name="joint5" parent="link4" child="link5" xyz="-0.001 0 0" rpy="0 -${pi/2} 0" lower="-2.0071" upper="2.0071"/>
+  <xacro:arm_joint name="joint6" parent="link5" child="link6" xyz="0.06 0 0" rpy="0 ${pi/2} 0" lower="-${pi}" upper="${pi}"/>
 
-  <link name="tool0"><visual><geometry><box size="0.055 0.025 0.025"/></geometry><material name="dark"/></visual><collision name="tool0_collision"><geometry><box size="0.055 0.025 0.025"/></geometry></collision><inertial><mass value="0.08"/><inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/></inertial></link>
-  <joint name="tool_fixed" type="fixed"><parent link="link6"/><child link="tool0"/><origin xyz="0 0 0.055"/></joint>
-  <link name="left_finger"><visual><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry><material name="blue"/></visual><collision name="left_finger_collision"><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
+  <link name="tool0"><visual><origin xyz="0 0 -0.006"/><geometry><cylinder radius="0.034" length="0.025"/></geometry><material name="dark"/></visual><collision name="tool0_collision"><origin xyz="0 0 -0.006"/><geometry><cylinder radius="0.010" length="0.020"/></geometry></collision><inertial><mass value="0.08"/><inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/></inertial></link>
+  <joint name="tool_fixed" type="fixed"><parent link="link6"/><child link="tool0"/><origin xyz="0 0 0.038" rpy="1.579 0 0"/></joint>
+  <!-- The compensated child transforms retain vertical finger geometry while
+       preserving the non-singular DART joint frames used by both backends. -->
+  <link name="left_finger"><visual><origin xyz="-0.031123 0 0.025127" rpy="0 2.25 0"/><geometry><box size="0.012 0.012 0.06"/></geometry><material name="blue"/></visual><collision name="left_finger_collision"><origin xyz="-0.031123 0 0.025127" rpy="0 2.25 0"/><geometry><box size="0.012 0.012 0.06"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
   <joint name="left_finger_joint" type="prismatic"><parent link="tool0"/><child link="left_finger"/><origin xyz="0 0.006 0" rpy="0 -2.25 0"/><axis xyz="0 1 0"/><limit lower="0.012" upper="0.032" effort="15" velocity="0.08"/><dynamics damping="0.35" friction="0.05"/></joint>
-  <link name="right_finger"><visual><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry><material name="blue"/></visual><collision name="right_finger_collision"><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
-  <!-- Rotate the right joint frame instead of using a negative prismatic
-       axis.  The physical direction is unchanged, while DART and ODE now
-       share the same positive-coordinate limit semantics. -->
-  <joint name="right_finger_joint" type="prismatic"><parent link="tool0"/><child link="right_finger"/><origin xyz="0 -0.006 0" rpy="0 2.25 ${pi}"/><axis xyz="0 1 0"/><limit lower="0.012" upper="0.032" effort="15" velocity="0.08"/><dynamics damping="0.35" friction="0.05"/></joint>
+  <!-- mechArm's single-motor linkage is represented by one actuated pivoting
+       jaw.  This avoids the DART parallel-prismatic lock while retaining
+       physical two-sided contact against the fixed jaw. -->
+  <link name="right_finger"><visual><origin xyz="0 -0.018 -0.04"/><geometry><box size="0.012 0.012 0.06"/></geometry><material name="blue"/></visual><collision name="right_finger_collision"><origin xyz="0 -0.018 -0.04"/><geometry><box size="0.012 0.012 0.06"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
+  <joint name="right_finger_joint" type="revolute"><parent link="tool0"/><child link="right_finger"/><origin xyz="0 -0.006 0"/><axis xyz="1 0 0"/><limit lower="-0.40" upper="0.20" effort="15" velocity="0.8"/><dynamics damping="0.35" friction="0.05"/></joint>
 
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
@@ -95,7 +103,7 @@
     <xacro:controlled_joint name="joint1"/><xacro:controlled_joint name="joint2"/><xacro:controlled_joint name="joint3"/>
     <xacro:controlled_joint name="joint4"/><xacro:controlled_joint name="joint5"/><xacro:controlled_joint name="joint6"/>
     <joint name="left_finger_joint"><command_interface name="position"><param name="min">0.012</param><param name="max">0.032</param></command_interface><state_interface name="position"><param name="initial_value">0.032</param></state_interface><state_interface name="velocity"/></joint>
-    <joint name="right_finger_joint"><command_interface name="position"><param name="min">0.012</param><param name="max">0.032</param></command_interface><state_interface name="position"><param name="initial_value">0.032</param></state_interface><state_interface name="velocity"/></joint>
+    <joint name="right_finger_joint"><command_interface name="position"><param name="min">-0.40</param><param name="max">0.20</param></command_interface><state_interface name="position"><param name="initial_value">-0.35</param></state_interface><state_interface name="velocity"/></joint>
   </ros2_control>
   <xacro:if value="${simulator_backend == 'classic'}"><gazebo>
     <!-- Primitive link envelopes overlap at several legal mechArm poses.

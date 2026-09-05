@@ -33,12 +33,12 @@ class PickPlaceNode(Node):
         super().__init__('pick_place')
         defaults = {
             'simulation': True, 'auto_start': True,
-            'auto_start_delay_sec': 5.0, 'action_timeout_sec': 12.0,
-            'motion_duration_sec': 2.0, 'gripper_duration_sec': 0.8,
+            'auto_start_delay_sec': 5.0, 'action_timeout_sec': 25.0,
+            'motion_duration_sec': 2.0, 'gripper_duration_sec': 2.0,
             'safe_height_m': 0.12, 'reach_min_m': 0.08,
             'reach_max_m': 0.38, 'table_z_m': 0.0,
-            'object_height_m': 0.04, 'gripper_open_rad': 0.032,
-            'gripper_closed_rad': 0.0165, 'log_directory': 'logs',
+            'object_height_m': 0.04, 'gripper_open_rad': -0.35,
+            'gripper_closed_rad': 0.15, 'log_directory': 'logs',
             'attachment_mode': 'service',
             'attach_service': '/grasp/attach',
             'detach_service': '/grasp/detach',
@@ -51,15 +51,23 @@ class PickPlaceNode(Node):
             'place_point_xyz': [0.20, -0.16, 0.02],
             'home_joints': [0.0] * 6,
             'pick_above_joints': [
-                0.499, -0.418, 2.196, 0.0, 0.0, 0.0],
+                0.494819, 0.444935, -0.142174,
+                -0.030279, -0.294663, 0.028902],
             'pick_joints': [
-                0.499, 0.072, 2.178, 0.0, 0.0, 0.0],
+                0.464516, 1.201020, -0.114062,
+                -0.096231, -1.080543, 0.044709],
             'place_above_joints': [
-                -0.675, -0.367, 2.154, 0.0, 0.0, 0.0],
+                -0.671786, 0.551014, -0.295827,
+                0.031529, -0.247085, -0.030507],
             'place_joints': [
-                -0.675, 0.112, 2.136, 0.0, 0.0, 0.0],
-            'joint_lower_limits': [-2.88, -2.05, -2.88, -2.05, -2.88, -3.14],
-            'joint_upper_limits': [2.88, 2.05, 2.88, 2.05, 2.88, 3.14],
+                -0.640737, 1.260058, -0.265817,
+                0.106509, -0.988509, -0.057984],
+            'joint_lower_limits': [
+                -2.792527, -1.3089, -3.0543,
+                -2.7052, -2.0071, -3.14],
+            'joint_upper_limits': [
+                2.792527, 2.0943, 1.1344,
+                2.7052, 2.0071, 3.14],
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)

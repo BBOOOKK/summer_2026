@@ -13,6 +13,8 @@ setup(
         ('share/' + package_name + '/config', glob('config/*.yaml')),
         ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
         ('share/' + package_name + '/urdf', glob('urdf/*')),
+        ('share/' + package_name + '/meshes/mecharm_270_m5',
+         glob('meshes/mecharm_270_m5/*')),
         ('share/' + package_name + '/worlds', glob('worlds/*')),
     ],
     install_requires=['setuptools'],

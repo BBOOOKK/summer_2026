@@ -17,7 +17,9 @@ def test_fortress_world_has_audited_workcell_and_contact_sources():
     assert 'target_object' in text
     assert '/gazebo/contacts/table' in text
     assert '/gazebo/contacts/target' in text
-    assert '<size>0.066 0.066 0.035</size>' in text
+    assert '/demo_camera/image' in text
+    assert '<width>1280</width><height>720</height>' in text
+    assert '<size>0.045 0.045 0.035</size>' in text
 
 
 def test_fortress_robot_is_physically_fixed_and_uses_real_joint_attach():
@@ -35,6 +37,7 @@ def test_fortress_launch_starts_bridge_moveit_safety_and_task_nodes():
         encoding='utf-8')
     for token in (
             'gz_sim.launch.py', 'parameter_bridge', 'fortress_adapter',
+            'ros_gz_image', 'image_bridge',
             'move_group.launch.py', 'planning_scene_node',
             'collision_monitor', 'object_manager', 'moveit_pick_place_node'):
         assert token in launch

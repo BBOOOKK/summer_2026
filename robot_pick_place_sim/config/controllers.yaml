@@ -34,4 +34,4 @@ gripper_controller:
       goal_time: 3.0
       # A force-limited grasp must be allowed to stop on the object before the
       # no-load close setpoint. Bilateral contact is the success criterion.
-      right_finger_joint: {trajectory: 0.020, goal: 0.016}
+      right_finger_joint: {trajectory: 0.30, goal: 0.20}

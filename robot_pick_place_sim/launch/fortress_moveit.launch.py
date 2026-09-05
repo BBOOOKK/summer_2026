@@ -9,6 +9,7 @@ from launch.actions import (
     ExecuteProcess,
     IncludeLaunchDescription,
     RegisterEventHandler,
+    SetEnvironmentVariable,
     TimerAction,
 )
 from launch.conditions import IfCondition, UnlessCondition
@@ -72,6 +73,8 @@ def generate_launch_description():
                                        'use_sim_time': True, 'log_directory': log_directory}]),
     ]
     return LaunchDescription([
+        SetEnvironmentVariable(
+            'IGN_GAZEBO_RESOURCE_PATH', str(package_share.parent)),
         DeclareLaunchArgument('auto_start', default_value='true'),
         DeclareLaunchArgument('gui', default_value='false'),
         DeclareLaunchArgument('task_config', default_value=str(package_share / 'config' / 'pick_place.yaml')),

@@ -1,4 +1,4 @@
-from math import cos, hypot, sin
+from math import cos, hypot, pi, sin
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -86,17 +86,49 @@ def test_taught_poses_match_a_b_and_safe_height():
     params = data['pick_place']['ros__parameters']
 
     def tool_position(joints):
-        q1, q2, q3, q4, q5, q6 = joints
-        assert q4 == 0.0 and q5 == 0.0 and q6 == 0.0
-        radial = 0.130 * sin(q2) + 0.310 * sin(q2 + q3)
-        z = 0.165 + 0.130 * cos(q2) + 0.310 * cos(q2 + q3)
-        return radial * cos(q1), radial * sin(q1), z
+        def multiply(left, right):
+            return [[sum(left[row][k] * right[k][col]
+                         for k in range(4))
+                     for col in range(4)] for row in range(4)]
+
+        def transform(xyz=(0.0, 0.0, 0.0), axis=None, angle=0.0):
+            matrix = [[1.0, 0.0, 0.0, xyz[0]],
+                      [0.0, 1.0, 0.0, xyz[1]],
+                      [0.0, 0.0, 1.0, xyz[2]],
+                      [0.0, 0.0, 0.0, 1.0]]
+            c, s = cos(angle), sin(angle)
+            rotations = {
+                'x': [[1, 0, 0, 0], [0, c, -s, 0],
+                      [0, s, c, 0], [0, 0, 0, 1]],
+                'y': [[c, 0, s, 0], [0, 1, 0, 0],
+                      [-s, 0, c, 0], [0, 0, 0, 1]],
+                'z': [[c, -s, 0, 0], [s, c, 0, 0],
+                      [0, 0, 1, 0], [0, 0, 0, 1]],
+            }
+            return matrix if axis is None else multiply(matrix, rotations[axis])
+
+        origins = (
+            ((0, 0, 0.1), None, 0.0),
+            ((0, 0, 0.038), 'x', -pi / 2),
+            ((0, -0.1, 0), None, 0.0),
+            ((0.108, -0.005, -0.001), 'y', pi / 2),
+            ((-0.001, 0, 0), 'y', -pi / 2),
+            ((0.06, 0, 0), 'y', pi / 2),
+        )
+        result = transform()
+        for (xyz, axis, angle), joint in zip(origins, joints):
+            result = multiply(result, transform(xyz, axis, angle))
+            result = multiply(result, transform(axis='z', angle=joint))
+        result = multiply(result, transform((0, 0, 0.038)))
+        return result[0][3], result[1][3], result[2][3]
 
     for prefix in ('pick', 'place'):
         point = params[f'{prefix}_point_xyz']
         low = tool_position(params[f'{prefix}_joints'])
         above = tool_position(params[f'{prefix}_above_joints'])
-        assert abs(hypot(low[0], low[1]) - hypot(point[0], point[1])) < 0.003
+        xy_error = hypot(low[0] - point[0], low[1] - point[1])
+        if prefix == 'pick':
+            assert abs(xy_error - 0.005) < 0.001
+        else:
+            assert xy_error < 0.001
         assert abs(above[2] - low[2] - params['safe_height_m']) < 0.003
-        assert abs(params[f'{prefix}_joints'][1] +
-                   params[f'{prefix}_joints'][2] - 2.25) < 0.003
