@@ -6,7 +6,7 @@
 \setmonofont{Menlo}
 \usepackage{amsmath,amssymb,array,booktabs,caption,enumitem,fancyhdr,float,geometry,graphicx}
 \usepackage[numbers,sort&compress]{natbib}
-\usepackage{placeins,setspace,tabularx,titlesec,url,xcolor}
+\usepackage{needspace,placeins,setspace,tabularx,titlesec,url,xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 \usepackage[hidelinks,hypertexnames=false]{hyperref}
@@ -16,6 +16,9 @@
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0pt}
 \setlength{\emergencystretch}{2em}
+\clubpenalty=10000
+\widowpenalty=10000
+\brokenpenalty=10000
 \setlist{nosep,leftmargin=2em}
 \captionsetup{font=small,labelsep=period}
 \titleformat{\section}{\large\bfseries}{\thesection}{0.75em}{}
@@ -84,7 +87,7 @@ University: & Ocean University of China \\
 \pagenumbering{Roman}
 \section*{Abstract}
 
-This experiment develops a five-class desktop object detector and a ROS 2 result-publishing pipeline based on YOLO11n. The dataset contains 5,000 images and 8,507 bounding boxes. A 1,000-image subset derived from self-collected material originates from 10 independently captured parent photographs and comprises 10 size-normalized base images and 990 deterministic augmentations. The remaining 4,000 images were selected from Open Images V7. All derivatives of a parent photograph were assigned to the same data split to prevent source overlap between training and evaluation. After 12 epochs of fine-tuning at an input size of 640 pixels, the selected model achieved a precision of 0.8385, a recall of 0.7697, an \mAPfifty{} of 0.8386, and an \mAPcoco{} of 0.5735 on 650 test images. In a deterministic, class-balanced subset of 20 real Open Images test photographs, the highest-confidence predicted class was correct for all 20 images. On a Jetson Orin NX, the PyTorch FP16 model required an average of 25.951 ms per \texttt{model.predict} call, equivalent to 38.534 FPS, while the ROS 2 result topic was measured at 29.99 Hz. The implementation accepts image, video, and camera inputs, stores structured detections and low-confidence review cases, and publishes both JSON results and annotated images. The report distinguishes independent captures from derived samples and separates model-call throughput from complete node publication frequency so that every result has an explicit measurement boundary.
+This experiment implements five-class desktop object detection and ROS 2 result publication using YOLO11n. The current dataset contains 5,000 images and 8,507 bounding boxes: 1,000 files derived from 10 self-collected source photographs and 4,000 Open Images V7 photographs. Parent grouping keeps derivatives of the same photograph within one split. The detector was fine-tuned for 12 epochs from a historical five-class checkpoint whose training history includes mixed-source data. On the fixed 650-image development holdout, mean per-class precision and recall were 0.8385 and 0.7697, with \mAPfifty{} of 0.8386 and \mAPcoco{} of 0.5735. A deterministic, class-balanced subset yielded 20/20 correct highest-confidence class decisions at confidence 0.50; separate box-level inspection identified localization errors, missed objects, and a false positive. A desktop frame demonstrated simultaneous laptop, keyboard, and mouse detection. On a Jetson Orin NX, PyTorch FP16 required 25.951 ms per complete \texttt{model.predict} call, equivalent to 38.534 FPS. The ROS 2 result topic reached 29.99 Hz, closely matching the camera input rate. These measurements support the specified recognition and real-time criteria under the stated protocols. The implementation provides annotated output, structured records, preserved review cases, and reproducible commands, with dataset provenance and checkpoint identity linked to the project repository.
 
 \textbf{Keywords:} object detection; YOLO11n; desktop objects; data augmentation; Jetson Orin NX; ROS 2
 
@@ -97,9 +100,14 @@ Desktop manipulation and human-robot interaction require more than a class label
 
 YOLO formulates object classification and bounding-box regression in a single forward pass and is representative of one-stage detection\cite{redmon2016yolo}. SSD likewise performs multi-scale prediction without an independent region-proposal stage\cite{liu2016ssd}. These designs are suitable for continuous image inference when the target platform has limited computing resources. The present experiment adopts the compact YOLO11n model without altering its architecture.
 
-The work addresses two connected tasks. First, a mixed-source dataset is constructed under a parent-image grouping rule and used to evaluate five desktop-object classes. Second, the same inference result is reused for visualization, persistent logging, and ROS 2 publication. Evaluation is divided into a 650-image detection test, a 20-image class-decision test, a Jetson camera benchmark, and a subscriber-side ROS 2 topic-frequency measurement.
+The work connects dataset construction and detector fine-tuning with camera inference and robot communication. Three experimental questions organize the evaluation:
+\begin{enumerate}[label=\textbf{EQ\arabic*.},leftmargin=3.8em]
+\item What detection quality does the selected model achieve across the five classes on the fixed 650-image development holdout?
+\item Does the implementation demonstrate simultaneous detection of at least two classes and at least 80\% correct class decisions on the specified 20-image acceptance sample?
+\item Does the deployed Jetson pipeline exceed 5 FPS while displaying detections and publishing results through ROS 2?
+\end{enumerate}
 
-The report emphasizes a reproducible chain rather than isolated successful screenshots. On the data side, it records image provenance, augmentation lineage, split assignment, and label conversion. On the model side, it fixes the weight file, thresholds, and evaluation protocol. On the deployment side, it distinguishes network inference time, complete model-call time, and the observed publication rate. These boundaries make the reported accuracy and throughput values traceable to specific files and commands.
+The evaluation combines aggregate detection metrics, a fixed class-recognition test, inspection of individual failures, and measurements of the deployed image stream. Dataset provenance and checkpoint history establish how the model was obtained; source-stratified analysis then examines how the holdout composition affects the result. Runtime measurements distinguish network inference, complete model calls, and ROS 2 publication, each of which answers a different question about robot integration.
 
 Accordingly, the principal outcome is an end-to-end implementation covering dataset construction, model fine-tuning, offline evaluation, camera inference, error preservation, and ROS 2 integration. The purpose is not to propose a new neural-network architecture, but to demonstrate that a compact detector can be trained, measured, deployed, and documented consistently for a desktop robotics scenario.
 
@@ -119,21 +127,21 @@ Open Images provides natural-scene images with several forms of annotation, incl
 
 Detection quality is reported using precision, recall, \mAPfifty{}, and \mAPcoco{}. The multi-threshold metric follows the COCO convention of averaging performance over several intersection-over-union thresholds\cite{lin2014coco}; its numerical implementation is provided by the Ultralytics validation interface\cite{ultralyticsval}. A stratified 20-image subset is also reported because the course acceptance criterion is stated as class-recognition accuracy rather than AP.
 
-ROS 2 topics provide a publisher-subscriber mechanism for exchanging sensor data and robot state. Once a topic name and message type are agreed, nodes can communicate without directly invoking one another\cite{ros2topics}. The detector can therefore remain independent while downstream software subscribes either to compact structured results or to annotated images.
+ROS 2 provides a modular communication architecture for robot systems\cite{macenski2022ros2}. Topics exchange sensor data and robot state through a publisher-subscriber interface. Once a topic name and message type are agreed, nodes can communicate without directly invoking one another\cite{ros2topics}. The detector can therefore remain independent while downstream software subscribes either to compact structured results or to annotated images.
 
 \section{Dataset Construction}
 
 \subsection{Classes and Annotation Rules}
 
-The five classes are mouse, keyboard, laptop, cup, and headphones, with identifiers 0 through 4 in that order. Labels use the Ultralytics YOLO horizontal bounding-box format; each line stores a class identifier, normalized center coordinates, and normalized width and height\cite{ultralyticsdataset}. An open laptop is labeled as a complete laptop, while its visible keyboard area is also labeled as keyboard. When an object is occluded, the box follows the visible portion. Open Images annotations retain their provided box extent after class mapping and coordinate validation.
+The five classes are mouse, keyboard, laptop, cup, and headphones, with identifiers 0 through 4 in that order. Labels use the Ultralytics YOLO horizontal bounding-box format; each line stores a class identifier, normalized center coordinates, and normalized width and height\cite{ultralyticsdataset}. In the self-collected annotations, an open laptop receives a complete-device box and its visible keyboard receives a separate keyboard box. Occluded objects are annotated over their visible extent. Open Images annotations retain the provider's box extent after class mapping and coordinate validation.
 
-The nested laptop-keyboard rule is important for consistency. Treating a visible laptop keyboard as keyboard in one source but ignoring it in another would create contradictory supervision. The same five-class order is therefore used in the dataset configuration, model initialization, evaluation scripts, ROS 2 output, and report tables.
+The nested rule makes the self-collected labels consistent with the intended robot interface. Public images were not exhaustively relabeled, so their annotations cannot be assumed to include every visible nested keyboard. This difference in annotation coverage is relevant when interpreting localization and unmatched detections. The five-class identifier order is nevertheless identical in the dataset configuration, checkpoint, evaluation scripts, and ROS 2 output.
 
 \subsection{Source Composition and Offline Expansion}
 
-The dataset contains 1,000 self-collected-source images and 4,000 Open Images V7 images\cite{openimagesv7}. The self-collected-source portion starts from 10 independent photographs. Each parent produces one base version normalized to $1280\times960$ pixels and 99 deterministic augmented versions. Parameters are determined from random seed 20260831 together with the parent filename and variant number. Transformations include rotation within $[-9^{\circ},9^{\circ}]$, scaling within $[0.88,1.12]$, horizontal or vertical translation of no more than 7\% of the image dimension, horizontal flipping with probability 0.5, and bounded brightness, contrast, blur, and noise perturbations. Bounding boxes are transformed with the image.
+The dataset contains 1,000 self-collected-source images and 4,000 Open Images V7 images\cite{openimagesv7}. The self-collected-source portion starts from 10 source photographs. Each parent produces one base version normalized to $1280\times960$ pixels and 99 deterministic augmented versions. Parameters are determined from random seed 20260831 together with the parent filename and variant number. Transformations include rotation within $[-9^{\circ},9^{\circ}]$, scaling within $[0.88,1.12]$, horizontal or vertical translation of no more than 7\% of the image dimension, horizontal flipping with probability 0.5, and bounded brightness, contrast, blur, and noise perturbations. Bounding boxes are transformed with the image.
 
-The term \emph{1,000 self-collected-source images} describes provenance, not 1,000 independent capture events. Independent visual content originates from 10 photographs; the remaining 990 files are traceable offline derivatives. Augmentation changes brightness, placement, and local imaging characteristics, but it cannot introduce a new room, camera, desk material, or capture operator. The report preserves this distinction so that derived sample count is not mistaken for independent scene count.
+The term \emph{1,000 self-collected-source images} describes the material supplied to the learning pipeline. It comprises 10 normalized base images and 990 augmented versions, rather than 1,000 independent captures. Augmentation changes brightness, placement, and local imaging characteristics; the source photographs determine the available rooms, desk arrangements, cameras, and object instances.
 
 The public subset supplements object appearance and background variation. For every Open Images file, the manifest stores the original split, source identifier, and download URL before mapping the class name to the local identifier. If a source box is represented in pixel coordinates, conversion to YOLO format is
 \begin{equation}
@@ -155,7 +163,7 @@ Figure~\ref{fig:selfsamples} shows four base images and their deterministic vari
 
 \subsection{Data Splits and Quality Control}
 
-The 10 parent photographs are assigned to training, validation, and test splits in an 8:1:1 ratio. Every derivative of a parent remains in the same split. Open Images files retain their original source split and are sampled by stable source-identifier hashes. The final training, validation, and test sets contain 4,000, 350, and 650 images, respectively. Table~\ref{tab:split} reports source composition and box count.
+The 10 parent photographs are assigned to training, validation, and test directories in an 8:1:1 ratio. Every derivative of a parent remains in the same split. Open Images files retain their original source split and are sampled by stable source-identifier hashes. The final splits contain 4,000, 350, and 650 images (Table~\ref{tab:split}), corresponding to 3,208, 251, and 551 distinct source identifiers. These identifiers count photographs, not independent scenes. Because the initialization checkpoint had already been evaluated on the retained public test images, the 650-image split is treated throughout as a fixed development holdout; its directory name remains \texttt{test} for reproducibility.
 
 \begin{table}[htbp]
 \caption{Dataset splits, image provenance, and bounding-box counts.}
@@ -168,33 +176,35 @@ Split & Self-collected source & Public & Images & Boxes \\
 \midrule
 Training & 800 & 3,200 & 4,000 & 6,773 \\
 Validation & 100 & 250 & 350 & 627 \\
-Test & 100 & 550 & 650 & 1,107 \\
+Holdout (test) & 100 & 550 & 650 & 1,107 \\
 \midrule
 Total & 1,000 & 4,000 & 5,000 & 8,507 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Quality control covers image readability, image-label pairing, class identifiers, normalized coordinates, duplicate source identifiers, byte-identical files, and parent-image overlap. The audit found no unreadable image, missing label, or parent-image leakage. Provenance totals are 1,000 self-collected-source images, 4,000 public images, zero generated images, and zero images of unknown origin. Perceptual-hash screening marked four cross-split pairs for visual review, but none was byte-identical and no common parent identifier crossed a split. Public annotations underwent structural checks and sampled visual inspection rather than exhaustive manual relabeling; the reported metrics therefore use the converted provider boxes as the reference annotations. File totals alone are not treated as sufficient evidence: the manifest, image tree, label tree, and source-group assignments are checked against one another.
+Quality control covers image readability, image-label pairing, class identifiers, normalized coordinates, duplicate source identifiers, byte-identical files, and parent-image overlap. No unreadable image, missing label, byte-identical duplicate, or cross-split derivative of the same parent was found. The current 5,000-image fine-tuning dataset contains zero generated images and zero images of unknown origin. This statement concerns the current dataset; the checkpoint's earlier training history is described in Section~\ref{sec:finetuning}.
 
-The class distribution is shown in Table~\ref{tab:classdist}. Laptop has 2,549 boxes and headphones 871, producing a largest-to-smallest ratio of approximately 2.93. The offline distribution was not altered by copying a single class. Per-class precision, recall, and AP are therefore reported in addition to global means.
+Perceptual-hash screening identified four cross-split pairs at Hamming distance 1. They involve derivatives of \texttt{IMG\_8304}, \texttt{IMG\_8305}, and \texttt{IMG\_8306}, which depict closely related desktop arrangements and lie in different splits. Parent grouping therefore prevents exact derivative overlap but does not establish scene independence. The holdout's 100 self-derived images all originate from \texttt{IMG\_8306} and contribute 300 of its 1,107 boxes (27.10\%). Public annotations underwent structural checks and sampled visual inspection; the converted provider boxes remain the evaluation reference.
+
+Table~\ref{tab:classdist} separates box counts by source. Laptop has 2,549 boxes and headphones 871, a ratio of approximately 2.93. Self-collected material covers mouse, keyboard, and laptop; cup and headphones are supported entirely by public images in the current dataset. All 5,000 label files contain at least one target box, so the evaluation does not provide a separate false-alarm rate for target-free scenes.
 
 \begin{table}[htbp]
-\caption{Bounding-box distribution across the five classes.}
+\caption{Bounding-box distribution by class and source.}
 \label{tab:classdist}
 \centering
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{lrrrr}
 \toprule
-Class & Boxes & Proportion (\%) \\
+Class & Self-derived & Public & Total & Share (\%) \\
 \midrule
-mouse & 1,724 & 20.27 \\
-keyboard & 1,966 & 23.11 \\
-laptop & 2,549 & 29.96 \\
-cup & 1,397 & 16.42 \\
-headphones & 871 & 10.24 \\
+mouse & 1,000 & 724 & 1,724 & 20.27 \\
+keyboard & 595 & 1,371 & 1,966 & 23.11 \\
+laptop & 700 & 1,849 & 2,549 & 29.96 \\
+cup & 0 & 1,397 & 1,397 & 16.42 \\
+headphones & 0 & 871 & 871 & 10.24 \\
 \midrule
-Total & 8,507 & 100.00 \\
+Total & 2,295 & 6,212 & 8,507 & 100.00 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -209,36 +219,52 @@ The system comprises dataset construction, model training, unified inference, an
 
 \begin{figure}[htbp]
 \centering
-\resizebox{0.96\textwidth}{!}{%
+\resizebox{0.97\textwidth}{!}{%
 \begin{tikzpicture}[
-  node distance=5mm and 7mm,
-  box/.style={draw,rounded corners=2pt,align=center,minimum height=9mm,minimum width=24mm,fill=blue!5,font=\small},
+  node distance=6mm and 7mm,
+  box/.style={draw,rounded corners=2pt,align=center,minimum height=12mm,text width=29mm,fill=blue!5,font=\small},
+  output/.style={box,fill=green!5,text width=33mm},
   arrow/.style={-{Latex[length=2mm]},thick}
 ]
-\node[box] (collect) {Captured photos\\Open Images V7};
-\node[box,right=of collect] (label) {Label conversion\\Provenance};
-\node[box,right=of label] (qa) {Grouped split\\Quality checks};
-\node[box,right=of qa] (train) {YOLO11n\\Fine-tuning};
-\node[box,right=of train] (infer) {Unified inference\\Result storage};
-\node[box,right=of infer] (ros) {ROS 2 publishing\\JSON and image};
-\draw[arrow] (collect) -- (label);
-\draw[arrow] (label) -- (qa);
-\draw[arrow] (qa) -- (train);
-\draw[arrow] (train) -- (infer);
-\draw[arrow] (infer) -- (ros);
+\node[box] (sources) {Photos and labels\\Provenance manifest};
+\node[box,right=of sources] (split) {Parent grouping\\Training / evaluation};
+\node[box,right=of split] (train) {Warm-start YOLO11n\\12-epoch fine-tuning};
+\node[box,right=of train] (weights) {Selected checkpoint\\SHA-256 identity};
+\node[box,below=19mm of sources] (camera) {Image / video / USB\\or ROS 2 image topic};
+\node[box,right=of camera] (infer) {Predict once\\Pre / infer / post};
+\node[box,right=of infer] (record) {Detection record\\Class / score / box};
+\node[output,right=of record] (json) {JSON result topic};
+\node[output,below=of json] (visual) {Image topic\\Display and video};
+\node[output,below=of record] (storage) {CSV records\\Saved review cases};
+\node[anchor=south west,font=\small\bfseries] at (sources.north west) {Offline preparation};
+\node[anchor=south west,font=\small\bfseries] at (camera.north west) {Online execution};
+\draw[arrow] (sources) -- (split);
+\draw[arrow] (split) -- (train);
+\draw[arrow] (train) -- (weights);
+\draw[arrow] (weights.south) -- ++(0,-8mm) -| (infer.north);
+\draw[arrow] (camera) -- (infer);
+\draw[arrow] (infer) -- (record);
+\draw[arrow] (record) -- (json);
+\draw[arrow] (record) -- (storage);
+\draw[arrow] (record.east) -- ++(3mm,0) |- (visual.west);
 \end{tikzpicture}
 }
-\caption{Dataset construction, model training, inference, and ROS 2 result-publication pipeline.}
+\caption{Offline preparation and online execution. A fixed checkpoint connects the two stages; one prediction result supplies structured messages, visual output, and persistent records.}
 \label{fig:pipeline}
 \end{figure}
 
 The modules share one class map and one set of inference parameters but retain separate entry points. This organization prevents camera, file, and ROS 2 modes from implementing different post-processing logic. It also allows a failure to be located at a specific boundary: data reading, model prediction, output serialization, or message publication.
 
 \subsection{Model Fine-Tuning}
+\label{sec:finetuning}
 
-The model is initialized from the previously trained five-class YOLO11n checkpoint \path{models/expanded_v1/best.pt}, whose class order matches the present dataset. Formal training uses 12 epochs, batch size 32, input size 640, zero data-loader workers, and early-stopping patience 4. Training runs on the Apple MPS backend with random seed 0, deterministic computation, and automatic mixed precision. The optimizer is selected automatically by Ultralytics, and the complete run configuration is preserved in \path{args.yaml}.
+The experiment uses sequential transfer learning. The initial P05 model was trained from \path{yolo11n.pt} on a 500-image baseline comprising 453 generated images, 37 public images, and 10 local photographs. The subsequent 30-epoch expanded-data run combined that baseline with 4,500 Open Images photographs and produced \path{models/expanded_v1/best.pt}. This historical checkpoint initializes the present 12-epoch run. Its SHA-256 is {\footnotesize\texttt{8c9ad192ec37128ad10751bf8d7f58a3ee821c4ae0e47733fe0a8d199212c9df}}. Thus, the final weight history includes generated-image supervision even though the current fine-tuning dataset contains none.
 
-Online augmentation includes hue, saturation, and value parameters of 0.015, 0.7, and 0.4; rotation, translation, and scaling parameters are 5 degrees, 0.1, and 0.3. Horizontal flipping has probability 0.5. Mosaic starts at 0.5 and is disabled for the final 10 epochs, while MixUp is disabled. Validation metrics are computed after every epoch, and both the last checkpoint and the checkpoint with the best validation metric are saved.
+All 4,000 public images in the current dataset also occur in the historical expanded dataset with the same split assignments: 3,200 training, 250 validation, and 550 test. The 550 public holdout images were evaluated during the earlier experiment, but the manifests do not assign them to either training split. The current validation and holdout source photographs also retain their earlier validation and test assignments. This lineage supports evaluation on a reused development holdout, without establishing a previously unseen external test.
+
+The current run uses 12 epochs, batch size 32, input size 640, zero data-loader workers, and early-stopping patience 4. Training runs on Apple MPS with random seed 0, deterministic mode requested, and AMP enabled in the configuration. These settings document the run without guaranteeing bitwise equivalence across hardware. Ultralytics selects the optimizer automatically, and \path{args.yaml} preserves the requested arguments.
+
+Online augmentation includes hue, saturation, and value parameters of 0.015, 0.7, and 0.4; rotation, translation, and scaling parameters are 5 degrees, 0.1, and 0.3. Horizontal flipping has probability 0.5. Mosaic is configured at 0.5 for the first two epochs and disabled for the final 10; MixUp is disabled. Validation metrics are computed after every epoch, and both the last checkpoint and the checkpoint with the best validation metric are saved.
 
 Table~\ref{tab:trainconfig} summarizes the parameters required to reproduce the run. The selected acceptance model contains 2,590,815 parameters and occupies 5,482,577 bytes. Its SHA-256 is {\footnotesize\texttt{c53834aa239974163ef48c566dc3fea04d38de7a1d05292ab5216d5163a09a42}}. Fixing the hash prevents a later checkpoint with the same \texttt{best.pt} filename from being assigned the reported results.
 
@@ -255,10 +281,10 @@ Initialization & \path{models/expanded_v1/best.pt}; unchanged five-class order \
 Epochs and early stopping & 12 epochs; patience 4 \\
 Batch and input & batch 32; $640\times640$ \\
 Training device & Apple M4, MPS; workers 0 \\
-Reproducibility & seed 0; deterministic true; AMP true \\
-Optimizer & Ultralytics auto; \texttt{lr0}=0.01; weight decay 0.0005 \\
+Reproducibility & seed 0; deterministic mode requested; AMP enabled in configuration \\
+Optimizer arguments & \texttt{optimizer=auto}; the automatic selector ignores the requested \texttt{lr0}=0.01; weight decay 0.0005 \\
 Geometric augmentation & degrees 5; translate 0.1; scale 0.3; horizontal flip 0.5 \\
-Composed augmentation & Mosaic 0.5, disabled for final 10 epochs; MixUp 0 \\
+Composed augmentation & Mosaic 0.5 in epochs 1--2, then disabled; MixUp 0 \\
 Model selection & validation after each epoch; best AP$_{50:95}$ checkpoint for testing \\
 \bottomrule
 \end{tabularx}
@@ -283,7 +309,7 @@ The JSON fields are listed in Table~\ref{tab:rosfields}. Pixel-coordinate boxes 
 \toprule
 Field & Form & Meaning \\
 \midrule
-timestamp & floating point & ROS 2 node-clock timestamp in seconds \\
+timestamp & floating point & node-clock time in seconds, assigned after prediction \\
 frame\_id & integer & processed-frame counter since node startup \\
 fps & floating point & exponentially smoothed model-call rate \\
 detections & list & all accepted detections in the current frame \\
@@ -295,7 +321,7 @@ bbox & object & pixel coordinates $x_1,y_1,x_2,y_2$ \\
 \end{tabularx}
 \end{table}
 
-The node performs one model call per frame. JSON, the annotated image, and optional video output are derived from that result, so enabling more than one output does not duplicate neural-network inference. The result-topic queue depth is 10 and the image-topic queue depth is 2. The smaller image queue limits accumulation of large stale frames. Camera and video-writer handles are released explicitly during node shutdown.
+The node performs one model call per frame. JSON, the annotated image, and optional video output are derived from that result, so enabling more than one output does not duplicate neural-network inference. The result-topic queue depth is 10 and the image-topic queue depth is 2. The smaller image queue limits accumulation of large stale frames. Camera and video-writer handles are released explicitly during node shutdown. The JSON timestamp denotes post-prediction node time, rather than camera exposure time. Encoding detections in \texttt{String} makes terminal inspection simple, but consumers must validate the JSON fields because the ROS message type does not enforce their schema.
 
 \subsection{Jetson Deployment}
 
@@ -343,17 +369,27 @@ The intersection over union between a predicted box $B_p$ and a ground-truth box
 \begin{equation}
 \mathrm{IoU}=\frac{|B_p\cap B_g|}{|B_p\cup B_g|}.
 \end{equation}
-\mAPfifty{} averages class AP at IoU 0.5. \mAPcoco{} averages AP over IoU thresholds from 0.5 through 0.95 in increments of 0.05 and therefore places a stricter requirement on localization\cite{lin2014coco,ultralyticsval}.
+These ratios are computed for each class. The reported mean precision and recall are macro averages over the five classes, rather than ratios formed by pooling all boxes. \mAPfifty{} averages class AP at IoU 0.5. \mAPcoco{} additionally averages over IoU thresholds from 0.5 through 0.95 in increments of 0.05 and therefore places a stricter requirement on localization\cite{lin2014coco,ultralyticsval}. The validator's summary precision and recall use its confidence-curve operating point; they are distinct from the class decisions made at the fixed deployment confidence of 0.50.
 
 \subsection{Test Protocols}
 
-First, the 650-image test split was evaluated with Ultralytics 8.4.133 using \texttt{split=test}, \texttt{imgsz=640}, \texttt{batch=16}, and \texttt{device=mps}. Remaining evaluation thresholds follow that version's defaults. This run produced global and per-class metrics together with a normalized confusion matrix.
+First, the 650-image development holdout was evaluated with Ultralytics 8.4.133 using \texttt{split=test}, \texttt{imgsz=640}, \texttt{batch=16}, and \texttt{device=mps}. The resolved validator settings use confidence 0.001 as the candidate floor, NMS IoU 0.70, at most 300 detections per image, rectangular batching, class-aware NMS, and no test-time augmentation. Offline evaluation uses FP32. Summary precision and recall are read at the common confidence threshold maximizing the smoothed mean F1 curve across classes, approximately 0.464 in the saved full-holdout curve. The confusion-matrix plot uses a separate confidence threshold of 0.25. These settings distinguish the AP evaluation and diagnostic plot from deployment at confidence 0.50 and NMS IoU 0.45.
 
-Second, a 20-image class-decision subset was formed from the public portion of the same test split. For each class, the first four Open Images files in lexicographic manifest order that contained exactly one reference box of that class were selected before inference. All 20 are real public photographs, and none belongs to the self-collected derivative groups. Predictions used confidence 0.50 and NMS IoU 0.45. A sample was counted as correct when the class of its highest-confidence box matched the manifest class; no detection or a different highest-confidence class was counted as an error. This deterministic subset is part of the 650-image test set, so its class-decision accuracy is an acceptance-oriented descriptive result rather than an independent estimate, and it is not combined with IoU-matched AP.
+A source-stratified evaluation additionally isolates the 550 Open Images photographs and their 807 boxes from this holdout. It uses the same checkpoint, software versions, and metric-affecting validation settings, except that batch size is reduced to 4 for memory-bounded execution. Rectangular batching is retained, so removing images and changing batch size can alter the padded input shapes. Its precision and recall use the subset's own common F1 operating point, 0.4454. The 550 source identifiers are unique, have no overlap with the 37 public images in the historical baseline, and all remained in the initialization dataset's test split. This analysis excludes self-derived scenes but still reuses development data; it is not an additional independent test.
+
+Second, a 20-image class-decision subset was formed from the public portion of the same holdout. For each class, the first four Open Images files in lexicographic manifest order with exactly one reference box were selected; the rule did not consult per-image predictions. All 20 are real public photographs. Inference used MPS, confidence 0.50, and NMS IoU 0.45. A sample was correct when its highest-confidence predicted class matched the manifest class; no detection or a different top class was an error. Lower-ranked detections and bounding-box IoU do not enter this decision. The image count is 20, with one annotated target per image. This protocol is a fixed photographic acceptance test, not a record of 20 newly presented physical objects. It remains descriptive because the photographs belong to the existing holdout, and its class-only decision is distinct from IoU-matched AP.
 
 Third, real-time performance was measured on the Jetson Orin NX with the USB camera. Timing began after camera acquisition. The first 20 frames were used for warm-up and the next 200 for measurement. Each interval covered Ultralytics preprocessing, GPU inference, and post-processing within \texttt{model.predict}; it excluded camera reading, box drawing, video or log storage, and ROS 2 publication. The model used PyTorch FP16 at input size 640 with confidence 0.50 and NMS IoU 0.45.
 
-Finally, ROS 2 communication performance was measured independently with \texttt{ros2 topic hz} on \path{/object_detection/result}. The sliding window contained 200 messages and the observation interval was 15 s. This frequency represents messages received by the subscriber and differs from the exponentially smoothed model-call FPS embedded in the JSON. Per-frame benchmark measurements are stored on the Jetson at \path{outputs/benchmark/jetson_orin_nx_camera.csv}.
+For timed call durations $t_i$ in milliseconds, the benchmark calculates
+\begin{equation}
+\overline{t}=\frac{1}{N}\sum_{i=1}^{N}t_i,\qquad
+F_{\mathrm{call}}=\frac{1000}{\overline{t}},\qquad
+F_{\min}=\frac{1000}{\max_i t_i},\quad N=200.
+\end{equation}
+The reported mean FPS is therefore the reciprocal of mean latency, not the arithmetic mean of individual frame rates. The minimum is the lowest observed call rate within this run.
+
+Finally, ROS 2 communication performance was measured with \texttt{ros2 topic hz} on \path{/object_detection/result}. The sliding window contained 200 messages and the observation interval was 15 s. This frequency represents messages received by the subscriber and differs from the exponentially smoothed model-call FPS embedded in the JSON. The aggregate benchmark CSV is retained on the Jetson at \path{outputs/benchmark/jetson_orin_nx_camera.csv}. The script writes one summary row; it does not export a per-frame latency series.
 
 \subsection{Reproduction Materials and Result Attribution}
 
@@ -375,11 +411,18 @@ Dataset configuration & \path{datasets/experiment1_1000self_4000public_v1/datase
 Provenance manifest & \path{datasets/experiment1_1000self_4000public_v1/manifest.csv} \\
 Provenance audit & \path{datasets/experiment1_1000self_4000public_v1/qa/provenance_audit.json} \\
 Training configuration & \path{outputs/training/experiment1_1000self_4000public_v1/args.yaml} and \path{results.csv} \\
-Test-set metrics & \path{outputs/evaluation/experiment1_1000self_4000public_v1_test/evaluation_results.json} \\
+Holdout metrics & \path{outputs/evaluation/experiment1_1000self_4000public_v1_test/evaluation_results.json} \\
+Public-source analysis & \path{outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/} \\
 20-image selection and results & \path{configs/test_samples.csv} and \path{20_object_test_results.csv} in the experiment evaluation directory \\
 Low-confidence review cases & \path{outputs/errors/experiment1_1000self_4000public_v1_real20/} \\
-Jetson measurement record & \path{docs/JETSON_MEASUREMENT.md}; per-frame CSV retained on the Jetson \\
+Inspected box-level errors & \path{outputs/errors/experiment1_1000self_4000public_v1_holdout/} \\
+Jetson measurement record & \path{docs/JETSON_MEASUREMENT.md}; summary CSV retained on the Jetson \\
 Acceptance checkpoint & \path{models/experiment1_1000self_4000public_v1/best.pt} and its SHA-256 \\
+Initialization checkpoint & \path{models/expanded_v1/best.pt} \\
+Program and ROS 2 node & \path{scripts/} and \path{ros2_ws/src/object_detector/} \\
+Result video & \path{outputs/videos/jetson_live_detection_20260905_193850.mp4} \\
+Running instructions & \path{docs/RUN_GUIDE.md}, \path{docs/JETSON_DEPLOYMENT.md}, and \path{docs/ROS2_GUIDE.md} \\
+English report & \path{docs/ieee_report/main.tex} and \path{output/pdf/desktop_object_detection_experiment_report.pdf} \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -392,7 +435,7 @@ Figure~\ref{fig:training} shows the 12-epoch run. All three training losses decr
 
 From epoch 1 to epoch 12, training box loss decreases from 0.9981 to 0.7168, classification loss from 0.9210 to 0.5428, and distribution focal loss from 1.3143 to 1.0812. Over the same interval, validation box loss and classification loss decrease from 1.4159 and 1.2833 to 1.1461 and 1.0796, whereas validation distribution focal loss changes from 1.7542 to 1.7939 with repeated fluctuations. Training-set convergence is therefore more regular than validation localization behavior.
 
-Validation \mAPfifty{} increases from 0.6760 at epoch 1 to 0.7334 at epoch 12, while \mAPcoco{} increases from 0.3804 to 0.4621. The final three \mAPcoco{} values are 0.4476, 0.4450, and 0.4621; the selected checkpoint is therefore based on the highest observed validation AP rather than on the training-loss minimum alone. Total training time was 3,467.77 s, approximately 57.8 min. This value describes the present run and is not used as a cross-hardware training benchmark.
+Validation \mAPfifty{} increases from 0.6760 at epoch 1 to 0.7334 at epoch 12, while \mAPcoco{} increases from 0.3804 to 0.4621. The final three \mAPcoco{} values are 0.4476, 0.4450, and 0.4621. The selected checkpoint is the best observed within the fixed training budget; its occurrence at the final epoch does not establish a performance plateau. Total training time was 3,467.77 s, approximately 57.8 min. These results describe a single run and do not estimate variation across random seeds.
 
 \begin{figure}[H]
 \centering
@@ -401,24 +444,24 @@ Validation \mAPfifty{} increases from 0.6760 at epoch 1 to 0.7334 at epoch 12, w
 \label{fig:training}
 \end{figure}
 
-Detection results on the 650-image test set are reported in Table~\ref{tab:metrics}. Global precision is 0.8385 and recall is 0.7697, indicating that retained predictions are more reliable than the detector's coverage of all ground-truth objects. \mAPfifty{} is 0.8386 and \mAPcoco{} is 0.5735. Their difference of 0.2651 shows a substantial reduction when stricter IoU conditions are introduced, so boundary localization remains more sensitive than class recognition at IoU 0.5.
+Detection results on the 650-image development holdout are reported in Table~\ref{tab:metrics}. Mean per-class precision is 0.8385 and recall is 0.7697. At the validator's operating point, accepted predictions are more precise than the model's coverage of annotated objects. \mAPfifty{} is 0.8386 and \mAPcoco{} is 0.5735. Their difference of 0.2651 indicates a substantial loss of performance under stricter box-overlap requirements.
 
 \begin{table}[H]
-\caption{Global and per-class detection metrics on the test set.}
+\caption{Per-class and macro-averaged metrics on the fixed development holdout. $\Delta$ is AP$_{50}$ minus AP$_{50:95}$.}
 \label{tab:metrics}
 \centering
 \small
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrrr}
 \toprule
-Class & $P$ & $R$ & AP$_{50}$ & AP$_{50:95}$ \\
+Class & $P$ & $R$ & AP$_{50}$ & AP$_{50:95}$ & $\Delta$ \\
 \midrule
-mouse & 0.9325 & 0.9101 & 0.9501 & 0.7546 \\
-keyboard & 0.8346 & 0.8469 & 0.9012 & 0.6361 \\
-laptop & 0.9121 & 0.7529 & 0.8640 & 0.4599 \\
-cup & 0.9091 & 0.7409 & 0.8571 & 0.6751 \\
-headphones & 0.6041 & 0.5978 & 0.6203 & 0.3419 \\
+mouse & 0.9325 & 0.9101 & 0.9501 & 0.7546 & 0.1955 \\
+keyboard & 0.8346 & 0.8469 & 0.9012 & 0.6361 & 0.2651 \\
+laptop & 0.9121 & 0.7529 & 0.8640 & 0.4599 & 0.4041 \\
+cup & 0.9091 & 0.7409 & 0.8571 & 0.6751 & 0.1820 \\
+headphones & 0.6041 & 0.5978 & 0.6203 & 0.3419 & 0.2784 \\
 \midrule
-Overall & 0.8385 & 0.7697 & 0.8386 & 0.5735 \\
+Macro mean & 0.8385 & 0.7697 & 0.8386 & 0.5735 & 0.2651 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -433,25 +476,25 @@ Cup precision is 0.9091 while recall is 0.7409. Accepted cup predictions are the
 
 For laptop, AP$_{50}$ is 0.8640 but AP$_{50:95}$ is 0.4599, a difference of 0.4041. An open laptop contains nested complete-device and visible-keyboard boxes, whereas a closed laptop presents a wide, low silhouette. These annotation semantics and appearance changes may contribute to localization complexity. The interpretation is consistent with inspected samples, but pose-specific AP was not computed and no direct causal claim is made.
 
-The normalized confusion matrix is shown in Figure~\ref{fig:confusion}. With columns normalized by true class, diagonal values for mouse, keyboard, laptop, cup, and headphones are 0.93, 0.89, 0.82, 0.78, and 0.67. In the background row, cup and headphones reach 0.22 and 0.32, indicating more unmatched ground-truth targets for these classes. Explicit class-to-class off-diagonal confusion is comparatively limited, consistent with the lower recall of cup and headphones.
+The normalized confusion matrix is shown in Figure~\ref{fig:confusion} at its diagnostic confidence threshold of 0.25. With columns normalized by true class, diagonal values for mouse, keyboard, laptop, cup, and headphones are 0.93, 0.89, 0.82, 0.78, and 0.67. In the background row, cup and headphones reach 0.22 and 0.32, indicating more unmatched ground-truth targets for these classes. Explicit class-to-class off-diagonal confusion is comparatively limited, consistent with the lower recall of cup and headphones.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.58\textwidth]{test_confusion_matrix.pdf}
-\caption{Normalized confusion matrix on the 650-image test split. Columns are true classes and rows are predicted classes.}
+\caption{Normalized confusion matrix on the 650-image development holdout. Columns are true classes and rows are predicted classes.}
 \label{fig:confusion}
 \end{figure}
 
-The 20-image script also preserves any prediction below a review threshold of 0.60 even when its class decision is correct. Three such cases occur in the deterministic subset: two keyboards and one laptop. They are retained as inspectable low-confidence examples, not as estimates of the frequency of a particular failure mechanism. Missed detections, misclassifications, and false positives would be stored by the same routine when present.
+The 20-image script preserves a sample when its correct top-class decision has confidence below the review threshold of 0.60. Three such cases occur in the deterministic subset: two keyboards and one laptop. They are retained as inspectable low-confidence examples, not as estimates of failure frequency. Samples with no detection or an incorrect top class are also retained when present; lower-ranked false positives require separate box-level inspection.
 
 \subsection{Twenty-Image Class Decisions and Multi-Class Output}
 
-For the deterministic 20-image subset, the highest-confidence predicted class matches the reference class for all 20 photographs, giving 100\% class-decision accuracy and exceeding the required 80\%. Because these images are drawn from the evaluated 650-image test split, this subset result describes a fixed acceptance sample rather than an additional independent test.
+For the deterministic 20-image subset, the highest-confidence predicted class matches the reference class for all 20 photographs, giving 100\% class-decision accuracy and a margin of 20 percentage points above the 80\% criterion. These images are part of the 650-image development holdout, so the result describes the fixed photographic acceptance sample.
 
 Per-class results are shown in Table~\ref{tab:twentyclass}. Every class achieves 4/4. Mean confidence is calculated over the four accepted class decisions for each category and is included to describe the score range, not as a calibrated probability or global reliability estimate. Keyboard has the lowest mean confidence, 0.6543, and includes the two lowest scores, 0.5083 and 0.5654; both remain above the configured confidence threshold.
 
 \begin{table}[htbp]
-\caption{Per-class decisions on the 20 single-object samples.}
+\caption{Per-class decisions on the 20 single-reference-box images.}
 \label{tab:twentyclass}
 \centering
 \small
@@ -471,14 +514,14 @@ Overall & 20/20 & 100 & -- & -- \\
 \end{tabular}
 \end{table}
 
-To examine simultaneous multi-class output, the current acceptance checkpoint was applied to \texttt{self\_IMG\_8306\_v000.jpg}, a base image in the self-collected-source portion of the test split. Inference on the training machine used MPS with confidence 0.50 and NMS IoU 0.45. The image contains laptop, keyboard, and mouse ground-truth objects; all three are detected in the same frame with confidence 0.9233, 0.9184, and 0.8631. Figure~\ref{fig:multiclass} shows the complete output.
+To examine simultaneous multi-class output, the current checkpoint was applied to \texttt{self\_IMG\_8306\_v000.jpg}, a base image in the self-collected-source portion of the holdout. Inference on MPS used confidence 0.50 and NMS IoU 0.45. Laptop, keyboard, and mouse were detected in the same frame with confidence 0.9233, 0.9184, and 0.8631 (Figure~\ref{fig:multiclass}). This is a functional demonstration on a familiar desktop arrangement.
 
 % Prediction generated with the current acceptance checkpoint on 2026-09-05.
 % Model SHA-256: c53834aa239974163ef48c566dc3fea04d38de7a1d05292ab5216d5163a09a42
 \begin{figure}[H]
 \centering
-\includegraphics[angle=90,width=0.68\textwidth]{../../outputs/evaluation/current_model_demo/current_test_self_real_imgsz640_conf050_iou045/self_IMG_8306_v000_20260905_204222.jpg}
-\caption{Multi-class output from the current acceptance checkpoint on a base test image derived from self-collected material. Laptop, keyboard, and mouse are detected simultaneously with bounding boxes and confidence values.}
+\includegraphics[width=0.88\textwidth]{../../outputs/evaluation/current_model_demo/current_test_self_real_imgsz640_conf050_iou045/self_IMG_8306_v000_20260905_204222.jpg}
+\caption{Functional multi-class demonstration on a base holdout image derived from self-collected material. Laptop, keyboard, and mouse are detected simultaneously with bounding boxes and confidence values.}
 \label{fig:multiclass}
 \end{figure}
 
@@ -499,40 +542,132 @@ Figure~\ref{fig:jetsonlive} contains 32 chronologically selected frames from a r
 \label{fig:jetsonlive}
 \end{figure}
 
-The observed publication frequency of \path{/object_detection/result} is 29.99 Hz over a 15 s window, close to the approximately 30 FPS camera input. It is lower than the independent model-call benchmark because continuous node execution also includes frame acquisition, JSON serialization, box drawing, and image-message conversion. Both measurements exceed 5 FPS, showing that model inference and ROS 2 result publication satisfy the real-time requirement in the measured configuration. Table~\ref{tab:summary} consolidates the principal results.
+The subscriber observed \path{/object_detection/result} at 29.99 Hz over 15 s, effectively matching the approximately 30 FPS camera input. This demonstrates publication at the source rate. The separate model-call benchmark indicates processing capacity above that input rate; the measurements do not isolate the individual costs of acquisition, serialization, drawing, and image conversion. Both model-call throughput and result-topic frequency exceed the 5 FPS criterion in the measured configuration. Table~\ref{tab:summary} connects each acceptance item to its evidence and decision rule.
 
 \begin{table}[htbp]
-\caption{Summary of detection results and Jetson performance.}
+\caption{Acceptance requirements and corresponding evidence. Numerical decisions apply to the protocols defined in this report.}
 \label{tab:summary}
 \centering
-\small
-\begin{tabular}{p{0.49\textwidth}p{0.35\textwidth}}
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.22\textwidth}}
 \toprule
-Test item & Result \\
+Requirement & Observation and evidence & Decision \\
 \midrule
-Test-set size & 650 images; 1,107 boxes \\
-Overall \mAPfifty{} / \mAPcoco{} & 0.8386 / 0.5735 \\
-20-image class-decision accuracy & 20/20; 100\% \\
-Jetson backend & PyTorch FP16; CUDA device 0 \\
-Jetson warm-up/measured frames & 20/200 \\
-Mean network inference time & 20.575 ms \\
-Mean \texttt{model.predict} call time & 25.951 ms \\
-Mean/minimum model-call rate & 38.534/37.952 FPS \\
-Maximum network inference time & 20.896 ms \\
-ROS 2 result-topic frequency & 29.99 Hz (15 s; window 200) \\
-Real-time requirement and decision & $\geq 5$ FPS; PASS \\
+At least two classes simultaneously & Laptop, keyboard, and mouse in one frame; Figure~\ref{fig:multiclass} & Demonstrated: 3 classes \\
+At least 80\% correct on 20 targets & 20/20 top-class decisions on the fixed photographic sample; Table~\ref{tab:twentyclass} & PASS for this protocol; +20 percentage points \\
+Jetson detection at $\geq5$ FPS & 38.534 FPS mean and 37.952 FPS minimum call rate in 200 timed frames & PASS; mean is $7.71\times$ the criterion \\
+Real-time labels, boxes, and scores & Annotated stream sequence and continuous recording; Figure~\ref{fig:jetsonlive} & Demonstrated \\
+ROS 2 result publication & \path{/object_detection/result}: 29.99 Hz at the subscriber (15 s; window 200) & Measured at approximately camera rate \\
+Save results and typical failures & Detection CSV, video, low-confidence cases, and inspected holdout errors; Section~\ref{sec:caseanalysis} & Artifacts retained \\
+Six submission materials & Dataset, checkpoint, program, video, instructions, and report; Table~\ref{tab:artifacts} & Supplied in the submission archive \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\FloatBarrier
+\section{Discussion}
+\subsection{Recognition, Localization, and Threshold Sensitivity}
+\label{sec:caseanalysis}
+
+The 20-image class result and the detection metrics answer different questions. AP evaluates ranked predictions against box annotations, whereas the acceptance sample checks only the highest-confidence class. A correct class decision can therefore coexist with an inaccurate bounding box. The saved case analysis below examines this distinction directly and supplements the class-level patterns in Table~\ref{tab:metrics}.
+
+The lowest accepted score in the 20-image sample is 0.5083, only 0.0083 above the configured threshold. Table~\ref{tab:threshold} applies stricter score cutoffs to the saved top-class decisions. At 0.60, 17 remain accepted; at 0.70, 16 remain, exactly meeting the 80\% criterion. At 0.75, only 14 remain. This is a retrospective score-filtering analysis of fixed predictions, not a fresh detection run or a basis for choosing a new threshold. It shows that the perfect class score at 0.50 includes several marginal decisions.
+
+\begin{table}[htbp]
+\caption{Retrospective score filtering of the 20 saved correct top-class decisions. Rejected decisions count as unsuccessful samples.}
+\label{tab:threshold}
+\centering
+\small
+\begin{tabular}{rrrr}
+\toprule
+Score cutoff & Accepted correct & Rejected & Success rate (\%) \\
+\midrule
+0.50 & 20 & 0 & 100 \\
+0.60 & 17 & 3 & 85 \\
+0.70 & 16 & 4 & 80 \\
+0.75 & 14 & 6 & 70 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{ccc}
+\includegraphics[width=0.30\textwidth,height=0.22\textheight,keepaspectratio]{../../outputs/errors/experiment1_1000self_4000public_v1_real20/real_07_low_confidence.jpg} &
+\includegraphics[width=0.30\textwidth,height=0.22\textheight,keepaspectratio]{../../outputs/errors/experiment1_1000self_4000public_v1_real20/real_08_low_confidence.jpg} &
+\includegraphics[width=0.30\textwidth,height=0.22\textheight,keepaspectratio]{../../outputs/errors/experiment1_1000self_4000public_v1_real20/real_10_low_confidence.jpg} \\
+\small (a) Keyboard: 0.5654 & \small (b) Keyboard: 0.5083 & \small (c) Laptop: 0.5904
+\end{tabular}
+\caption{Correct class decisions retained by the low-confidence review policy. All three scores exceed the inference threshold of 0.50 but fall below the review threshold of 0.60. These cases illustrate threshold sensitivity and are not misclassification examples.}
+\label{fig:lowconfidence}
+\end{figure}
+
+Three additional inspections use the same checkpoint with single-image MPS inference at confidence 0.50 and NMS IoU 0.45 (Figure~\ref{fig:actualerrors}). The cases were selected purposefully from the public holdout to examine the weakest class. Their records preserve source identifiers, input and label hashes, all reference and predicted boxes, confidence values, and pairwise IoU. They do not modify the aggregate AP result or estimate the prevalence of each error type.
+
+In case (a), the model returns no accepted detection for a visible pair of headphones. In case (b), it predicts headphones with confidence 0.7140 but covers only part of the provider's reference extent, producing IoU 0.4682. This image is also \texttt{real\_17} in the 20-image sample: its class decision is correct, yet it fails an IoU 0.50 box-matching rule. In case (c), a correct headphones prediction (confidence 0.6108, IoU 0.7689) accompanies a spurious cup prediction with higher confidence, 0.8460. No cup is visible in the source. Class-aware NMS permits overlapping boxes of different classes to remain, so it does not resolve this semantic conflict. These examples show why classification success, localization quality, and false-positive control require separate inspection.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{../../outputs/errors/experiment1_1000self_4000public_v1_holdout/01_headphones_missed_gt_vs_prediction.jpg}\par
+\vspace{0.4em}
+{\small (a) Missed detection: source \texttt{6eb03384f25d3f01}.\par}
+\vspace{0.7em}
+\includegraphics[width=0.95\textwidth]{../../outputs/errors/experiment1_1000self_4000public_v1_holdout/02_headphones_localization_gt_vs_prediction.jpg}\par
+\vspace{0.4em}
+{\small (b) Localization mismatch: source \texttt{0378fe468292e979}.\par}
+\vspace{0.7em}
+\includegraphics[width=0.95\textwidth]{../../outputs/errors/experiment1_1000self_4000public_v1_holdout/03_spurious_cup_gt_vs_prediction.jpg}\par
+\vspace{0.4em}
+{\small (c) Spurious cup prediction: source \texttt{34da803c6cae973c}.\par}
+\caption{Purposefully selected box-level failures. Each row compares the provider annotation (left) with predictions (right) on the same image. Green denotes reference boxes; orange marks localization mismatch, red an unmatched prediction, and cyan a class-correct match at IoU $\geq0.50$. The source pixels are preserved beneath the annotations.}
+\label{fig:actualerrors}
+\end{figure}
+
+\subsection{Source Composition and Scope of the Detection Results}
+
+Table~\ref{tab:publicsubset} reports the public-only analysis. Across 550 photographs and 807 boxes, macro precision and recall are 0.7927 and 0.7114, with \mAPfifty{} of 0.7762 and \mAPcoco{} of 0.5593. Relative to the mixed 650-image holdout, the two AP measures are lower by 0.0623 and 0.0142. The larger numerical decrease occurs at IoU 0.50. Because the cohorts and rectangular-batch input shapes differ and AP is nonlinear, neither difference estimates the contribution of the 100 self-derived images.
+
+\begin{table}[htbp]
+\caption{Source-stratified evaluation on the 550 public holdout images. Precision and recall use each cohort's shared F1 operating point: 0.4454 for public images and approximately 0.464 for the mixed holdout. The last row reproduces the mixed-holdout macro result for context.}
+\label{tab:publicsubset}
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Class or cohort & Boxes & Precision & Recall & AP$_{50}$ & AP$_{50:95}$ \\
+\midrule
+mouse & 78 & 0.8664 & 0.8312 & 0.8818 & 0.6955 \\
+keyboard & 174 & 0.7454 & 0.7816 & 0.7843 & 0.5370 \\
+laptop & 162 & 0.8370 & 0.6023 & 0.7360 & 0.5425 \\
+cup & 301 & 0.9105 & 0.7440 & 0.8564 & 0.6732 \\
+headphones & 92 & 0.6042 & 0.5978 & 0.6227 & 0.3484 \\
+\midrule
+Public 550 (macro) & 807 & 0.7927 & 0.7114 & 0.7762 & 0.5593 \\
+Mixed 650 (macro) & 1,107 & 0.8385 & 0.7697 & 0.8386 & 0.5735 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The class pattern is more informative than the aggregate difference alone. Mouse, keyboard, and laptop all show lower AP$_{50}$ on public images, whereas cup and headphones remain close to their mixed-holdout values. This is consistent with the latter two classes having no self-derived reference boxes. Small differences can still occur because rectangular batch composition changes the padded inputs; the public-only run is not a subtraction of saved full-holdout predictions. Laptop AP$_{50:95}$ rises from 0.4599 to 0.5425 even as its AP$_{50}$ falls. For laptop, the cohort comparison therefore has no uniformly favorable direction across overlap criteria. The analysis describes source-associated variation, not a difficulty-matched comparison or an ablation of training data.
+
+The holdout AP values also exceed their final-epoch validation counterparts by 0.1052 at IoU 0.5 and by 0.1114 across IoU thresholds. Those splits differ in source proportions and object composition: self-derived images account for 28.57\% of validation images and 15.38\% of holdout images. Their AP difference therefore cannot be interpreted as a performance gain caused by moving from validation to testing.
+
+The limited number of source photographs is the main constraint on conclusions about new desktop scenes. The holdout contains only one self-collected parent, with nearby arrangements represented in training and validation. Augmentations provide useful appearance variation but remain correlated observations. Public images extend category coverage, especially for cup and headphones, while their inherited annotations introduce uncertainty about box extent and exhaustive target coverage. Together with prior access to the public holdout during model development, these properties support a measured account of performance on the stated data rather than an estimate of deployment accuracy across unseen environments.
+
 \FloatBarrier
-\subsection{Integrated Interpretation of the Evaluation Results}
+\subsection{Runtime Interpretation and Robot Integration}
 
-The reported measurements answer different questions and must not be substituted for one another. Test-set AP depends on IoU matching between predictions and reference boxes and evaluates ranking and localization over multiple images and objects. The 20-image value compares only each image's highest-confidence class with its manifest class and corresponds to the course's class-recognition criterion. Its 100\% value does not imply a test-set recall of 1.00 because the subset is small, its class composition is fixed, its images are already part of the test split, and its matching rule differs from detection AP.
+Jetson model-call throughput is 7.71 times the 5 FPS criterion, and result-topic frequency is approximately 6.00 times that criterion. The 29.99 Hz result is consistent with the 30 FPS source limit, so the difference from 38.534 FPS does not quantify a processing penalty. The measured durations describe complete prediction calls, while topic frequency describes subscriber arrivals. Neither is a distribution of latency from camera exposure to downstream action. The evidence is specific to the recorded Orin NX configuration, FP16 backend, camera, and detection thresholds.
 
-Jetson throughput of 38.534 FPS is obtained from a fixed 20-frame warm-up and 200 timed \texttt{model.predict} calls. The 29.99 Hz ROS 2 result is observed at the subscriber over 15 s. The difference of approximately 8.54 is consistent with the broader work performed by the continuous node. Relative to the 5 FPS requirement, mean model-call throughput is 7.71 times the threshold and topic frequency is approximately 6.00 times the threshold. The report retains both values instead of replacing either with the screen recording's container frame rate.
+The multi-class image demonstrates concurrent laptop, keyboard, and mouse output, and the 32-frame sequence shows annotated detections as the camera view changes. The original recording preserves the continuous sequence for inspection. These visual results complement the numerical measurements but do not independently determine aggregate accuracy or minimum throughput. From an integration perspective, reusing one prediction result for messages, visualization, and storage keeps the outputs consistent and avoids repeated network execution within a frame.
 
-The multi-class base image and 32-frame Jetson sequence provide qualitative evidence. The former verifies that laptop, keyboard, and mouse can be produced in one frame, while the sampled sequence is consistent with sustained annotated output as the camera view changes. The original continuous recording supports temporal inspection; neither the still image nor the montage independently establishes aggregate accuracy or minimum throughput. Numerical metrics, stored examples, and runtime video therefore serve distinct evidential roles.
+\FloatBarrier
+\Needspace{23\baselineskip}
+\section{Conclusion}
+
+This experiment completed a five-class desktop perception pipeline from data preparation and YOLO11n fine-tuning to Jetson inference and ROS 2 publication. For EQ1, the selected checkpoint achieved \mAPfifty{} of 0.8386 and \mAPcoco{} of 0.5735 on the fixed 650-image development holdout. Per-class analysis identified headphones as the weakest category and laptop as the most sensitive to stricter localization requirements. For EQ2, the fixed photographic acceptance sample produced 20/20 correct top-class decisions at confidence 0.50, and a desktop frame demonstrated three classes simultaneously. For EQ3, Jetson model-call throughput reached 38.534 FPS and the subscriber observed 29.99 result messages per second, both above the 5 FPS criterion.
+
+The principal outcome is a reproducible experimental implementation with a consistent class map, identified checkpoints, explicit measurement protocols, saved detection and review records, and documented execution commands. The results establish the reported functionality and performance in the measured setting. Their interpretation retains the constraints imposed by sequential fine-tuning, reused development data, correlated self-collected scenes, and provider annotations. The accompanying repository and submission archive connect these conclusions to the dataset, model, program, video, running instructions, and report.
 
 \FloatBarrier
 \clearpage

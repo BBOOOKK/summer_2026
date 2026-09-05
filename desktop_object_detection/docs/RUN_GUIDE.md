@@ -45,14 +45,15 @@ python scripts/train.py \
   --epochs 12 \
   --batch 32 \
   --imgsz 640 \
-  --device 0 \
-  --workers 4 \
+  --device mps \
+  --workers 0 \
+  --patience 4 \
   --project outputs/training \
-  --name experiment1_1000self_4000public_v1 \
-  --models-dir models/experiment1_1000self_4000public_v1
+  --name experiment1_reproduction \
+  --models-dir models/experiment1_reproduction
 ```
 
-CPU 可用 `--device cpu`；Apple Silicon 可尝试 `--device mps`。训练完成后权重位于 `models/experiment1_1000self_4000public_v1/`。
+以上命令匹配本次 Apple M4 MPS 训练的关键参数，复训权重另存于 `models/experiment1_reproduction/`。CUDA 主机可改为 `--device 0`，CPU 可改为 `--device cpu`。初始化权重来自历史混合数据训练；当前 5,000 张微调集没有生成图，但最终模型的历史监督包含生成图。650 张评估图属于重复使用的开发留出集，不是外部盲测。
 
 ## 5. 模型评估
 
