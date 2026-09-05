@@ -17,7 +17,7 @@ def test_fortress_world_has_audited_workcell_and_contact_sources():
     assert 'target_object' in text
     assert '/gazebo/contacts/table' in text
     assert '/gazebo/contacts/target' in text
-    assert '<size>0.05 0.05 0.035</size>' in text
+    assert '<size>0.066 0.066 0.035</size>' in text
 
 
 def test_fortress_robot_is_physically_fixed_and_uses_real_joint_attach():
@@ -54,4 +54,3 @@ def test_moveit_configuration_maps_shared_ros2_control_interfaces():
     semantic = ET.parse(MOVEIT / 'config' / 'mecharm270.srdf').getroot()
     assert semantic.find("./group[@name='arm']/chain").attrib == {
         'base_link': 'base_link', 'tip_link': 'tool0'}
-

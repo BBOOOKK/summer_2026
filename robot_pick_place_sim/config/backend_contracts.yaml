@@ -1,0 +1,36 @@
+contract: pick_place_ros2_v1
+task_logic: robot_pick_place_sim/moveit_pick_place_node
+stable_interfaces:
+  joint_state: /joint_states
+  arm_action: /arm_controller/follow_joint_trajectory
+  gripper_action: /gripper_controller/follow_joint_trajectory
+  task_start: /pick_place/start
+  task_stop: /pick_place/stop
+  task_state: /pick_place/state
+  safety_readiness: /collision_monitor/readiness
+  entity_get: /gazebo/get_entity_state
+  entity_set: /gazebo/set_entity_state
+  grasp_attach: /grasp/attach
+  grasp_detach: /grasp/detach
+backends:
+  fortress:
+    status: acceptance_authoritative
+    bridge: fortress_adapter
+    command_transport: gz_ros2_control
+    evidence: docs/evidence/fortress_moveit_acceptance_20260905.json
+  gazebo_classic:
+    status: legacy_supported
+    bridge: gazebo_ros
+    command_transport: gazebo_ros2_control
+  isaac_sim:
+    status: connector_ready_not_executed
+    native_transport: isaacsim.ros2.bridge
+    adapter_requirement: FollowJointTrajectory and entity/contact service shim
+  webots:
+    status: connector_ready_not_executed
+    native_transport: webots_ros2_control
+    adapter_requirement: Supervisor entity/contact service shim
+  coppeliasim:
+    status: connector_ready_not_executed
+    native_transport: simROS2
+    adapter_requirement: FollowJointTrajectory and entity/contact service shim

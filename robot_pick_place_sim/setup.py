@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'acceptance_runner = robot_pick_place_sim.acceptance_runner:main',
+            'backend_contract_check = robot_pick_place_sim.backend_contract:main',
             'collision_monitor = robot_pick_place_sim.collision_monitor:main',
             'fortress_adapter = robot_pick_place_sim.fortress_adapter:main',
             'object_manager = robot_pick_place_sim.object_manager:main',
