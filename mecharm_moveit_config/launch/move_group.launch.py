@@ -44,7 +44,10 @@ def generate_launch_description():
         _yaml(moveit_share / 'config' / 'moveit_controllers.yaml'),
         {'trajectory_execution.allowed_execution_duration_scaling': 1.4,
          'trajectory_execution.allowed_goal_duration_margin': 1.0,
-         'trajectory_execution.allowed_start_tolerance': 0.02},
+         # The task node validates every commanded state against the URDF
+         # limits. Disable MoveIt's duplicate wall-time freshness gate: it can
+         # reject valid simulated states when amd64 ROS runs on an ARM host.
+         'trajectory_execution.allowed_start_tolerance': 0.0},
     ]
     return LaunchDescription([
         DeclareLaunchArgument('simulator', default_value='fortress'),

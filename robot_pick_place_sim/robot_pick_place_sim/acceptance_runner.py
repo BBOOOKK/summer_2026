@@ -21,6 +21,7 @@ class AcceptanceRunner(Node):
     def __init__(self):
         super().__init__('acceptance_runner')
         self.declare_parameter('repeat_count', 5)
+        self.declare_parameter('backend', 'fortress')
         self.declare_parameter('task_timeout_sec', 90.0)
         self.declare_parameter('between_runs_sec', 2.0)
         self.declare_parameter('log_directory', 'logs')
@@ -28,6 +29,7 @@ class AcceptanceRunner(Node):
         self.declare_parameter('place_point_world', [0.20, -0.16, 0.77])
         self.declare_parameter('place_tolerance_m', 0.07)
         self._repeat_count = int(self.get_parameter('repeat_count').value)
+        self._backend = str(self.get_parameter('backend').value)
         self._timeout = float(self.get_parameter('task_timeout_sec').value)
         self._delay = float(self.get_parameter('between_runs_sec').value)
         self._log_dir = Path(
@@ -142,6 +144,7 @@ class AcceptanceRunner(Node):
             place_tolerance=self._place_tolerance)
         summary = {
             'time': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
+            'backend': self._backend,
             'required_runs': self._repeat_count,
             'succeeded': succeeded,
             'passed': (

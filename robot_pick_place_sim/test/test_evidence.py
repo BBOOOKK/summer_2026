@@ -64,3 +64,24 @@ def test_missing_contact_source_fails_closed(tmp_path):
     summary['sources'].pop('robot')
     (tmp_path / 'collision_summary.json').write_text(json.dumps(summary))
     assert analyze_acceptance(tmp_path, ['run-1'])['passed'] is False
+
+
+def test_staging_samples_before_async_reset_do_not_hide_a_point(tmp_path):
+    _valid_artifacts(tmp_path)
+    path = tmp_path / 'object_trajectory_run-1.csv'
+    with path.open('w', newline='', encoding='utf-8') as stream:
+        writer = csv.DictWriter(stream, fieldnames=['stage', 'x', 'y', 'z'])
+        writer.writeheader()
+        for _index in range(60):
+            writer.writerow({'stage': 'OPEN_GRIPPER', 'x': 0.50, 'y': 0.30, 'z': 0.77})
+        for _index in range(40):
+            writer.writerow({'stage': 'HOME', 'x': 0.22, 'y': 0.12, 'z': 0.77})
+        for index in range(100):
+            fraction = index / 99
+            writer.writerow({
+                'stage': 'LIFT_OBJECT' if index < 50 else 'DESCEND_PLACE',
+                'x': 0.22 - 0.02 * fraction,
+                'y': 0.12 - 0.28 * fraction,
+                'z': 0.77 + 0.12 * (1.0 - abs(2.0 * fraction - 1.0)),
+            })
+    assert analyze_acceptance(tmp_path, ['run-1'])['passed'] is True
