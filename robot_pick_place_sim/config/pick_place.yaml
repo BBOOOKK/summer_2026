@@ -19,7 +19,7 @@ pick_place:
     attachment_mode: service
     attach_service: /grasp/attach
     detach_service: /grasp/detach
-    grasp_service_timeout_sec: 3.0
+    grasp_service_timeout_sec: 6.0
     require_collision_monitor: true
     collision_readiness_service: /collision_monitor/readiness
     collision_reset_service: /collision_monitor/reset

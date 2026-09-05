@@ -8,6 +8,7 @@ contact-gated detachable-joint plugin.
 
 import csv
 import json
+import math
 from pathlib import Path
 import time
 
@@ -25,12 +26,16 @@ class ObjectManager(Node):
         super().__init__('object_manager')
         self.declare_parameter('entity_name', 'target_object')
         self.declare_parameter('world_frame', 'world')
-        self.declare_parameter('initial_pose', [0.22, 0.12, 0.77])
+        # The 35 mm cube rests exactly on the 0.75 m table in world space.
+        self.declare_parameter('initial_pose', [0.22, 0.12, 0.7675])
+        self.declare_parameter('initial_yaw_rad', 0.499)
         self.declare_parameter('sample_rate_hz', 50.0)
         self.declare_parameter('log_directory', 'logs')
         self._entity = self.get_parameter('entity_name').value
         self._world = self.get_parameter('world_frame').value
         self._initial = self.get_parameter('initial_pose').value
+        self._initial_yaw = float(
+            self.get_parameter('initial_yaw_rad').value)
         self._log_dir = Path(
             str(self.get_parameter('log_directory').value)).expanduser()
         self._log_dir.mkdir(parents=True, exist_ok=True)
@@ -82,7 +87,8 @@ class ObjectManager(Node):
         request.state.pose.position.x = float(self._initial[0])
         request.state.pose.position.y = float(self._initial[1])
         request.state.pose.position.z = float(self._initial[2])
-        request.state.pose.orientation.w = 1.0
+        request.state.pose.orientation.z = math.sin(self._initial_yaw / 2.0)
+        request.state.pose.orientation.w = math.cos(self._initial_yaw / 2.0)
         self._reset_writes += 1
         future = self._set_state.call_async(request)
         future.add_done_callback(self._reset_complete)

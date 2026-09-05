@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mecharm270_sim">
   <xacro:arg name="controllers_file" default=""/>
+  <xacro:arg name="simulator" default="classic"/>
+  <xacro:property name="simulator_backend" value="$(arg simulator)"/>
   <xacro:property name="arm_radius" value="0.026"/>
 
-  <xacro:macro name="contact_sensor" params="link collision">
+  <xacro:macro name="contact_sensor" params="link collision topic:=/gazebo/contacts/robot">
     <gazebo reference="${link}">
       <sensor type="contact" name="${link}_contact_sensor">
         <always_on>true</always_on>
         <update_rate>100</update_rate>
-        <contact><collision>${collision}</collision></contact>
+        <contact><collision>${collision}</collision><topic>${topic}</topic></contact>
+        <xacro:if value="${simulator_backend == 'classic'}">
         <plugin name="${link}_contact_publisher" filename="libgazebo_ros_bumper.so">
           <ros>
             <namespace>/gazebo</namespace>
@@ -16,6 +19,7 @@
           </ros>
           <frame_name>world</frame_name>
         </plugin>
+        </xacro:if>
       </sensor>
     </gazebo>
   </xacro:macro>
@@ -75,10 +79,16 @@
   <link name="left_finger"><visual><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry><material name="blue"/></visual><collision name="left_finger_collision"><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
   <joint name="left_finger_joint" type="prismatic"><parent link="tool0"/><child link="left_finger"/><origin xyz="0 0.006 0" rpy="0 -2.25 0"/><axis xyz="0 1 0"/><limit lower="0.012" upper="0.032" effort="15" velocity="0.08"/><dynamics damping="0.35" friction="0.05"/></joint>
   <link name="right_finger"><visual><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry><material name="blue"/></visual><collision name="right_finger_collision"><origin xyz="0 0 -0.05"/><geometry><box size="0.012 0.012 0.08"/></geometry></collision><inertial><mass value="0.03"/><inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/></inertial></link>
-  <joint name="right_finger_joint" type="prismatic"><parent link="tool0"/><child link="right_finger"/><origin xyz="0 -0.006 0" rpy="0 -2.25 0"/><axis xyz="0 -1 0"/><limit lower="0.012" upper="0.032" effort="15" velocity="0.08"/><dynamics damping="0.35" friction="0.05"/></joint>
+  <!-- Rotate the right joint frame instead of using a negative prismatic
+       axis.  The physical direction is unchanged, while DART and ODE now
+       share the same positive-coordinate limit semantics. -->
+  <joint name="right_finger_joint" type="prismatic"><parent link="tool0"/><child link="right_finger"/><origin xyz="0 -0.006 0" rpy="0 2.25 ${pi}"/><axis xyz="0 1 0"/><limit lower="0.012" upper="0.032" effort="15" velocity="0.08"/><dynamics damping="0.35" friction="0.05"/></joint>
 
   <ros2_control name="GazeboSystem" type="system">
-    <hardware><plugin>gazebo_ros2_control/GazeboSystem</plugin></hardware>
+    <hardware>
+      <xacro:if value="${simulator_backend == 'classic'}"><plugin>gazebo_ros2_control/GazeboSystem</plugin></xacro:if>
+      <xacro:if value="${simulator_backend == 'fortress'}"><plugin>gz_ros2_control/GazeboSimSystem</plugin></xacro:if>
+    </hardware>
     <xacro:macro name="controlled_joint" params="name initial:=0.0">
       <joint name="${name}"><command_interface name="position"><param name="min">-3.14</param><param name="max">3.14</param></command_interface><state_interface name="position"><param name="initial_value">${initial}</param></state_interface><state_interface name="velocity"/></joint>
     </xacro:macro>
@@ -87,17 +97,33 @@
     <joint name="left_finger_joint"><command_interface name="position"><param name="min">0.012</param><param name="max">0.032</param></command_interface><state_interface name="position"><param name="initial_value">0.032</param></state_interface><state_interface name="velocity"/></joint>
     <joint name="right_finger_joint"><command_interface name="position"><param name="min">0.012</param><param name="max">0.032</param></command_interface><state_interface name="position"><param name="initial_value">0.032</param></state_interface><state_interface name="velocity"/></joint>
   </ros2_control>
-  <gazebo>
+  <xacro:if value="${simulator_backend == 'classic'}"><gazebo>
     <!-- Primitive link envelopes overlap at several legal mechArm poses.
          Gazebo self-collision is therefore disabled; sampled capsule clearance
          validation handles non-adjacent self-collision without destabilising ODE. -->
     <self_collide>false</self_collide>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control"><parameters>$(arg controllers_file)</parameters></plugin>
-  </gazebo>
+  </gazebo></xacro:if>
+  <xacro:if value="${simulator_backend == 'fortress'}"><gazebo>
+    <self_collide>false</self_collide>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(arg controllers_file)</parameters>
+      <!-- Track MoveIt trajectories closely without exceeding the documented
+           non-oscillating gain bound (position error -> joint velocity). -->
+      <position_proportional_gain>0.5</position_proportional_gain>
+      <ros><remapping>/joint_states:=/fortress/joint_states_raw</remapping></ros>
+    </plugin>
+    <plugin filename="ignition-gazebo-detachable-joint-system" name="ignition::gazebo::systems::DetachableJoint">
+      <parent_link>tool0</parent_link><child_model>target_object</child_model><child_link>object</child_link>
+      <attach_topic>/grasp/attach_cmd</attach_topic><detach_topic>/grasp/detach_cmd</detach_topic>
+      <output_topic>/grasp/attached</output_topic>
+    </plugin>
+  </gazebo></xacro:if>
   <gazebo reference="tool_fixed"><preserveFixedJoint>true</preserveFixedJoint></gazebo>
   <gazebo reference="left_finger"><mu1>2.0</mu1><mu2>2.0</mu2></gazebo>
   <gazebo reference="right_finger"><mu1>2.0</mu1><mu2>2.0</mu2></gazebo>
 
+  <xacro:if value="${simulator_backend == 'classic'}">
   <xacro:contact_sensor link="base_link" collision="base_link_collision"/>
   <xacro:contact_sensor link="link1" collision="link1_collision"/>
   <xacro:contact_sensor link="link2" collision="link2_collision"/>
@@ -108,4 +134,13 @@
   <xacro:contact_sensor link="tool0" collision="tool0_collision"/>
   <xacro:contact_sensor link="left_finger" collision="left_finger_collision"/>
   <xacro:contact_sensor link="right_finger" collision="right_finger_collision"/>
+  </xacro:if>
+  <xacro:if value="${simulator_backend == 'fortress'}">
+    <!-- Fortress contact sensors on dynamic objects only emit while contact
+         exists, so each finger has an independent physical source. -->
+    <xacro:contact_sensor link="left_finger" collision="left_finger_collision"
+                          topic="/gazebo/contacts/left_finger"/>
+    <xacro:contact_sensor link="right_finger" collision="right_finger_collision"
+                          topic="/gazebo/contacts/right_finger"/>
+  </xacro:if>
 </robot>

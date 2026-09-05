@@ -26,8 +26,11 @@ setup(
         'console_scripts': [
             'acceptance_runner = robot_pick_place_sim.acceptance_runner:main',
             'collision_monitor = robot_pick_place_sim.collision_monitor:main',
+            'fortress_adapter = robot_pick_place_sim.fortress_adapter:main',
             'object_manager = robot_pick_place_sim.object_manager:main',
             'pick_place_node = robot_pick_place_sim.pick_place_node:main',
+            'moveit_pick_place_node = robot_pick_place_sim.moveit_pick_place_node:main',
+            'planning_scene_node = robot_pick_place_sim.planning_scene_node:main',
         ],
     },
 )

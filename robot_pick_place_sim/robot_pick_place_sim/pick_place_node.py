@@ -42,7 +42,7 @@ class PickPlaceNode(Node):
             'attachment_mode': 'service',
             'attach_service': '/grasp/attach',
             'detach_service': '/grasp/detach',
-            'grasp_service_timeout_sec': 3.0,
+            'grasp_service_timeout_sec': 6.0,
             'require_collision_monitor': True,
             'collision_readiness_service': '/collision_monitor/readiness',
             'collision_reset_service': '/collision_monitor/reset',
@@ -289,8 +289,7 @@ class PickPlaceNode(Node):
 
     def _gripper_move(self, position):
         self._send_trajectory(
-            self._gripper, ['left_finger_joint', 'right_finger_joint'],
-            [float(position), float(position)],
+            self._gripper, ['right_finger_joint'], [float(position)],
             float(self._config['gripper_duration_sec']))
 
     def _attach_object(self, _unused=None):

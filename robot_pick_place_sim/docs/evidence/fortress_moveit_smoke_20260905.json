@@ -1,0 +1,26 @@
+{
+  "backend": "Gazebo Fortress 6.18 + MoveIt 2.5.9",
+  "environment": "ROS 2 Humble, Ubuntu 22.04 amd64 container on Apple Silicon",
+  "run_id": "20260905_071354_956a97",
+  "result": "SUCCEEDED",
+  "duration_sec": 50.46,
+  "evidence_audit_passed": true,
+  "checks": {
+    "state_sequence_complete": true,
+    "result_log_succeeded": true,
+    "joint_trajectory_recorded": true,
+    "bilateral_finger_contact": true,
+    "no_forbidden_contact": true,
+    "object_trajectory_valid": true,
+    "collision_monitor_healthy": true
+  },
+  "metrics": {
+    "joint_samples": 24520,
+    "object_samples": 3587,
+    "forbidden_contacts": 0,
+    "initial_error_m": 0.0025,
+    "placement_error_m": 0.00757,
+    "maximum_object_z_m": 0.897,
+    "final_object_xyz_m": [0.20671, -0.15651, 0.7675]
+  }
+}

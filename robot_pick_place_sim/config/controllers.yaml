@@ -23,9 +23,13 @@ arm_controller:
 
 gripper_controller:
   ros__parameters:
-    joints: [left_finger_joint, right_finger_joint]
+    joints: [right_finger_joint]
     command_interfaces: [position]
     state_interfaces: [position, velocity]
     state_publish_rate: 50.0
     action_monitor_rate: 20.0
     allow_nonzero_velocity_at_trajectory_end: false
+    constraints:
+      stopped_velocity_tolerance: 0.02
+      goal_time: 3.0
+      right_finger_joint: {trajectory: 0.020, goal: 0.003}
