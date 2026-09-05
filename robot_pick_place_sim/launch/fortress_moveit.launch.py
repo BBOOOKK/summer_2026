@@ -11,6 +11,7 @@ from launch.actions import (
     RegisterEventHandler,
     TimerAction,
 )
+from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -28,6 +29,7 @@ def generate_launch_description():
     task_config = LaunchConfiguration('task_config')
     log_directory = LaunchConfiguration('log_directory')
     auto_start = LaunchConfiguration('auto_start')
+    gui = LaunchConfiguration('gui')
     description = ParameterValue(Command([
         'xacro ', str(xacro), ' simulator:=fortress controllers_file:=',
         str(controllers)]), value_type=str)
@@ -71,11 +73,17 @@ def generate_launch_description():
     ]
     return LaunchDescription([
         DeclareLaunchArgument('auto_start', default_value='true'),
+        DeclareLaunchArgument('gui', default_value='false'),
         DeclareLaunchArgument('task_config', default_value=str(package_share / 'config' / 'pick_place.yaml')),
         DeclareLaunchArgument('log_directory', default_value=str(Path.cwd() / 'logs' / 'fortress_moveit')),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(str(ros_gz_share / 'launch' / 'gz_sim.launch.py')),
-            launch_arguments={'gz_args': f'-s {world}'}.items()),
+            launch_arguments={'gz_args': f'-s {world}'}.items(),
+            condition=UnlessCondition(gui)),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(str(ros_gz_share / 'launch' / 'gz_sim.launch.py')),
+            launch_arguments={'gz_args': str(world)}.items(),
+            condition=IfCondition(gui)),
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
              parameters=[{'robot_description': description, 'use_sim_time': True}]),
         # Keep physics paused while inserting the robot.  On translated ARM
@@ -91,6 +99,8 @@ def generate_launch_description():
                  ('/gazebo/contacts/left_finger', '/fortress/contacts/left_finger'),
                  ('/gazebo/contacts/right_finger', '/fortress/contacts/right_finger'),
                  ('/world/pick_place/dynamic_pose/info', '/fortress/dynamic_pose')]),
+        Node(package='ros_gz_image', executable='image_bridge', output='screen',
+             arguments=['/demo_camera/image']),
         Node(package='robot_pick_place_sim', executable='fortress_adapter', output='screen'),
         RegisterEventHandler(OnProcessExit(
             target_action=spawn_robot,
