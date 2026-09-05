@@ -33,7 +33,7 @@ colcon test-result --verbose
 
 ```bash
 mkdir -p ~/robot_ws/acceptance_logs
-ros2 launch robot_pick_place_sim simulation.launch.py \
+ros2 launch robot_pick_place_sim fortress_moveit.launch.py \
   log_directory:=$HOME/robot_ws/acceptance_logs
 ```
 
@@ -62,7 +62,7 @@ ROBOT_WS=$PWD src/robot_pick_place_sim/scripts/run_acceptance.sh
 终端 A 禁用自动单次任务：
 
 ```bash
-ros2 launch robot_pick_place_sim simulation.launch.py \
+ros2 launch robot_pick_place_sim fortress_moveit.launch.py \
   auto_start:=false \
   log_directory:=$HOME/robot_ws/acceptance_logs
 ```
@@ -85,7 +85,7 @@ ros2 run robot_pick_place_sim acceptance_runner --ros-args \
 ```bash
 cp ~/robot_ws/src/robot_pick_place_sim/config/pick_place.yaml /tmp/unreachable.yaml
 sed -i 's/pick_point_xyz: \[0.22, 0.12, 0.02\]/pick_point_xyz: [0.80, 0.00, 0.02]/' /tmp/unreachable.yaml
-ros2 launch robot_pick_place_sim simulation.launch.py \
+ros2 launch robot_pick_place_sim fortress_moveit.launch.py \
   task_config:=/tmp/unreachable.yaml
 ```
 
@@ -100,13 +100,13 @@ ros2 launch robot_pick_place_sim simulation.launch.py \
 
 不要把未实际运行的记录填写为成功；视频、日志和报告中的运行编号应一致。
 
-## 6. 从真实轨迹生成演示视频
+## 6. 录制 Gazebo 真实场景
+
+Launch 中的 `/demo_camera/image` 直接来自 Fortress 相机传感器。启动系统并禁用自动任务后，先运行录制器，再调用 `/pick_place/start`：
 
 ```bash
-sudo apt install -y python3-pil ffmpeg
-python3 scripts/render_trajectory_video.py \
-  --input acceptance_logs/trajectory_<run_id>.csv \
-  --output acceptance_logs/demo_<run_id>.mp4
+python3 scripts/record_fortress_demo.py \
+  --output acceptance_logs/fortress_camera.mp4 --fps 10 --timeout 180
 ```
 
-回放画面会明确标注其数据来源为 Gazebo `/joint_states`，不应描述成 Gazebo GUI 录屏。
+录制器只叠加阶段、进度和安全状态；机械臂、桌面、夹爪及目标物均由 Gazebo 渲染。

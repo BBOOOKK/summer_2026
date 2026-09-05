@@ -1,0 +1,16 @@
+{
+  "backend": "Gazebo Fortress 6.18.0 + MoveIt 2.5.9",
+  "robot_visual": "manufacturer mechArm 270 M5 CAD meshes",
+  "test": "unreachable pickup point",
+  "injected_pick_point_xyz_m": [0.8, 0.0, 0.02],
+  "run_id": "20260905_103931_890fad",
+  "result": "FAILED_AS_EXPECTED",
+  "terminal_state": "SAFE_STOP",
+  "detail": "pick_point_xyz: unreachable radius 0.800 m; allowed [0.080, 0.380] m",
+  "validation_duration_sec": 0.009,
+  "arm_motion_commands_executed": 0,
+  "trajectory_samples": 1,
+  "final_joint_state": "home",
+  "forbidden_collision_observations": 0,
+  "collision_sources_healthy": true
+}

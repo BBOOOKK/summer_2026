@@ -4,7 +4,7 @@
 
 ## 已实现
 
-- 6 关节机械臂、双指对称平行夹爪、固定底座、桌面、A/B 标记与目标物；
+- 厂家 mechArm 270 M5 CAD 外壳、真实 6 轴尺寸、单电机连杆夹爪、固定底座、桌面、A/B 标记与目标物；
 - 回零 → A 点上方 → 下降 → 夹取 → 抬升 → B 点上方 → 下降 → 释放 → 抬升 → 回零；
 - 单一 `fortress_moveit.launch.py` 启动 Gazebo、MoveIt、模型、控制器、状态和任务节点；
 - 不可达、缺少示教/逆解、关节超限、Action 超时/拒绝、人工停止的安全停止；
@@ -21,6 +21,7 @@
 mkdir -p ~/robot_ws/src
 cp -r robot_pick_place_sim ~/robot_ws/src/
 cp -r robot_grasp_joint ~/robot_ws/src/
+cp -r mecharm_moveit_config ~/robot_ws/src/
 cd ~/robot_ws
 source /opt/ros/humble/setup.bash
 rosdep install --from-paths src --ignore-src -r -y
@@ -33,8 +34,11 @@ ros2 launch robot_pick_place_sim fortress_moveit.launch.py
 碰撞规则、锁存停机与动态注入结果见 [docs/COLLISION_SAFETY.md](docs/COLLISION_SAFETY.md)。
 
 2026-09-05 Fortress + MoveIt 2 正式动态验收结果为 5/5；见 [权威运行说明](docs/fortress_moveit.md) 和 [机器可读证据](docs/evidence/fortress_moveit_acceptance_20260905.json)。
+厂家 CAD 版本的动态不可达测试在 9 ms 内进入 `SAFE_STOP`，机械臂保持回零且禁碰为 0；见 [异常证据](docs/evidence/fortress_unreachable_cad_20260905.json)。
 
 Isaac Sim、Webots 和 CoppeliaSim 的复用边界、接口映射及运行时契约检查见 [多仿真平台接入](docs/MULTI_SIM_BACKENDS.md)。未在本机执行的平台明确标记为未验收，不与 Fortress 的 5/5 结果混淆。
+
+厂家 CAD 的 Gazebo 相机成片、预览图及 5 次落点汇总图见 [仿真可视化](docs/VISUALIZATION.md)。
 
 非 ROS 主机可执行：
 

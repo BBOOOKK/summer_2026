@@ -1,0 +1,27 @@
+{
+  "artifact": "fortress_final_demo_20260905.mp4",
+  "sha256": "ab7cead2f748130d2dc722699029fa0f747a5c07897f41a6fd8e77a32662a8ae",
+  "backend": "Gazebo Fortress 6.18.0 + MoveIt 2.5.9",
+  "robot_visual": "manufacturer mechArm 270 M5 CAD meshes",
+  "source": "Gazebo camera sensor /demo_camera/image",
+  "run_id": "20260905_103122_24fadc",
+  "task_result": "SUCCEEDED",
+  "task_duration_sec": 56.446,
+  "video": {
+    "codec": "H.264 High",
+    "resolution": "1280x720",
+    "frame_rate": 30,
+    "duration_sec": 15.533,
+    "postprocess": "motion interpolation and color correction only; no geometry or trajectory edits"
+  },
+  "physical_evidence": {
+    "bilateral_finger_contact": true,
+    "contact_gated_joint_attach": true,
+    "transport_pose_writes": 0,
+    "forbidden_collision_observations": 0,
+    "collision_monitor_unsafe_latched": false,
+    "final_object_xyz_m": [0.20514262, -0.16879707, 0.76749962],
+    "place_target_xy_m": [0.2, -0.16],
+    "final_planar_error_mm": 10.19
+  }
+}

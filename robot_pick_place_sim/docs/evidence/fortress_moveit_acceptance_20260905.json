@@ -1,72 +1,226 @@
 {
-  "time": "2026-09-05T08:21:04+0000",
+  "time": "2026-09-05T10:22:28+0000",
   "backend": "fortress",
-  "runtime": "ROS 2 Humble / Gazebo Fortress 6.18 / MoveIt 2.5.9",
-  "host_note": "amd64 Ubuntu 22.04 container on ARM host",
   "required_runs": 5,
   "succeeded": 5,
   "passed": true,
-  "evidence_passed": true,
-  "collision_monitor_healthy": true,
-  "forbidden_contacts_total": 0,
-  "common_checks": {
-    "state_sequence_complete": true,
-    "result_log_succeeded": true,
-    "joint_trajectory_recorded": true,
-    "bilateral_finger_contact": true,
-    "no_forbidden_contact": true,
-    "object_trajectory_valid": true
-  },
   "runs": [
     {
       "run": 1,
-      "run_id": "20260905_081810_e1153d",
-      "duration_sec": 30.867,
-      "joint_samples": 24048,
-      "object_samples": 1598,
-      "placement_error_m": 0.00072,
-      "max_z_m": 0.86785,
-      "final_xyz": [0.20071, -0.15991, 0.7675]
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "run_id": "20260905_101451_a7533f",
+      "duration_sec": 88.243,
+      "object_position_world": [
+        0.2057,
+        -0.1677,
+        0.7675
+      ]
     },
     {
       "run": 2,
-      "run_id": "20260905_081843_3e8014",
-      "duration_sec": 35.344,
-      "joint_samples": 24584,
-      "object_samples": 1650,
-      "placement_error_m": 0.00103,
-      "max_z_m": 0.86792,
-      "final_xyz": [0.201, -0.16025, 0.7675]
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "run_id": "20260905_101622_0c9f8f",
+      "duration_sec": 89.0,
+      "object_position_world": [
+        0.2056,
+        -0.168,
+        0.7675
+      ]
     },
     {
       "run": 3,
-      "run_id": "20260905_081921_da347e",
-      "duration_sec": 34.24,
-      "joint_samples": 26056,
-      "object_samples": 1630,
-      "placement_error_m": 0.00063,
-      "max_z_m": 0.86807,
-      "final_xyz": [0.19962, -0.1605, 0.7675]
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "run_id": "20260905_101753_29727c",
+      "duration_sec": 89.233,
+      "object_position_world": [
+        0.2061,
+        -0.1677,
+        0.7675
+      ]
     },
     {
       "run": 4,
-      "run_id": "20260905_081957_dfb90e",
-      "duration_sec": 32.411,
-      "joint_samples": 25472,
-      "object_samples": 1653,
-      "placement_error_m": 0.00174,
-      "max_z_m": 0.86768,
-      "final_xyz": [0.20146, -0.16096, 0.7675]
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "run_id": "20260905_101924_f1d0ab",
+      "duration_sec": 89.506,
+      "object_position_world": [
+        0.2057,
+        -0.1682,
+        0.7675
+      ]
     },
     {
       "run": 5,
-      "run_id": "20260905_082031_1b2106",
-      "duration_sec": 29.777,
-      "joint_samples": 23696,
-      "object_samples": 1633,
-      "placement_error_m": 0.00202,
-      "max_z_m": 0.86869,
-      "final_xyz": [0.20123, -0.16161, 0.7675]
+      "result": "SUCCEEDED",
+      "detail": "pick-and-place sequence completed",
+      "run_id": "20260905_102055_7131d0",
+      "duration_sec": 89.074,
+      "object_position_world": [
+        0.2055,
+        -0.1685,
+        0.7675
+      ]
     }
-  ]
+  ],
+  "evidence": {
+    "collision_monitor_healthy": true,
+    "successful_runs_audited": 5,
+    "runs": [
+      {
+        "run_id": "20260905_101451_a7533f",
+        "passed": true,
+        "checks": {
+          "state_sequence_complete": true,
+          "result_log_succeeded": true,
+          "joint_trajectory_recorded": true,
+          "bilateral_finger_contact": true,
+          "no_forbidden_contact": true,
+          "object_trajectory_valid": true
+        },
+        "joint_samples": 22016,
+        "forbidden_contacts": 0,
+        "finger_contacts": [
+          "left_finger",
+          "right_finger"
+        ],
+        "object": {
+          "passed": true,
+          "samples": 1408,
+          "initial_error_m": 0.0025,
+          "placement_error_m": 0.00957,
+          "max_z_m": 0.88768,
+          "final_xyz": [
+            0.20566,
+            -0.16772,
+            0.7675
+          ]
+        }
+      },
+      {
+        "run_id": "20260905_101622_0c9f8f",
+        "passed": true,
+        "checks": {
+          "state_sequence_complete": true,
+          "result_log_succeeded": true,
+          "joint_trajectory_recorded": true,
+          "bilateral_finger_contact": true,
+          "no_forbidden_contact": true,
+          "object_trajectory_valid": true
+        },
+        "joint_samples": 21880,
+        "forbidden_contacts": 0,
+        "finger_contacts": [
+          "left_finger",
+          "right_finger"
+        ],
+        "object": {
+          "passed": true,
+          "samples": 1397,
+          "initial_error_m": 0.0025,
+          "placement_error_m": 0.00983,
+          "max_z_m": 0.88808,
+          "final_xyz": [
+            0.20564,
+            -0.16804,
+            0.7675
+          ]
+        }
+      },
+      {
+        "run_id": "20260905_101753_29727c",
+        "passed": true,
+        "checks": {
+          "state_sequence_complete": true,
+          "result_log_succeeded": true,
+          "joint_trajectory_recorded": true,
+          "bilateral_finger_contact": true,
+          "no_forbidden_contact": true,
+          "object_trajectory_valid": true
+        },
+        "joint_samples": 21752,
+        "forbidden_contacts": 0,
+        "finger_contacts": [
+          "left_finger",
+          "right_finger"
+        ],
+        "object": {
+          "passed": true,
+          "samples": 1387,
+          "initial_error_m": 0.0025,
+          "placement_error_m": 0.00983,
+          "max_z_m": 0.88751,
+          "final_xyz": [
+            0.20612,
+            -0.16769,
+            0.7675
+          ]
+        }
+      },
+      {
+        "run_id": "20260905_101924_f1d0ab",
+        "passed": true,
+        "checks": {
+          "state_sequence_complete": true,
+          "result_log_succeeded": true,
+          "joint_trajectory_recorded": true,
+          "bilateral_finger_contact": true,
+          "no_forbidden_contact": true,
+          "object_trajectory_valid": true
+        },
+        "joint_samples": 21912,
+        "forbidden_contacts": 0,
+        "finger_contacts": [
+          "left_finger",
+          "right_finger"
+        ],
+        "object": {
+          "passed": true,
+          "samples": 1399,
+          "initial_error_m": 0.0025,
+          "placement_error_m": 0.00994,
+          "max_z_m": 0.88691,
+          "final_xyz": [
+            0.20568,
+            -0.16816,
+            0.7675
+          ]
+        }
+      },
+      {
+        "run_id": "20260905_102055_7131d0",
+        "passed": true,
+        "checks": {
+          "state_sequence_complete": true,
+          "result_log_succeeded": true,
+          "joint_trajectory_recorded": true,
+          "bilateral_finger_contact": true,
+          "no_forbidden_contact": true,
+          "object_trajectory_valid": true
+        },
+        "joint_samples": 21912,
+        "forbidden_contacts": 0,
+        "finger_contacts": [
+          "left_finger",
+          "right_finger"
+        ],
+        "object": {
+          "passed": true,
+          "samples": 1416,
+          "initial_error_m": 0.0025,
+          "placement_error_m": 0.01014,
+          "max_z_m": 0.88706,
+          "final_xyz": [
+            0.20555,
+            -0.16849,
+            0.7675
+          ]
+        }
+      }
+    ],
+    "passed": true
+  }
 }
