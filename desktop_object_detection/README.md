@@ -34,7 +34,7 @@
 
 | 验收项 | 要求 | 验证工具 | 当前状态 |
 | --- | ---: | --- | --- |
-| A. 同时识别类别 | ≥ 2 类 | 图片/视频/摄像头检测 | PASS：独立 MIX 图同时检出 5 类 |
+| A. 同时识别类别 | ≥ 2 类 | 图片/视频/摄像头检测 | PASS：当前权重在自主采集来源测试图中同时检出 3 类 |
 | B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：19/20，95.00% |
 | C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | PASS：Orin NX / PyTorch FP16 实测 38.534 FPS |
 | D. ROS2 结果发布 | 实时 JSON + 图像 | `detector_node` | PASS：实机主题已发布，`/object_detection/result` 实测 29.99 Hz |
@@ -120,7 +120,7 @@ desktop_object_detection/
 - 当前 1,000 + 4,000 数据训练的 YOLO11n 最佳权重：`models/experiment1_1000self_4000public_v1/best.pt`。
 - 650 张独立 test：Precision 0.8385、Recall 0.7697、mAP50 0.8386、mAP50-95 0.5735。
 - 20 样本：19/20，95.00%；唯一错误为 laptop 漏检，错误图已保存。
-- MIX 示例 `P05_S02_MIX_0121.jpg`：阈值 0.5 下同时检出 5 类。
+- 自主采集来源基准测试图 `self_IMG_8306_v000.jpg`：阈值 0.5 下同时检出 laptop、keyboard 和 mouse 三类；参数、哈希与逐框结果见[多类别定性结果记录](outputs/evaluation/current_model_demo/README.md)。
 - 本机 MPS 视频输入 benchmark：平均预测调用速率 60.409 FPS；该结果不是 Jetson 证据。
 - Jetson Orin NX、PyTorch FP16：平均预测调用速率 38.534 FPS，最低 37.952 FPS。
 - ROS2 `/object_detection/result`：15 s 测量窗口内为 29.99 Hz。

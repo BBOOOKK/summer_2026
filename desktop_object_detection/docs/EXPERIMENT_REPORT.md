@@ -53,7 +53,7 @@
 
 ## 6 多类别同时识别
 
-在独立 test MIX 图 `P05_S02_MIX_0121.jpg` 上，以置信度阈值 0.5 同时检出 mouse、keyboard、laptop、cup、headphones 共五类，满足“不少于两类”要求。标注结果保存于 `outputs/images/`。
+在当前 5000 张数据集的 test 划分中，选取自主采集来源基准图 `self_IMG_8306_v000.jpg`，以当前验收权重、置信度阈值 0.5 和 NMS IoU 阈值 0.45 推理，同一帧内正确检出 laptop、keyboard 和 mouse 三类，满足“不少于两类”要求。标注图与逐框 CSV 保存于 `outputs/evaluation/current_model_demo/current_test_self_real_imgsz640_conf050_iou045/`。
 
 ## 7 20 个目标正确率
 
