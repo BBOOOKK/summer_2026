@@ -1,0 +1,194 @@
+{
+  "configuration": {
+    "analysis_scope": "source-stratified Open Images V7 subset of the reused 650-image development holdout",
+    "model": "models/experiment1_1000self_4000public_v1/best.pt",
+    "model_sha256": "c53834aa239974163ef48c566dc3fea04d38de7a1d05292ab5216d5163a09a42",
+    "model_size_bytes": 5482577,
+    "checkpoint_overrides": {
+      "task": "detect",
+      "data": "datasets/experiment1_1000self_4000public_v1/dataset.yaml",
+      "imgsz": 640,
+      "single_cls": false,
+      "model": "models/experiment1_1000self_4000public_v1/best.pt"
+    },
+    "dataset": "datasets/experiment1_1000self_4000public_v1",
+    "dataset_yaml_sha256": "0b7ab4c5fb5ac4a59b90cab473e3c5d4277253e48384b3a91b03272e2f189d77",
+    "dataset_manifest_sha256": "59eaa679c3cb301e805afb51df5e14aceb02572530d5c72713d1c15ec82a7dda",
+    "portable_holdout_list": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/public_holdout_files.txt",
+    "portable_holdout_list_sha256": "138bfb6cb3f40f5da81febb5949f851fdf384cf8274ca5e60e034b0cda4e4d71",
+    "public_holdout_manifest": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/public_holdout_manifest.csv",
+    "public_holdout_manifest_sha256": "f9c7f17cbf2a51253c93cd51cb49145a5c9db134eb6b91bf3a66704317f69f9f",
+    "evaluation_input_yaml": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/evaluation_input.absolute.yaml",
+    "evaluation_input_yaml_sha256": "52792f24dd7b8d2546ed4e25e62748639157d6b6746346e5b53c9e83d11f2953",
+    "evaluation_input_image_list": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/evaluation_input_images.absolute.txt",
+    "evaluation_input_image_list_sha256": "ca9b8c8c30b773a639db03369a2cdd37759dd38957fe1eb366ebce8b4031f716",
+    "software": {
+      "python": "3.12.4",
+      "torch": "2.13.0",
+      "ultralytics": "8.4.133"
+    },
+    "resolved_validation_arguments": {
+      "split": "test",
+      "imgsz": 640,
+      "batch": 4,
+      "device": "mps",
+      "workers": 0,
+      "conf": 0.001,
+      "iou": 0.7,
+      "max_det": 300,
+      "agnostic_nms": false,
+      "single_cls": false,
+      "rect": true,
+      "augment": false,
+      "quantize": null,
+      "plots": false,
+      "save_json": false,
+      "save_txt": false,
+      "save_conf": false,
+      "dnn": false,
+      "verbose": true,
+      "name": "public_holdout",
+      "exist_ok": true,
+      "data": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/evaluation_input.absolute.yaml",
+      "project": "outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/runs",
+      "effective_precision": "FP32 on MPS (quantize=None)",
+      "nms_multi_label": true
+    },
+    "metric_definition": {
+      "iou_thresholds_for_ap": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ],
+      "precision_recall_operating_point": "One shared confidence index maximizing the smoothed mean F1 curve across represented classes; reported overall precision and recall are unweighted means across class values at that index.",
+      "operating_confidence": 0.44544544544544545,
+      "nms_candidate_confidence_floor": 0.001
+    }
+  },
+  "cohort": {
+    "manifest_test_images": 650,
+    "filesystem_test_images": 650,
+    "public_test_images": 550,
+    "self_derived_test_images": 100,
+    "manifest_exactly_matches_test_directory": true,
+    "public_source_split_counts": {
+      "test": 550
+    },
+    "public_source_ids_unique": true,
+    "public_test_boxes": 807,
+    "class_image_counts": {
+      "mouse": 73,
+      "keyboard": 152,
+      "laptop": 125,
+      "cup": 181,
+      "headphones": 78
+    },
+    "class_instance_counts": {
+      "mouse": 78,
+      "keyboard": 174,
+      "laptop": 162,
+      "cup": 301,
+      "headphones": 92
+    },
+    "baseline_openimages_id_count": 37,
+    "baseline_vs_all_current_public_overlap_count": 0,
+    "baseline_vs_public_holdout_overlap_count": 0,
+    "initializer_manifest_missing_count": 0,
+    "initializer_manifest_nonunique_count": 0,
+    "initializer_manifest_non_test_placement_count": 0,
+    "interpretation": "The 550 images are exactly the Open Images V7 portion of the existing 650-image test split. They are a source-stratified analysis of a reused development holdout, not a new independent test set."
+  },
+  "metrics": [
+    {
+      "scope": "overall_macro",
+      "class_id": "all",
+      "class_name": "all",
+      "images": 550,
+      "instances": 807,
+      "precision": 0.7927129773997589,
+      "recall": 0.711388387819978,
+      "f1": 0.7463842433178627,
+      "mAP50": 0.7762437216228171,
+      "mAP50-95": 0.5593159422113806,
+      "operating_confidence": 0.44544544544544545
+    },
+    {
+      "scope": "class",
+      "class_id": 0,
+      "class_name": "mouse",
+      "images": 73,
+      "instances": 78,
+      "precision": 0.8663721775562526,
+      "recall": 0.8312379300476944,
+      "f1": 0.8484414793444277,
+      "mAP50": 0.8817913921667213,
+      "mAP50-95": 0.6954563409046711,
+      "operating_confidence": 0.44544544544544545
+    },
+    {
+      "scope": "class",
+      "class_id": 1,
+      "class_name": "keyboard",
+      "images": 152,
+      "instances": 174,
+      "precision": 0.745393107907649,
+      "recall": 0.7816091954022989,
+      "f1": 0.7630716811196064,
+      "mAP50": 0.7843011174315228,
+      "mAP50-95": 0.5370416409850309,
+      "operating_confidence": 0.44544544544544545
+    },
+    {
+      "scope": "class",
+      "class_id": 2,
+      "class_name": "laptop",
+      "images": 125,
+      "instances": 162,
+      "precision": 0.8370106386943654,
+      "recall": 0.602309417920704,
+      "f1": 0.700524373669958,
+      "mAP50": 0.7359854859578621,
+      "mAP50-95": 0.5424802417902991,
+      "operating_confidence": 0.44544544544544545
+    },
+    {
+      "scope": "class",
+      "class_id": 3,
+      "class_name": "cup",
+      "images": 181,
+      "instances": 301,
+      "precision": 0.9105441935074271,
+      "recall": 0.7439593087726715,
+      "f1": 0.8188653911886051,
+      "mAP50": 0.8564381113031139,
+      "mAP50-95": 0.6732434500552944,
+      "operating_confidence": 0.44544544544544545
+    },
+    {
+      "scope": "class",
+      "class_id": 4,
+      "class_name": "headphones",
+      "images": 78,
+      "instances": 92,
+      "precision": 0.6042447693331001,
+      "recall": 0.5978260869565217,
+      "f1": 0.601018291266716,
+      "mAP50": 0.6227025012548651,
+      "mAP50-95": 0.3483580373216073,
+      "operating_confidence": 0.44544544544544545
+    }
+  ],
+  "speed_ms_per_image": {
+    "preprocess": 1.6887990090551532,
+    "inference": 16.316050541777674,
+    "loss": 0.00020046165445819497,
+    "postprocess": 10.04594402699943
+  }
+}

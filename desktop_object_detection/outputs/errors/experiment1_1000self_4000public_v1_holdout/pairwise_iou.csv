@@ -1,0 +1,4 @@
+case_order,source_id,prediction_index,prediction_class_id,prediction_class_name,prediction_confidence,ground_truth_index,ground_truth_class_id,ground_truth_class_name,class_match,iou
+2,0378fe468292e979,0,4,headphones,0.714034,0,4,headphones,true,0.468169
+3,34da803c6cae973c,0,3,cup,0.846040,0,4,headphones,false,0.841275
+3,34da803c6cae973c,1,4,headphones,0.610839,0,4,headphones,true,0.768871

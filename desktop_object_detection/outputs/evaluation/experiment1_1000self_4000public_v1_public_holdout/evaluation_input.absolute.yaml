@@ -1,0 +1,11 @@
+path: "/Users/book./Desktop/\u8BAD\u7EC3\u96C6/desktop_object_detection/datasets/experiment1_1000self_4000public_v1"
+train: "/Users/book./Desktop/\u8BAD\u7EC3\u96C6/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/train"
+val: "/Users/book./Desktop/\u8BAD\u7EC3\u96C6/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/images/val"
+test: "/Users/book./Desktop/\u8BAD\u7EC3\u96C6/desktop_object_detection/outputs/evaluation/experiment1_1000self_4000public_v1_public_holdout/evaluation_input_images.absolute.txt"
+nc: 5
+names:
+  0: mouse
+  1: keyboard
+  2: laptop
+  3: cup
+  4: headphones

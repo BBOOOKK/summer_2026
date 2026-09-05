@@ -1,0 +1,7 @@
+case_order,source_id,record_kind,box_index,class_id,class_name,confidence,x1_px,y1_px,x2_px,y2_px,x_center_normalized,y_center_normalized,width_normalized,height_normalized,evaluation_label_iou50,max_iou_any_counterpart,max_iou_same_class_counterpart,matched_counterpart_index_iou50
+1,6eb03384f25d3f01,ground_truth,0,4,headphones,,32.074240,7.129242,945.595904,423.000000,0.477378,0.508427,0.892111,0.983146,false_negative,0.000000,0.000000,
+2,0378fe468292e979,ground_truth,0,4,headphones,,350.399488,78.399744,779.199488,529.599744,0.551562,0.395833,0.418750,0.587500,false_negative,0.468169,0.468169,
+2,0378fe468292e979,prediction,0,4,headphones,0.714034,557.875854,82.460983,791.258484,502.433533,0.658757,0.380791,0.227913,0.546839,localization_or_duplicate_false_positive,0.468169,0.468169,
+3,34da803c6cae973c,ground_truth,0,4,headphones,,0.000000,11.962563,1024.000000,596.435438,0.500000,0.347656,1.000000,0.667969,matched_true_positive,0.841275,0.768871,1
+3,34da803c6cae973c,prediction,0,3,cup,0.846040,6.709375,0.000000,980.302124,664.485840,0.481939,0.379706,0.950774,0.759412,wrong_class_false_positive,0.841275,0.000000,
+3,34da803c6cae973c,prediction,1,4,headphones,0.610839,5.308984,0.000000,855.938110,641.045654,0.420531,0.366312,0.830693,0.732624,true_positive,0.768871,0.768871,0

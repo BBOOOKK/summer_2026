@@ -1,0 +1,328 @@
+{
+  "schema_version": "1.0",
+  "created_utc": "2026-09-05T18:35:41.542563+00:00",
+  "generator": {
+    "script_path": "scripts/save_report_error_cases.py",
+    "script_sha256": "8f80eb136ee9c1227428113f8fc0c1b6b4bdb75fd203583dcae4935d58f8b765"
+  },
+  "scope": {
+    "selection": "Three purposefully selected qualitative cases from the public portion of the existing 650-image test split.",
+    "statistical_interpretation": "The cases are not randomly sampled and must not be used to estimate an overall error rate.",
+    "aggregate_evaluation_impact": "None. Saving these records does not modify the frozen 650-image AP evaluation, its labels, the checkpoint, or any training state.",
+    "training_impact": "No retraining or parameter update is performed.",
+    "iou_analysis": "The per-box IoU records are descriptive at an IoU 0.50 matching threshold and do not reimplement or replace Ultralytics AP."
+  },
+  "inference_configuration": {
+    "model_path": "models/experiment1_1000self_4000public_v1/best.pt",
+    "model_sha256": "c53834aa239974163ef48c566dc3fea04d38de7a1d05292ab5216d5163a09a42",
+    "model_size_bytes": 5482577,
+    "class_names": [
+      "mouse",
+      "keyboard",
+      "laptop",
+      "cup",
+      "headphones"
+    ],
+    "imgsz": 640,
+    "confidence_threshold": 0.5,
+    "nms_iou_threshold": 0.45,
+    "device": "mps",
+    "half": false,
+    "prediction_unit": "one image per model.predict call; no list batch"
+  },
+  "dataset_record": {
+    "dataset_path": "datasets/experiment1_1000self_4000public_v1",
+    "manifest_path": "datasets/experiment1_1000self_4000public_v1/manifest.csv",
+    "manifest_sha256": "59eaa679c3cb301e805afb51df5e14aceb02572530d5c72713d1c15ec82a7dda",
+    "selected_split": "test",
+    "selected_source_type": "open_images_v7"
+  },
+  "software_environment": {
+    "python": "3.12.4",
+    "python_executable": "/Users/book./Desktop/训练集/work/p05env/bin/python",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "torch": "2.13.0",
+    "ultralytics": "8.4.133",
+    "opencv": "5.0.0",
+    "mps_available": true
+  },
+  "cases": [
+    {
+      "case_order": 1,
+      "source_id": "6eb03384f25d3f01",
+      "source_type": "open_images_v7",
+      "source_split": "test",
+      "dataset_split": "test",
+      "source_url": "https://open-images-dataset.s3.amazonaws.com/test/6eb03384f25d3f01.jpg",
+      "manifest_file": "oi_test_6eb03384f25d3f01.jpg",
+      "manifest_label_count": 1,
+      "manifest_classes": [
+        "headphones"
+      ],
+      "case_type": "false_negative_no_detection",
+      "selection_reason": "Purposefully selected headphones example with no prediction at the fixed confidence threshold.",
+      "visual_review": "Headphones are visibly present; no accepted prediction is produced.",
+      "image_path": "datasets/experiment1_1000self_4000public_v1/images/test/oi_test_6eb03384f25d3f01.jpg",
+      "annotation_path": "datasets/experiment1_1000self_4000public_v1/labels/test/oi_test_6eb03384f25d3f01.txt",
+      "resolved_image_source_path": "datasets/p05_expanded_v1/sources/openimages/test/6eb03384f25d3f01.jpg",
+      "resolved_annotation_source_path": "datasets/p05_expanded_v1/labels/test/oi_test_6eb03384f25d3f01.txt",
+      "comparison_image_path": "outputs/errors/experiment1_1000self_4000public_v1_holdout/01_headphones_missed_gt_vs_prediction.jpg",
+      "comparison_image_sha256": "b9114499afd9bae27e508a34b2856e995990ca6a9b3c65a8fc61f77ca8b80a3d",
+      "image_width_px": 1024,
+      "image_height_px": 423,
+      "image_sha256": "930f96c49cafe7407106573f1cc8f9a789f10286fad3f6192fdcb7f4434a4abc",
+      "annotation_sha256": "9bbb0415ee026c06b34f0c390545d0b82a1ab1558bce337fe8d2fd0378d7dd71",
+      "ground_truth": [
+        {
+          "box_index": 0,
+          "class_id": 4,
+          "class_name": "headphones",
+          "confidence": null,
+          "bbox_xyxy_px": [
+            32.07424000000003,
+            7.129241999999992,
+            945.595904,
+            423.0
+          ],
+          "bbox_yolo_normalized": [
+            0.477378,
+            0.508427,
+            0.892111,
+            0.983146
+          ],
+          "max_iou_any_prediction": 0.0,
+          "max_iou_same_class_prediction": 0.0,
+          "matched_prediction_index_iou50": null,
+          "evaluation_label_iou50": "false_negative"
+        }
+      ],
+      "predictions": [],
+      "pairwise_iou": [],
+      "iou50_summary": {
+        "true_positives_iou50": 0,
+        "false_positives_iou50": 0,
+        "false_negatives_iou50": 1
+      }
+    },
+    {
+      "case_order": 2,
+      "source_id": "0378fe468292e979",
+      "source_type": "open_images_v7",
+      "source_split": "test",
+      "dataset_split": "test",
+      "source_url": "https://open-images-dataset.s3.amazonaws.com/test/0378fe468292e979.jpg",
+      "manifest_file": "oi_test_0378fe468292e979.jpg",
+      "manifest_label_count": 1,
+      "manifest_classes": [
+        "headphones"
+      ],
+      "case_type": "correct_class_localization_below_iou50",
+      "selection_reason": "Purposefully selected example with the correct headphones class but a box overlap below IoU 0.50.",
+      "visual_review": "The predicted class is correct, but its extent differs from the provider reference box.",
+      "image_path": "datasets/experiment1_1000self_4000public_v1/images/test/oi_test_0378fe468292e979.jpg",
+      "annotation_path": "datasets/experiment1_1000self_4000public_v1/labels/test/oi_test_0378fe468292e979.txt",
+      "resolved_image_source_path": "datasets/p05_expanded_v1/sources/openimages/test/0378fe468292e979.jpg",
+      "resolved_annotation_source_path": "datasets/p05_expanded_v1/labels/test/oi_test_0378fe468292e979.txt",
+      "comparison_image_path": "outputs/errors/experiment1_1000self_4000public_v1_holdout/02_headphones_localization_gt_vs_prediction.jpg",
+      "comparison_image_sha256": "63a2b42b2578c682e2349ab286c3c6f585ae8d0800e22969564a4b90ff9cab48",
+      "image_width_px": 1024,
+      "image_height_px": 768,
+      "image_sha256": "bb158393ae8fcec39180997cd154662bbcbb10d4c232dd1f0e158debd87bc2e5",
+      "annotation_sha256": "faa1c39f6e41e8d621d0a50a3849405fa25a4d05ab0bdf0d864535813d61307e",
+      "ground_truth": [
+        {
+          "box_index": 0,
+          "class_id": 4,
+          "class_name": "headphones",
+          "confidence": null,
+          "bbox_xyxy_px": [
+            350.399488,
+            78.39974399999998,
+            779.199488,
+            529.5997440000001
+          ],
+          "bbox_yolo_normalized": [
+            0.551562,
+            0.395833,
+            0.41875,
+            0.5875
+          ],
+          "max_iou_any_prediction": 0.46816921220923347,
+          "max_iou_same_class_prediction": 0.46816921220923347,
+          "matched_prediction_index_iou50": null,
+          "evaluation_label_iou50": "false_negative"
+        }
+      ],
+      "predictions": [
+        {
+          "box_index": 0,
+          "class_id": 4,
+          "class_name": "headphones",
+          "confidence": 0.7140336036682129,
+          "bbox_xyxy_px": [
+            557.8758544921875,
+            82.46098327636719,
+            791.2584838867188,
+            502.43353271484375
+          ],
+          "bbox_yolo_normalized": [
+            0.6587570011615753,
+            0.38079070051511127,
+            0.22791272401809692,
+            0.5468392570813497
+          ],
+          "max_iou_any_ground_truth": 0.46816921220923347,
+          "max_iou_same_class_ground_truth": 0.46816921220923347,
+          "best_same_class_ground_truth_index": 0,
+          "matched_ground_truth_index_iou50": null,
+          "evaluation_label_iou50": "localization_or_duplicate_false_positive"
+        }
+      ],
+      "pairwise_iou": [
+        {
+          "prediction_index": 0,
+          "prediction_class_id": 4,
+          "prediction_class_name": "headphones",
+          "prediction_confidence": 0.7140336036682129,
+          "ground_truth_index": 0,
+          "ground_truth_class_id": 4,
+          "ground_truth_class_name": "headphones",
+          "class_match": true,
+          "iou": 0.46816921220923347
+        }
+      ],
+      "iou50_summary": {
+        "true_positives_iou50": 0,
+        "false_positives_iou50": 1,
+        "false_negatives_iou50": 1
+      }
+    },
+    {
+      "case_order": 3,
+      "source_id": "34da803c6cae973c",
+      "source_type": "open_images_v7",
+      "source_split": "test",
+      "dataset_split": "test",
+      "source_url": "https://open-images-dataset.s3.amazonaws.com/test/34da803c6cae973c.jpg",
+      "manifest_file": "oi_test_34da803c6cae973c.jpg",
+      "manifest_label_count": 1,
+      "manifest_classes": [
+        "headphones"
+      ],
+      "case_type": "spurious_cup_false_positive_with_headphones_detection",
+      "selection_reason": "Purposefully selected example containing a high-confidence cup prediction in addition to a headphones prediction.",
+      "visual_review": "No cup is visible in the image; the cup box is a false positive relative to the provider ground truth and direct visual inspection.",
+      "image_path": "datasets/experiment1_1000self_4000public_v1/images/test/oi_test_34da803c6cae973c.jpg",
+      "annotation_path": "datasets/experiment1_1000self_4000public_v1/labels/test/oi_test_34da803c6cae973c.txt",
+      "resolved_image_source_path": "datasets/p05_expanded_v1/sources/openimages/test/34da803c6cae973c.jpg",
+      "resolved_annotation_source_path": "datasets/p05_expanded_v1/labels/test/oi_test_34da803c6cae973c.txt",
+      "comparison_image_path": "outputs/errors/experiment1_1000self_4000public_v1_holdout/03_spurious_cup_gt_vs_prediction.jpg",
+      "comparison_image_sha256": "e80bf9ea6b762897d750996feb93aef4b063a2152e537bf3096465dbd639a6f1",
+      "image_width_px": 1024,
+      "image_height_px": 875,
+      "image_sha256": "c8e93cec6eac257975f37fa722aeb56facfa52c9833f5605f18c088cf6b68537",
+      "annotation_sha256": "058a5b41d2519c3b67a51d84034ebf63452b7f53ad33a2cece5d7237ba7ef8d8",
+      "ground_truth": [
+        {
+          "box_index": 0,
+          "class_id": 4,
+          "class_name": "headphones",
+          "confidence": null,
+          "bbox_xyxy_px": [
+            0.0,
+            11.962562500000002,
+            1024.0,
+            596.4354375
+          ],
+          "bbox_yolo_normalized": [
+            0.5,
+            0.347656,
+            1.0,
+            0.667969
+          ],
+          "max_iou_any_prediction": 0.841274880299809,
+          "max_iou_same_class_prediction": 0.7688713494486519,
+          "matched_prediction_index_iou50": 1,
+          "evaluation_label_iou50": "matched_true_positive"
+        }
+      ],
+      "predictions": [
+        {
+          "box_index": 0,
+          "class_id": 3,
+          "class_name": "cup",
+          "confidence": 0.8460395932197571,
+          "bbox_xyxy_px": [
+            6.709374904632568,
+            0.0,
+            980.3021240234375,
+            664.48583984375
+          ],
+          "bbox_yolo_normalized": [
+            0.4819392084609717,
+            0.3797061941964286,
+            0.9507741690613329,
+            0.7594123883928572
+          ],
+          "max_iou_any_ground_truth": 0.841274880299809,
+          "max_iou_same_class_ground_truth": 0.0,
+          "best_same_class_ground_truth_index": null,
+          "matched_ground_truth_index_iou50": null,
+          "evaluation_label_iou50": "wrong_class_false_positive"
+        },
+        {
+          "box_index": 1,
+          "class_id": 4,
+          "class_name": "headphones",
+          "confidence": 0.6108392477035522,
+          "bbox_xyxy_px": [
+            5.308984279632568,
+            0.0,
+            855.9381103515625,
+            641.045654296875
+          ],
+          "bbox_yolo_normalized": [
+            0.4205308079253882,
+            0.36631180245535716,
+            0.8306925059296191,
+            0.7326236049107143
+          ],
+          "max_iou_any_ground_truth": 0.7688713494486519,
+          "max_iou_same_class_ground_truth": 0.7688713494486519,
+          "best_same_class_ground_truth_index": 0,
+          "matched_ground_truth_index_iou50": 0,
+          "evaluation_label_iou50": "true_positive"
+        }
+      ],
+      "pairwise_iou": [
+        {
+          "prediction_index": 0,
+          "prediction_class_id": 3,
+          "prediction_class_name": "cup",
+          "prediction_confidence": 0.8460395932197571,
+          "ground_truth_index": 0,
+          "ground_truth_class_id": 4,
+          "ground_truth_class_name": "headphones",
+          "class_match": false,
+          "iou": 0.841274880299809
+        },
+        {
+          "prediction_index": 1,
+          "prediction_class_id": 4,
+          "prediction_class_name": "headphones",
+          "prediction_confidence": 0.6108392477035522,
+          "ground_truth_index": 0,
+          "ground_truth_class_id": 4,
+          "ground_truth_class_name": "headphones",
+          "class_match": true,
+          "iou": 0.7688713494486519
+        }
+      ],
+      "iou50_summary": {
+        "true_positives_iou50": 1,
+        "false_positives_iou50": 1,
+        "false_negatives_iou50": 0
+      }
+    }
+  ]
+}
