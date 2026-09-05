@@ -4,6 +4,7 @@
 - 参考文献：`references.bib`
 - 图表生成脚本：`scripts/generate_publication_figures.py`
 - 最终 PDF：`output/pdf/desktop_object_detection_experiment_report.pdf`
+- Jetson 实机结果视频：[jetson_live_detection_20260905_193850.mp4](../../outputs/videos/jetson_live_detection_20260905_193850.mp4)
 
 从项目虚拟环境重建论文图表：
 

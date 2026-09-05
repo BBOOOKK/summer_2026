@@ -62,3 +62,17 @@ ros2 topic hz /object_detection/result --window 200
 
 图像 SHA-256：
 `23d1e0b327de6f4c55a2570f650e474d971a1dc43024ded40018833a461494a6`。
+
+## 实时结果视频
+
+2026-09-05 19:38:50（UTC+8）起，从同一 Jetson MJPEG 检测流连续采集
+30.000 s，并保存为：
+
+[outputs/videos/jetson_live_detection_20260905_193850.mp4](../outputs/videos/jetson_live_detection_20260905_193850.mp4)
+
+视频采用 H.264 编码，分辨率为 `640×480`，共 900 帧，以 30 帧/s 封装，
+文件大小为 1,539,189 B。封装帧率仅用于视频回放，不作为模型性能或 ROS2
+发布频率的测量值。
+
+视频 SHA-256：
+`df54c64684ec047ddbe75f31dd2aaf4ea56db65fb6abdd1f95595f3d82a8a8c1`。
