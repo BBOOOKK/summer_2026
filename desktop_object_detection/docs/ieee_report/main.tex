@@ -342,22 +342,34 @@ headphones 的 Precision、Recall 和 AP$_{50}$分别为0.6041、0.5978和0.6203
 
 保存结果中的代表性 laptop 错误表现为目标未检出或边界框偏移。由于本实验未对遮挡、视角和画面位置等错误因素逐项计数，这些图像仅作为典型案例保存，不用于推断各因素的发生比例。
 
-\subsection{20样本类别判定}
+\subsection{20样本类别判定与多类别输出}
 
 20张单目标样本中，最高置信度预测类别与预设类别一致的样本为19张，正确率为95\%，高于实验要求的80\%。唯一错误样本的预设类别为 laptop，在0.5置信度阈值下没有生成有效检测框。该样本已记录为漏检，并单独保存错误图像。
+
+为考察单帧多类别输出能力，另选取当前数据集 test 划分中的自主采集来源基准图像 \texttt{self\_IMG\_8306\_v000.jpg}，在训练机 MPS 后端使用同一验收权重以及0.50 confidence、0.45 NMS IoU 阈值进行推理。该图包含 laptop、keyboard 和 mouse 三类真值目标，模型在同一帧中将三类全部检出，置信度分别为0.9233、0.9184和0.8631。图\ref{fig:multiclass}给出了完整输出，直接展示了同一画面内多类目标的同步定位与分类能力。
+
+% Prediction generated with the current acceptance best.pt on 2026-09-05.
+% Model SHA-256: c53834aa239974163ef48c566dc3fea04d38de7a1d05292ab5216d5163a09a42
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,width=0.68\textwidth]{../../outputs/evaluation/current_model_demo/current_test_self_real_imgsz640_conf050_iou045/self_IMG_8306_v000_20260905_204222.jpg}
+\caption{当前验收权重在自主采集来源基准测试图像上的多类别检测结果。模型在同一帧中输出 laptop、keyboard 和 mouse 三类目标及其边界框与置信度。}
+\label{fig:multiclass}
+\end{figure}
 
 \subsection{Jetson 实时检测与 ROS2 发布性能}
 
 Jetson 实机在20帧预热后统计200个摄像头帧，\texttt{model.predict} 平均调用耗时为25.951 ms，对应38.534 FPS；最低逐帧预测调用速率为37.952 FPS。Ultralytics 记录的平均网络推理耗时为20.575 ms，最大网络推理耗时为20.896 ms。调用耗时比网络推理耗时高5.376 ms，该差值包含预处理、后处理和预测接口调用开销。平均预测调用速率约为5 FPS 验收阈值的7.71倍，最低逐帧速率亦高于该阈值。
 
-图\ref{fig:jetsonlive}给出了 Jetson 当前运行检测程序输出的实时画面。该帧中 mouse 的预测置信度为0.85，类别文字与边界框均由模型在线生成。画面左上角的38.4 FPS 是检测程序按预测调用耗时计算的指数平滑显示值，用于观察运行状态；正式性能仍以固定预热和计时帧数的 benchmark 结果为准。
+图\ref{fig:jetsonlive}给出了实机运行录像中按时间顺序选取的32帧。录像记录浏览器中显示的 Jetson 实时检测流；所选帧覆盖0.25--15.60 s，并按由左至右、由上至下的顺序排列。随着视角在桌面范围内移动，画面连续出现 laptop、keyboard 和 mouse 的类别文字、置信度与边界框。各帧左上角的 FPS 是程序按预测调用耗时计算的指数平滑显示值，用于观察运行状态；正式性能仍以固定预热和计时帧数的 benchmark 结果为准。
 
-% Live frame captured from the running Jetson MJPEG stream on 2026-09-05
-% at 18:54:00 +0800. SHA-256: 23d1e0b327de6f4c55a2570f650e474d971a1dc43024ded40018833a461494a6
-\begin{figure}[htbp]
+% Source screen recording: 录屏2026-09-05 16.49.53.mov
+% Source SHA-256: 0acf3562f4ce261b09675eca778f654b72e202d7364ea5f1daf99fa1a3ddbc65
+% Contact-sheet SHA-256: ca827a09c5e8fe1b9365055e27c28bec109ce64b7a244e495bfdbdd62c40a7fa
+\begin{figure}[p]
 \centering
-\includegraphics[width=0.72\textwidth]{jetson_live_detection.jpg}
-\caption{Jetson Orin NX 与 USB 摄像头的实时检测画面。当前帧显示 mouse 类别、置信度、边界框和预测调用速率。}
+\includegraphics[height=0.86\textheight]{jetson_recording_32frame_contact_sheet.jpg}
+\caption{Jetson 实时检测录像的32帧序列。各帧按时间顺序排列，截取自0.25--15.60 s；画面保留类别、置信度、检测框与程序显示的即时 FPS。}
 \label{fig:jetsonlive}
 \end{figure}
 

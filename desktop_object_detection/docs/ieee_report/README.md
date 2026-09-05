@@ -26,4 +26,4 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
 latexmk -c
 ```
 
-报告使用 `ctexart` A4 单栏格式和 XeLaTeX 中文字体支持。图表脚本直接读取仓库内的数据集、训练记录与测试结果，并校验测试集混淆矩阵源文件。`figures/jetson_live_detection.jpg` 是从运行中的 Jetson 检测流取得的实机画面，其采集时间与哈希记录在 `../JETSON_MEASUREMENT.md`。实验数字取自正式训练、测试、20 样本结果、Jetson benchmark 和 ROS2 topic 测量。
+报告使用 `ctexart` A4 单栏格式和 XeLaTeX 中文字体支持。图表脚本直接读取仓库内的数据集、训练记录与测试结果，并校验测试集混淆矩阵源文件。图6使用 `figures/jetson_recording_32frame_contact_sheet.jpg`，由实机屏幕录像的32个代表性时刻组成；原始录像元数据、抽帧时间和哈希记录在 `../JETSON_MEASUREMENT.md`。`figures/jetson_live_detection.jpg` 保留为从 Jetson 检测流直接取得的单帧记录。实验数字取自正式训练、测试、20 样本结果、Jetson benchmark 和 ROS2 topic 测量。
