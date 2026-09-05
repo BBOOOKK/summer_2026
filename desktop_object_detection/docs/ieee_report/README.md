@@ -1,29 +1,44 @@
-# 标准 A4 单栏实验报告
+# A4 Single-Column Experiment Report
 
-- 主文件：`main.tex`
-- 参考文献：`references.bib`
-- 图表生成脚本：`scripts/generate_publication_figures.py`
-- 最终 PDF：`output/pdf/desktop_object_detection_experiment_report.pdf`
-- Jetson 实机结果视频：[jetson_live_detection_20260905_193850.mp4](../../outputs/videos/jetson_live_detection_20260905_193850.mp4)
+This directory contains the reproducible English report for Experiment 1.
 
-从项目虚拟环境重建论文图表：
+- LaTeX source: `main.tex`
+- Bibliography: `references.bib`
+- Figure-generation script: `scripts/generate_publication_figures.py`
+- Final PDF: `output/pdf/desktop_object_detection_experiment_report.pdf`
+- Jetson result video: `../../outputs/videos/jetson_live_detection_20260905_193850.mp4`
+
+Regenerate the evidence-based figures from the repository data:
 
 ```bash
 python scripts/generate_publication_figures.py
 ```
 
-图表脚本需要 Pillow 和 ReportLab；应使用与当前机器架构一致且已安装这两个包的 Python 环境。
+The figure script requires Pillow and ReportLab. Use a Python environment whose
+packages match the host architecture.
 
-从本目录编译：
+Compile the report from this directory with XeLaTeX:
 
 ```bash
 latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-清理中间文件：
+Remove intermediate LaTeX files when required:
 
 ```bash
 latexmk -c
 ```
 
-报告使用 `ctexart` A4 单栏格式和 XeLaTeX 中文字体支持。图表脚本直接读取仓库内的数据集、训练记录与测试结果，并校验测试集混淆矩阵源文件。图6使用 `figures/jetson_recording_32frame_contact_sheet.jpg`，由实机屏幕录像的32个代表性时刻组成；原始录像元数据、抽帧时间和哈希记录在 `../JETSON_MEASUREMENT.md`。`figures/jetson_live_detection.jpg` 保留为从 Jetson 检测流直接取得的单帧记录。实验数字取自正式训练、测试、20 样本结果、Jetson benchmark 和 ROS2 topic 测量。
+The document uses the standard `article` class in A4 single-column format. Its
+figures are generated from the repository's dataset manifests, training logs,
+test results, and verified confusion-matrix source. Figure 6 is the 32-frame
+sequence in `figures/jetson_recording_32frame_contact_sheet.jpg`, sampled from
+the continuous Jetson screen recording; extraction times and file hashes are
+recorded in `../JETSON_MEASUREMENT.md`. The original single-frame capture is
+retained as `figures/jetson_live_detection.jpg`.
+
+Reported values come from the selected training run, the 650-image test split,
+the current-weight 20-image assessment, the Jetson benchmark, and the measured
+ROS 2 topic frequency. The report explicitly separates independent source
+captures from augmented derivatives and separates model-call throughput from
+ROS 2 publication rate.
