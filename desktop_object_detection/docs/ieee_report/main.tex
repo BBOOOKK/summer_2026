@@ -350,6 +350,17 @@ headphones 的 Precision、Recall 和 AP$_{50}$分别为0.6041、0.5978和0.6203
 
 Jetson 实机在20帧预热后统计200个摄像头帧，\texttt{model.predict} 平均调用耗时为25.951 ms，对应38.534 FPS；最低逐帧预测调用速率为37.952 FPS。Ultralytics 记录的平均网络推理耗时为20.575 ms，最大网络推理耗时为20.896 ms。调用耗时比网络推理耗时高5.376 ms，该差值包含预处理、后处理和预测接口调用开销。平均预测调用速率约为5 FPS 验收阈值的7.71倍，最低逐帧速率亦高于该阈值。
 
+图\ref{fig:jetsonlive}给出了 Jetson 当前运行检测程序输出的实时画面。该帧中 mouse 的预测置信度为0.85，类别文字与边界框均由模型在线生成。画面左上角的38.4 FPS 是检测程序按预测调用耗时计算的指数平滑显示值，用于观察运行状态；正式性能仍以固定预热和计时帧数的 benchmark 结果为准。
+
+% Live frame captured from the running Jetson MJPEG stream on 2026-09-05
+% at 18:54:00 +0800. SHA-256: 23d1e0b327de6f4c55a2570f650e474d971a1dc43024ded40018833a461494a6
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{jetson_live_detection.jpg}
+\caption{Jetson Orin NX 与 USB 摄像头的实时检测画面。当前帧显示 mouse 类别、置信度、边界框和预测调用速率。}
+\label{fig:jetsonlive}
+\end{figure}
+
 \path{/object_detection/result} 在15 s测量窗口中的实际发布频率为29.99 Hz，与约30 FPS 的摄像头输入速率接近。该频率低于独立 benchmark 得到的模型预测调用速率，因为连续节点运行还涉及取帧、结果封装、绘框及图像消息处理。两项测量均超过5 FPS，表明模型推理与 ROS2 结果发布在当前配置下均满足实时性要求。主要检测与实机结果汇总于表\ref{tab:summary}。
 
 \begin{table}[htbp]
@@ -377,11 +388,10 @@ ROS2 结果主题频率 & 29.99 Hz（15 s，window 200） \\
 \end{table}
 
 \FloatBarrier
-\clearpage
 \begingroup
-\small
-\setstretch{1.10}
-\setlength{\bibsep}{0.35em}
+\footnotesize
+\setstretch{1.05}
+\setlength{\bibsep}{0.25em}
 \bibliographystyle{gbt7714-numerical}
 \bibliography{references}
 \endgroup
