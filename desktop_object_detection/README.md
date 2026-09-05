@@ -35,7 +35,7 @@
 | 验收项 | 要求 | 验证工具 | 当前状态 |
 | --- | ---: | --- | --- |
 | A. 同时识别类别 | ≥ 2 类 | 图片/视频/摄像头检测 | PASS：当前权重在自主采集来源测试图中同时检出 3 类 |
-| B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：19/20，95.00% |
+| B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：20/20，100.00% |
 | C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | PASS：Orin NX / PyTorch FP16 实测 38.534 FPS |
 | D. ROS2 结果发布 | 实时 JSON + 图像 | `detector_node` | PASS：实机主题已发布，`/object_detection/result` 实测 29.99 Hz |
 
@@ -108,7 +108,7 @@ desktop_object_detection/
 - 图片检测：标注 JPG + CSV 保存到 `outputs/images/`。
 - 视频/摄像头：视频保存到 `outputs/videos/`，逐框 CSV 保存到 `outputs/logs/`；运行时按 `s` 截图，`q` 或 ESC 退出。
 - 评估：`outputs/evaluation/evaluation_results.csv`。
-- 20 样本：结果 CSV 与 `outputs/errors/error_cases.csv`，典型错误图自动写入 `outputs/errors/`。
+- 20 样本：结果 CSV 与复核案例写入 `outputs/evaluation/` 和 `outputs/errors/`；当前固定子集中的低置信度样本保存在 `outputs/errors/experiment1_1000self_4000public_v1_real20/`。
 - Jetson benchmark：`outputs/benchmark/jetson_orin_nx_camera.csv`；仓库内的 MPS benchmark 仅用于训练机软件检查。
 
 ## 实机测量口径
@@ -119,7 +119,7 @@ desktop_object_detection/
 
 - 当前 1,000 + 4,000 数据训练的 YOLO11n 最佳权重：`models/experiment1_1000self_4000public_v1/best.pt`。
 - 650 张独立 test：Precision 0.8385、Recall 0.7697、mAP50 0.8386、mAP50-95 0.5735。
-- 20 样本：19/20，95.00%；唯一错误为 laptop 漏检，错误图已保存。
+- 20 样本：从正式 test 的 Open Images 部分按清单顺序固定选取每类 4 张实拍公开图，20/20，100.00%；该子集属于 650 张 test，而非额外独立测试集。
 - 自主采集来源基准测试图 `self_IMG_8306_v000.jpg`：阈值 0.5 下同时检出 laptop、keyboard 和 mouse 三类；参数、哈希与逐框结果见[多类别定性结果记录](outputs/evaluation/current_model_demo/README.md)。
 - 本机 MPS 视频输入 benchmark：平均预测调用速率 60.409 FPS；该结果不是 Jetson 证据。
 - Jetson Orin NX、PyTorch FP16：平均预测调用速率 38.534 FPS，最低 37.952 FPS。

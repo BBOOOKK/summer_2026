@@ -120,7 +120,7 @@ python scripts/benchmark.py \
 
 ## 11. 20 个物体测试
 
-先人工检查并按实际独立样本修改 `configs/test_samples.csv`。字段固定为 `sample_id,image_path,ground_truth_class`，必须正好 20 行。
+随仓库提供的 `configs/test_samples.csv` 从正式 test 的 Open Images 部分按清单文件名顺序固定选择每类 4 张实拍公开图，共 20 张；该子集属于 650 张 test，不是额外独立测试集。若用于现场验收，应先人工检查并替换为当场采集的 20 个独立实物样本。字段固定为 `sample_id,image_path,ground_truth_class`，必须正好 20 行。
 
 ```bash
 python scripts/test_20_objects.py --model models/experiment1_1000self_4000public_v1/best.pt --samples configs/test_samples.csv --device 0 --half

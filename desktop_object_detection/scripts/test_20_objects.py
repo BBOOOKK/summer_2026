@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 from pathlib import Path
 from typing import Any
 
@@ -55,6 +56,7 @@ def label_error(frame: Any, gt: str, prediction: str, confidence: float) -> Any:
 
 def main() -> int:
     args = parse_args()
+    root = project_root()
     if not args.model.is_file():
         print(f"[ERROR] Model not found: {args.model}")
         return 2
@@ -86,10 +88,14 @@ def main() -> int:
         image_path = Path(sample["image_path"]).expanduser()
         if not image_path.is_absolute():
             image_path = args.samples.parent / image_path
-        image_path = image_path.resolve()
+        # Keep the configured dataset path rather than resolving a symlink to an
+        # implementation-specific source directory. This makes saved CSV files
+        # portable while the filesystem check and inference still follow links.
+        image_path = Path(os.path.abspath(image_path))
         if not image_path.is_file():
             print(f"[ERROR] Test image not found: {image_path}")
             return 2
+        stored_image_path = Path(os.path.relpath(image_path, root))
         result = model.predict(
             str(image_path),
             imgsz=args.imgsz,
@@ -120,7 +126,7 @@ def main() -> int:
         correct_count += int(correct)
         results_rows.append({
             "sample_id": sample["sample_id"],
-            "image_path": str(image_path),
+            "image_path": str(stored_image_path),
             "ground_truth": "|".join(sorted(gt_classes)),
             "prediction": prediction,
             "confidence": f"{confidence:.6f}",
@@ -147,12 +153,12 @@ def main() -> int:
                 "error_type": error_type,
             })
     with args.output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=RESULT_FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=RESULT_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(results_rows)
     errors_csv = args.errors / "error_cases.csv"
     with errors_csv.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=ERROR_FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=ERROR_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(error_rows)
     total = len(samples)

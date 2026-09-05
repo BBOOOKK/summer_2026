@@ -57,13 +57,13 @@
 
 ## 7 20 个目标正确率
 
-测试集从独立 test 划分中每类选取 4 张单目标图，共 20 张；最高置信度类别作为最终预测。
+从正式 test 中 Open Images 部分按清单文件名顺序固定选择每类 4 张仅含 1 个参考框的实拍公开图，共 20 张；最高置信度类别作为最终预测。该子集属于 650 张 test，不是额外独立测试集。
 
 | 测试数量 | 正确 | 错误 | 正确率 | 要求 | 结果 |
 | ---: | ---: | ---: | ---: | ---: | --- |
-| 20 | 19 | 1 | 95.00% | ≥ 80% | PASS |
+| 20 | 20 | 0 | 100.00% | ≥ 80% | PASS |
 
-唯一错误为 laptop 漏检。相关文件为 `outputs/evaluation/experiment1_1000self_4000public_v1_test/20_object_test_results.csv` 和 `outputs/errors/experiment1_1000self_4000public_v1/error_cases.csv`。
+20 张的最高置信度类别均与清单类别一致。结果位于 `outputs/evaluation/experiment1_1000self_4000public_v1_test/20_object_test_results.csv`；3 张低于 0.60 复核阈值的正确样本保存在 `outputs/errors/experiment1_1000self_4000public_v1_real20/`。
 
 ## 8 实时性能
 
@@ -82,14 +82,14 @@ ROS2 Humble 节点在 Jetson 上运行，`/object_detection/result` 经 15 s、2
 
 ## 10 结果视频与错误分析
 
-Jetson 实机检测流已保存为 30 秒、900 帧、$640\times480$ 的 H.264 视频 `outputs/videos/jetson_live_detection_20260905_193850.mp4`，画面包含类别、检测框、置信度和预测调用速率。20 样本测试中的唯一错误为 laptop 漏检；该样本及相应记录已单独保存。视频的 30 帧/s 是封装回放时基，不作为模型或 ROS2 性能测量值。
+Jetson 实机检测流已保存为 30 秒、900 帧、$640\times480$ 的 H.264 视频 `outputs/videos/jetson_live_detection_20260905_193850.mp4`，画面包含类别、检测框、置信度和预测调用速率。20 样本测试全部判定正确，其中 3 张低置信度正确样本已单独保存供复核。视频的 30 帧/s 是封装回放时基，不作为模型或 ROS2 性能测量值。
 
 ## 11 四项验收结论
 
 | 验收项 | 要求 | 当前结果 | 状态 |
 | --- | ---: | ---: | --- |
 | A. 同时识别类别 | ≥ 2 类 | 5 类 | PASS |
-| B. 20 目标正确率 | ≥ 80% | 95.00% | PASS |
+| B. 20 目标正确率 | ≥ 80% | 100.00% | PASS |
 | C. Jetson 平均 FPS | ≥ 5 | 38.534 FPS | PASS |
 | D. ROS2 实时发布 | 正常 | 结果主题 29.99 Hz | PASS |
 

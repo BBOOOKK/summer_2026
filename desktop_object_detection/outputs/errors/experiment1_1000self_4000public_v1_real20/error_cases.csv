@@ -1,0 +1,4 @@
+image,ground_truth,prediction,confidence,error_type
+outputs/errors/experiment1_1000self_4000public_v1_real20/real_07_low_confidence.jpg,keyboard,keyboard,0.565428,low_confidence
+outputs/errors/experiment1_1000self_4000public_v1_real20/real_08_low_confidence.jpg,keyboard,keyboard,0.508314,low_confidence
+outputs/errors/experiment1_1000self_4000public_v1_real20/real_10_low_confidence.jpg,laptop,laptop,0.590368,low_confidence

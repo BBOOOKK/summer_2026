@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "config": "/Users/book./Desktop/训练集/desktop_object_detection/configs/dataset.yaml",
+  "config": "/Users/book./Desktop/训练集/desktop_object_detection/datasets/experiment1_1000self_4000public_v1/dataset.yaml",
   "names": {
     "0": "mouse",
     "1": "keyboard",
@@ -11,16 +11,16 @@
   "splits": {
     "train": {
       "split": "train",
-      "image_count": 347,
-      "label_count": 347,
-      "empty_labels": 35,
-      "object_count": 577,
+      "image_count": 4000,
+      "label_count": 4000,
+      "empty_labels": 0,
+      "object_count": 6773,
       "class_counts": {
-        "0": 112,
-        "1": 115,
-        "2": 118,
-        "3": 117,
-        "4": 115
+        "0": 1424,
+        "1": 1544,
+        "2": 2139,
+        "3": 921,
+        "4": 745
       },
       "missing_labels": [],
       "orphan_labels": [],
@@ -28,16 +28,16 @@
     },
     "val": {
       "split": "val",
-      "image_count": 100,
-      "label_count": 100,
-      "empty_labels": 10,
-      "object_count": 170,
+      "image_count": 350,
+      "label_count": 350,
+      "empty_labels": 0,
+      "object_count": 627,
       "class_counts": {
-        "0": 38,
-        "1": 36,
-        "2": 33,
-        "3": 32,
-        "4": 31
+        "0": 122,
+        "1": 148,
+        "2": 148,
+        "3": 175,
+        "4": 34
       },
       "missing_labels": [],
       "orphan_labels": [],
@@ -45,16 +45,16 @@
     },
     "test": {
       "split": "test",
-      "image_count": 53,
-      "label_count": 53,
-      "empty_labels": 5,
-      "object_count": 94,
+      "image_count": 650,
+      "label_count": 650,
+      "empty_labels": 0,
+      "object_count": 1107,
       "class_counts": {
-        "0": 18,
-        "1": 17,
-        "2": 18,
-        "3": 19,
-        "4": 22
+        "0": 178,
+        "1": 274,
+        "2": 262,
+        "3": 301,
+        "4": 92
       },
       "missing_labels": [],
       "orphan_labels": [],
@@ -62,17 +62,17 @@
     }
   },
   "totals": {
-    "images": 500,
-    "labels": 500,
-    "empty_labels": 50,
-    "objects": 841
+    "images": 5000,
+    "labels": 5000,
+    "empty_labels": 0,
+    "objects": 8507
   },
   "class_counts": {
-    "0": 168,
-    "1": 168,
-    "2": 169,
-    "3": 168,
-    "4": 168
+    "0": 1724,
+    "1": 1966,
+    "2": 2549,
+    "3": 1397,
+    "4": 871
   },
   "errors": []
 }
