@@ -5,7 +5,7 @@
 ```bash
 source /opt/ros/$ROS_DISTRO/setup.bash
 sudo apt update
-sudo apt install python3-colcon-common-extensions ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-sensor-msgs
+sudo apt install python3-colcon-common-extensions ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-sensor-msgs ros-$ROS_DISTRO-rqt-image-view
 ```
 
 Ultralytics 与 CUDA PyTorch 需要对 ROS2 使用的 Python 可见。
@@ -15,7 +15,7 @@ Ultralytics 与 CUDA PyTorch 需要对 ROS2 使用的 Python 可见。
 ```bash
 cd desktop_object_detection/ros2_ws
 source /opt/ros/$ROS_DISTRO/setup.bash
-colcon build --symlink-install
+colcon build
 source install/setup.bash
 ```
 
@@ -29,10 +29,12 @@ ros2 run object_detector detector_node --ros-args \
   -p confidence_threshold:=0.5 \
   -p iou_threshold:=0.45 \
   -p imgsz:=640 \
-  -p device:=0 \
   -p publish_image:=true \
   -p save_video:=false
 ```
+
+`device` 默认为字符串 `auto`，在 Jetson 上会自动选择 CUDA device 0。
+不要写成 `-p device:=0`；ROS2 会把它解析成整数，与节点声明的字符串类型冲突。
 
 ## 模式 B：订阅图像
 
@@ -40,8 +42,7 @@ ros2 run object_detector detector_node --ros-args \
 ros2 run object_detector detector_node --ros-args \
   -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt \
   -p source_mode:=topic \
-  -p input_topic:=/camera/image_raw \
-  -p device:=0
+  -p input_topic:=/camera/image_raw
 ```
 
 ## 输出
@@ -50,11 +51,13 @@ ros2 run object_detector detector_node --ros-args \
 - `/object_detection/image`：`sensor_msgs/msg/Image`，含检测框、类别、置信度和 FPS。
 
 ```bash
-ros2 topic echo /object_detection/result
-ros2 topic hz /object_detection/result
+ros2 topic echo --once /object_detection/result
+ros2 topic hz /object_detection/result --window 200
 ros2 topic info /object_detection/image
 ros2 run rqt_image_view rqt_image_view /object_detection/image
 ```
+
+本次实机以 15 s 窗口测得 `/object_detection/result` 为 29.99 Hz。该值是消息到达频率，不等同于 JSON 中按预测调用耗时计算的平滑 FPS；环境和计时口径见 [Jetson 实机测量记录](JETSON_MEASUREMENT.md)。
 
 JSON 示例：
 

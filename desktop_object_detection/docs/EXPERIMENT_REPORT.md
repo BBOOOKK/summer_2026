@@ -1,12 +1,14 @@
 # 实验一：目标检测与识别实验报告
 
+> 本文件为项目内的 Markdown 摘要，不作为正式提交稿。标准 A4 单栏 LaTeX 报告及最终 PDF 位于 `docs/ieee_report/`。
+
 ## 1 实验目的
 
 使用轻量级 YOLO 检测五类桌面目标，在 NVIDIA Jetson 上实现实时识别，并通过 ROS2 发布类别、检测框、置信度和带框图像。验收重点为同时识别不少于两类、20 个样本正确率不低于 80%、Jetson 平均 FPS 不低于 5，以及 ROS2 实时发布。
 
 ## 2 实验环境
 
-当前开发与训练环境：macOS、Apple M4、Python 3.12.4、PyTorch 2.13.0、Ultralytics 8.4.133、MPS。Jetson 型号、JetPack、CUDA、TensorRT 和 ROS2 发行版需在目标设备上填写。
+开发与训练环境为 macOS、Apple M4、Python 3.12.4、PyTorch 2.13.0、Ultralytics 8.4.133 和 MPS。边缘端采用 NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super（16 GB）、JetPack 6.2.1、L4T 36.4.4、CUDA runtime 12.6.77、NVIDIA build PyTorch 2.5.0 和 ROS2 Humble。实机推理后端为 PyTorch FP16；系统虽安装 TensorRT 10.7.0.23 运行库，本次测量未使用 TensorRT Engine。
 
 ## 3 数据集
 
@@ -65,9 +67,9 @@
 
 ## 8 实时性能
 
-本机 MPS 使用 640 输入、130 个计时帧的端到端平均速度为 60.409 FPS，最低 34.733 FPS，证明 benchmark 软件链路可运行，但该结果不能替代 Jetson 验收。
+本机 MPS 使用 640 输入、130 个计时帧的平均预测调用速率为 60.409 FPS，最低 34.733 FPS，该结果仅用于训练机软件检查。
 
-Jetson 必须另行填写：型号、功耗模式、PyTorch/ONNX/TensorRT 后端、平均 FPS、最低 FPS和温度。验收要求为平均 ≥ 5 FPS。
+Jetson 在 `MAXN_SUPER` 动态调频模式下使用当前 `best.pt`、CUDA device 0 和 FP16。预热 20 帧后统计 200 帧，完整 `model.predict()` 调用平均耗时为 25.951 ms，对应 38.534 FPS；最低预测调用速率为 37.952 FPS。Ultralytics 报告的平均网络推理耗时为 20.575 ms，最大为 20.896 ms。上述预测调用计时不包含摄像头读取、绘框、写盘或 ROS2 发布，平均速度超过 5 FPS 验收阈值。
 
 ## 9 ROS2 通信
 
@@ -76,11 +78,11 @@ Jetson 必须另行填写：型号、功耗模式、PyTorch/ONNX/TensorRT 后端
 - `/object_detection/result`：`std_msgs/msg/String` JSON。
 - `/object_detection/image`：`sensor_msgs/msg/Image` 带框图像。
 
-ROS2 包、消息结构和参数已通过静态自检。由于开发机没有 ROS2/colcon 环境，仍需在 Jetson 上完成 `colcon build`、`ros2 topic echo`、`ros2 topic hz` 和图像显示截图。
+ROS2 Humble 节点在 Jetson 上运行，`/object_detection/result` 经 15 s、200 条消息滑动窗口测得 29.99 Hz。该数值表示结果消息到达订阅端的实际频率，与节点 JSON 中按预测调用耗时计算的平滑 FPS 分开记录。
 
 ## 10 结果视频与错误分析
 
-已生成 15 秒、150 帧的检测结果视频 `outputs/videos/detection_20260831_101614.mp4`，包含框、类别、置信度和 FPS。典型错误主要为 cup 漏检，可能与杯子外观差异、背景对比度或置信度阈值有关。改进顺序应为补充真实杯子样本、复核边界框、分析置信度分布，再谨慎调整阈值。
+Jetson 实机检测流已保存为 30 秒、900 帧、$640\times480$ 的 H.264 视频 `outputs/videos/jetson_live_detection_20260905_193850.mp4`，画面包含类别、检测框、置信度和预测调用速率。20 样本测试中的唯一错误为 laptop 漏检；该样本及相应记录已单独保存。视频的 30 帧/s 是封装回放时基，不作为模型或 ROS2 性能测量值。
 
 ## 11 四项验收结论
 
@@ -88,9 +90,9 @@ ROS2 包、消息结构和参数已通过静态自检。由于开发机没有 RO
 | --- | ---: | ---: | --- |
 | A. 同时识别类别 | ≥ 2 类 | 5 类 | PASS |
 | B. 20 目标正确率 | ≥ 80% | 95.00% | PASS |
-| C. Jetson 平均 FPS | ≥ 5 | 本机 60.409；Jetson 未测 | PENDING |
-| D. ROS2 实时发布 | 正常 | 软件完成，实机未测 | PENDING |
+| C. Jetson 平均 FPS | ≥ 5 | 38.534 FPS | PASS |
+| D. ROS2 实时发布 | 正常 | 结果主题 29.99 Hz | PASS |
 
 ## 12 总结
 
-本实验已完成数据接入、YOLO11n 训练、独立评估、图片/视频/摄像头推理程序、20 样本统计、错误案例保存、benchmark 和 ROS2 节点开发。当前验收模型以 PyTorch 权重交付，ONNX/TensorRT 可通过导出脚本生成。软件侧自检结论为 `PASS_WITH_HARDWARE_PENDING`。最终课程验收仍需在指定 Jetson 与摄像头上生成 TensorRT Engine、记录平均 FPS、保存现场视频，并补充 ROS2 topic 截图。
+本实验完成了数据构建、YOLO11n 训练、独立测试、20 样本统计、错误案例保存、Jetson 摄像头推理和 ROS2 结果发布。当前验收模型以 PyTorch FP16 权重运行；测试集检测、20 样本类别判定、Jetson 实时性能及 ROS2 发布频率均达到课程验收阈值。正式论述、图表和参考文献以 `docs/ieee_report/` 中的 LaTeX 报告为准。

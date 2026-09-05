@@ -36,8 +36,8 @@
 | --- | ---: | --- | --- |
 | A. 同时识别类别 | ≥ 2 类 | 图片/视频/摄像头检测 | PASS：独立 MIX 图同时检出 5 类 |
 | B. 20 目标正确率 | ≥ 80% | `test_20_objects.py` | PASS：19/20，95.00% |
-| C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | 本机 MPS 60.409 FPS；Jetson 待实测 |
-| D. ROS2 结果发布 | 实时 JSON + 图像 | `detector_node` | 静态自检 PASS；ROS2/Jetson 实机待运行 |
+| C. Jetson 实时速度 | 平均 ≥ 5 FPS | `benchmark.py` | PASS：Orin NX / PyTorch FP16 实测 38.534 FPS |
+| D. ROS2 结果发布 | 实时 JSON + 图像 | `detector_node` | PASS：实机主题已发布，`/object_detection/result` 实测 29.99 Hz |
 
 ## 最简运行流程
 
@@ -52,12 +52,12 @@ python scripts/detect_camera.py --model models/experiment1_1000self_4000public_v
 python scripts/benchmark.py --model models/experiment1_1000self_4000public_v1/best.pt --source 0 --device 0 --half
 
 cd ros2_ws
-colcon build --symlink-install
+colcon build
 source install/setup.bash
 ros2 run object_detector detector_node --ros-args -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt -p camera_id:=0
 ```
 
-Jetson 的 PyTorch 必须按 JetPack 版本单独安装，不能直接依赖通用 pip wheel。完整步骤见 [运行指南](docs/RUN_GUIDE.md)、[Jetson 部署](docs/JETSON_DEPLOYMENT.md)和 [ROS2 指南](docs/ROS2_GUIDE.md)。
+Jetson 的 PyTorch 必须按 JetPack 版本单独安装，不能直接依赖通用 pip wheel。完整步骤见 [运行指南](docs/RUN_GUIDE.md)、[Jetson 部署](docs/JETSON_DEPLOYMENT.md)、[ROS2 指南](docs/ROS2_GUIDE.md)和[实机测量记录](docs/JETSON_MEASUREMENT.md)。正式实验报告见 [LaTeX 报告目录](docs/ieee_report/)。
 
 ## 工程结构
 
@@ -96,7 +96,7 @@ desktop_object_detection/
 
 ## 训练参数建议
 
-- Jetson 实时模型：`yolo11n.pt`，若 JetPack/Ultralytics 兼容性异常可用 `yolov8n.pt`。
+- 当前 Jetson 验收模型：`models/experiment1_1000self_4000public_v1/best.pt`，其网络规模为 YOLO11n；`yolo11n.pt` 仅是训练前的基础检查点，不能替代五类验收权重。
 - 默认：640 px、100 epochs、batch 16、early stopping 25。
 - 轻量增强：小角度旋转、平移、缩放、水平翻转、有限 Mosaic；禁用 MixUp。
 - 显存不足：先将 batch 调到 8 或 4，不要先降低图像尺寸。
@@ -109,11 +109,11 @@ desktop_object_detection/
 - 视频/摄像头：视频保存到 `outputs/videos/`，逐框 CSV 保存到 `outputs/logs/`；运行时按 `s` 截图，`q` 或 ESC 退出。
 - 评估：`outputs/evaluation/evaluation_results.csv`。
 - 20 样本：结果 CSV 与 `outputs/errors/error_cases.csv`，典型错误图自动写入 `outputs/errors/`。
-- Benchmark：`outputs/benchmark/benchmark.csv`。
+- Jetson benchmark：`outputs/benchmark/jetson_orin_nx_camera.csv`；仓库内的 MPS benchmark 仅用于训练机软件检查。
 
-## 已知硬件边界
+## 实机测量口径
 
-当前软件自检不能替代 Jetson 实测。最终报告中的 FPS、摄像头视频和 ROS2 topic 截图必须在目标 Jetson、实际摄像头和对应 JetPack/ROS2 环境中生成。
+当前实机结果来自 Jetson Orin NX、USB 摄像头和同一份五类验收权重。`benchmark.py` 的 FPS 覆盖一次完整 `model.predict()` 调用，不包括摄像头读取、绘框、写盘或 ROS2 发布；`ros2 topic hz` 则表示结果消息到达订阅端的实际频率。两项数据应分别报告，具体环境和测量边界见 `docs/JETSON_MEASUREMENT.md`。
 
 ## 当前实测摘要
 
@@ -121,5 +121,8 @@ desktop_object_detection/
 - 650 张独立 test：Precision 0.8385、Recall 0.7697、mAP50 0.8386、mAP50-95 0.5735。
 - 20 样本：19/20，95.00%；唯一错误为 laptop 漏检，错误图已保存。
 - MIX 示例 `P05_S02_MIX_0121.jpg`：阈值 0.5 下同时检出 5 类。
-- 本机 MPS 结果视频 benchmark：60.409 FPS；该结果不是 Jetson 证据。
-- 项目审计：`outputs/evaluation/project_self_check.json` 为 `PASS_WITH_HARDWARE_PENDING`。
+- 本机 MPS 视频输入 benchmark：平均预测调用速率 60.409 FPS；该结果不是 Jetson 证据。
+- Jetson Orin NX、PyTorch FP16：平均预测调用速率 38.534 FPS，最低 37.952 FPS。
+- ROS2 `/object_detection/result`：15 s 测量窗口内为 29.99 Hz。
+- 实机结果视频：`outputs/videos/jetson_live_detection_20260905_193850.mp4`。
+- 项目软件自检：`outputs/evaluation/project_self_check.json` 保留原有 `PASS_WITH_HARDWARE_PENDING` 快照；Jetson 实测已另行记录于 `docs/JETSON_MEASUREMENT.md`。

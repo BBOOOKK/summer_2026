@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark end-to-end YOLO stream FPS against the 5 FPS requirement."""
+"""Benchmark full YOLO model.predict() call FPS against the 5 FPS requirement."""
 
 from __future__ import annotations
 
@@ -88,6 +88,8 @@ def main() -> int:
         "image_size": args.imgsz,
         "frames": len(loop_times_ms),
         "average_inference_ms": f"{average_inference_ms:.3f}",
+        # Historical CSV column retained for compatibility. The value covers one
+        # full model.predict() call, not camera capture, drawing, storage, or ROS2.
         "average_end_to_end_ms": f"{average_loop_ms:.3f}",
         "average_fps": f"{average_fps:.3f}",
         "min_fps": f"{min_fps:.3f}",

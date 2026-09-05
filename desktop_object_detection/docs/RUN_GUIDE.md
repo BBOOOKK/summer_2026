@@ -103,15 +103,20 @@ python scripts/export_model.py --model models/experiment1_1000self_4000public_v1
 
 ```bash
 python scripts/benchmark.py \
-  --model models/experiment1_1000self_4000public_v1/best.engine \
+  --model models/experiment1_1000self_4000public_v1/best.pt \
   --source 0 \
   --imgsz 640 \
+  --conf 0.5 \
+  --iou 0.45 \
   --device 0 \
+  --half \
   --warmup-frames 20 \
-  --test-frames 200
+  --test-frames 200 \
+  --requirement-fps 5 \
+  --output outputs/benchmark/jetson_orin_nx_camera.csv
 ```
 
-平均端到端 FPS ≥ 5 才输出 PASS。也可用视频文件替代摄像头，使不同模型对比可复现。
+平均预测调用 FPS ≥ 5 才输出 PASS。计时从摄像头取帧完成后开始，到 `model.predict()` 返回时结束，包含 Ultralytics 预处理、GPU 推理和后处理，不包含取帧、绘框、显示、写盘或 ROS2 发布。也可用视频文件替代摄像头，使不同模型对比可复现。
 
 ## 11. 20 个物体测试
 
@@ -128,14 +133,13 @@ python scripts/test_20_objects.py --model models/experiment1_1000self_4000public
 ```bash
 cd ros2_ws
 source /opt/ros/$ROS_DISTRO/setup.bash
-colcon build --symlink-install
+colcon build
 source install/setup.bash
 ros2 run object_detector detector_node \
   --ros-args \
-  -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.engine \
+  -p model_path:=$(pwd)/../models/experiment1_1000self_4000public_v1/best.pt \
   -p source_mode:=camera \
   -p camera_id:=0 \
-  -p device:=0 \
   -p half:=true
 ```
 
