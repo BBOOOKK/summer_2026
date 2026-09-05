@@ -1,7 +1,6 @@
-\documentclass[conference,a4paper]{IEEEtran}
+\documentclass[12pt,a4paper,UTF8,fontset=none]{ctexart}
 
 \usepackage{fontspec}
-\usepackage{xeCJK}
 \setmainfont{Times New Roman}
 \setsansfont{Arial}
 \setmonofont{Menlo}
@@ -11,155 +10,166 @@
 
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{geometry}
 \usepackage{graphicx}
-\usepackage{multirow}
 \usepackage{array}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage{placeins}
+\usepackage{setspace}
+\usepackage{tabularx}
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage[hidelinks]{hyperref}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 
-\graphicspath{{../../datasets/experiment1_1000self_4000public_v1/qa/}{../../outputs/training/experiment1_1000self_4000public_v1/}{../../outputs/evaluation/experiment1_1000self_4000public_v1_test/runs/best_test-2/}}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.8cm,right=2.5cm,headheight=15pt}
+\setstretch{1.35}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,leftmargin=2em}
+\captionsetup{font=small,labelsep=quad}
+\ctexset{
+  section={format=\zihao{3}\bfseries,beforeskip=1.2em,afterskip=0.6em},
+  subsection={format=\zihao{4}\bfseries,beforeskip=0.9em,afterskip=0.4em}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{机器人集成小组项目实验报告}
+\fancyhead[R]{李书宇}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\graphicspath{{figures/}}
 \newcommand{\mAPfifty}{mAP@0.5}
 \newcommand{\mAPcoco}{mAP@0.5:0.95}
 \renewcommand{\arraystretch}{1.12}
 
-\title{基于 YOLO11n 的桌面物体检测\\与 ROS2 通信实验}
-
-\author{\IEEEauthorblockN{李书宇}
-\IEEEauthorblockA{中国海洋大学信息科学与工程学部计算机学院\\
-2024级计算机科学与技术（中外合作办学）\\
-学号：24020036035\\
-课程：机器人集成小组项目\quad 指导教师：周小伟}}
+\hypersetup{
+  pdftitle={基于 YOLO11n 的桌面物体检测及 ROS2 结果发布实验},
+  pdfauthor={李书宇}
+}
 
 \begin{document}
-\maketitle
 
-\begin{center}
-\small\textbf{摘\quad 要}
-\end{center}
-\begingroup\small
-本实验采用 YOLO11n 完成鼠标、键盘、笔记本电脑、杯子和头戴式耳机五类桌面物体的检测，并通过 ROS2 发布检测结果。训练数据共5000张，标注目标框8507个，其中1000张为自主采集来源素材，4000张取自 Open Images V7。数据按母图分组划分，以防止同源增强图像分散到不同集合。模型以640像素输入训练12轮，在650张测试图像上取得0.8385的 Precision、0.7697的 Recall、0.8386的 \mAPfifty{} 和0.5735的 \mAPcoco{}。另选取20张单目标图片进行测试，正确识别19张，正确率为95\%。Apple M4 MPS 环境下，固定视频130个计时帧的平均端到端速度为60.409 FPS。程序支持图片、视频和摄像头输入，可保存检测记录及错误样本，并发布结构化检测结果与带框图像。
-
-\textbf{关键词：}目标检测；YOLO11n；桌面物体；ROS2；边缘视觉；迁移学习
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{0.8cm}
+{\zihao{1}\bfseries 中国海洋大学\par}
+\vspace{0.7cm}
+{\zihao{2}\bfseries 机器人集成小组项目\par}
+\vspace{0.25cm}
+{\zihao{2}\bfseries 实验报告\par}
+\vspace{1.5cm}
+{\zihao{1}\bfseries 基于 YOLO11n 的桌面物体检测\\[0.45cm]
+及 ROS2 结果发布实验\par}
+\vspace{2.0cm}
+\begingroup
+\renewcommand{\arraystretch}{1.6}
+\zihao{-3}
+\begin{tabular}{>{\bfseries}r l}
+学生姓名： & 李书宇 \\
+学\qquad 号： & 24020036035 \\
+学院专业： & 信息科学与工程学部计算机学院 \\
+ & 2024级计算机科学与技术（中外合作办学） \\
+课程名称： & 机器人集成小组项目 \\
+指导教师： & 周小伟 \\
+学校名称： & 中国海洋大学 \\
+\end{tabular}
 \endgroup
+\vfill
+{\zihao{4}2026年9月\par}
+\end{titlepage}
 
-\begin{abstract}
-This experiment applies YOLO11n to the detection of five desktop-object classes: mouse, keyboard, laptop, cup, and headphones. Detection results are subsequently published through ROS2. The dataset comprises 5,000 images with 8,507 bounding boxes; 1,000 images originate from self-collected photographs and 4,000 are drawn from Open Images V7. All derivatives of a parent photograph were assigned to the same split to prevent source overlap across training and evaluation data. After 12 epochs of fine-tuning at an input size of 640 pixels, the model achieved a precision of 0.8385, a recall of 0.7697, an mAP at IoU 0.5 of 0.8386, and an mAP over IoU 0.5--0.95 of 0.5735 on 650 test images. It correctly recognized 19 of 20 additional single-object samples. A 130-frame timed video test on Apple M4 MPS yielded an average end-to-end rate of 60.409 FPS. The resulting program processes images, videos, and camera streams, saves detections and error cases, and publishes structured results together with annotated images.
-\end{abstract}
+\pagenumbering{Roman}
+\section*{摘\quad 要}
+针对机器人桌面场景中的物体定位与检测结果发布需求，本实验实现了基于 YOLO11n 的五类目标检测程序。数据集共5000张图像、8507个目标框，其中1000张自主采集来源样本由10张独立实拍母图扩展得到，包含10张尺寸统一的基准版本和990张确定性增强图像，其余4000张选自 Open Images V7。自主采集部分按母图分组划分，避免同源增强图像跨集合交叉。模型以640像素输入微调12轮，在650张测试图像上取得0.8385的 Precision、0.7697的 Recall、0.8386的 \mAPfifty{} 和0.5735的 \mAPcoco{}。20张单目标样本按最高置信度类别判定，19张预测正确，正确率为95\%。在 Jetson Orin NX 上，PyTorch FP16 模型的平均 \texttt{model.predict} 调用耗时为25.951 ms，对应38.534 FPS；ROS2 结果主题的实测发布频率为29.99 Hz。程序能够处理图片、视频和摄像头输入，保存检测记录与错误样本，并通过 ROS2 发布结构化结果和带框图像。
 
-\begin{IEEEkeywords}
-object detection, YOLO11n, desktop objects, ROS2, edge vision, transfer learning
-\end{IEEEkeywords}
+\textbf{关键词：}目标检测；YOLO11n；桌面物体；数据增强；Jetson Orin NX；ROS2
+
+\vspace{1.5em}
+\section*{Abstract}
+Desktop manipulation requires object categories and locations to be available to downstream robot software. This experiment implements a YOLO11n detector for mouse, keyboard, laptop, cup, and headphones, together with a ROS2 result-publishing interface. The dataset contains 5,000 images and 8,507 bounding boxes. The 1,000-image subset derived from self-collected material originated from 10 independently captured parent photographs and contains 10 size-normalized base images and 990 deterministic augmentations; the remaining 4,000 images were selected from Open Images V7. Derivatives of the same parent photograph were assigned to a single split to prevent source overlap across training and evaluation data. After 12 epochs of fine-tuning at an input size of 640 pixels, the model achieved a precision of 0.8385, a recall of 0.7697, an mAP at IoU 0.5 of 0.8386, and an mAP over IoU 0.5--0.95 of 0.5735 on 650 test images. The highest-confidence predicted class was correct for 19 of 20 additional single-object samples. On a Jetson Orin NX, the PyTorch FP16 model achieved a mean \texttt{model.predict} call time of 25.951 ms, corresponding to 38.534 FPS, while the ROS2 result topic was observed at 29.99 Hz. The program processes images, videos, and camera streams, stores detection records and error cases, and publishes structured detections and annotated images through ROS2.
+
+\textbf{Keywords:} object detection; YOLO11n; desktop objects; data augmentation; Jetson Orin NX; ROS2
+
+\clearpage
+\pagenumbering{arabic}
 
 \section{引言}
 
-桌面抓取和人机交互不仅需要判断物体类别，还需要获得目标在画面中的位置。鼠标、键盘和笔记本电脑常在较小范围内同时出现；笔记本打开时，整机与可见键盘又形成相互包含的目标。光照、遮挡和拍摄角度的变化进一步增加了检测难度。由此，识别程序需要连续处理摄像头画面，并同步输出类别、边界框和置信度。
+桌面抓取和人机交互不仅需要判断物体类别，还需要获得目标在画面中的位置。鼠标、键盘和笔记本电脑经常在有限区域内同时出现；笔记本打开时，整机与可见键盘又形成相互包含的目标。光照、遮挡和拍摄角度变化会进一步改变目标外观。检测程序因而需要连续处理图像，并同步输出类别、边界框和置信度。
 
-YOLO 在一次前向传播中同时完成类别预测和边界框回归，属于单阶段检测方法\cite{redmon2016yolo}。SSD 则利用不同尺度的特征图处理尺寸差异较大的目标\cite{liu2016ssd}。这类方法省去了候选区域生成步骤，推理链路较短，更适合接入摄像头程序。本实验据此选用参数量较小的 YOLO11n，在五类桌面物体数据上继续训练，并通过 ROS2 发布检测结果。
+YOLO 在一次前向传播中完成类别预测与边界框回归，属于单阶段检测方法\cite{redmon2016yolo}；SSD 则利用多尺度特征图处理尺寸差异较大的目标\cite{liu2016ssd}。两类方法均省去了独立的候选区域生成阶段，适合对连续图像进行快速推理。本实验据此选用规模较小的 YOLO11n，并保持网络结构不变。
 
-实验包括数据整理、模型训练、结果测试和 ROS2 节点实现。除测试集逐类指标外，还按照课程验收口径测试20张单目标图片，并在固定视频上记录完整处理速度。实验未改动 YOLO11n 的网络结构，主要工作集中在数据构建、推理实现、结果留存和通信接口的衔接。
+实验围绕两项任务展开：一是在母图级划分控制下构建混合来源数据集，并评价五类桌面物体的检测性能；二是将同一推理流程用于结果可视化、记录保存和 ROS2 消息发布。三项评价分别对应测试集检测、单目标类别判定和摄像头预测调用性能，ROS2 接口复用同一检测结果结构。
 
 \section{相关工作}
 
 \subsection{单阶段目标检测}
 
-原始 YOLO 直接从整幅图像预测边界框及类别概率，省去了区域提议与二次分类\cite{redmon2016yolo}。SSD 在多层特征图上设置默认框，使不同尺寸的目标能够在相应分辨率上完成检测\cite{liu2016ssd}。针对稠密检测中前景、背景样本不平衡的问题，Focal Loss 降低易分类样本的损失权重，使训练更关注困难样本\cite{lin2017focal}。上述方法奠定了实时单阶段目标检测的基本技术路线。
+原始 YOLO 直接从整幅图像预测边界框和类别概率\cite{redmon2016yolo}。SSD 在多层特征图上设置默认框，使不同尺度的目标能够在相应分辨率上完成检测\cite{liu2016ssd}；Focal Loss 则从损失加权角度缓解稠密检测中的前景、背景样本不平衡\cite{lin2017focal}。这些方法分别从整体回归、多尺度预测和损失重加权三个角度发展了单阶段检测。
 
-数据增强在训练阶段改变样本外观，不会增加部署时的网络计算量。YOLOv4 将颜色变化、几何变换和 Mosaic 等方法组合用于检测训练，并比较了实时场景下的速度与精度\cite{bochkovskiy2020yolov4}。桌面物体通常不存在大幅形变，故本实验将旋转限制在较小范围，并配合平移、缩放、水平翻转及概率为0.5的 Mosaic。
+数据增强可在不改变部署网络的情况下扩展训练样本外观。YOLOv4 将颜色变化、几何变换与 Mosaic 组合用于目标检测训练\cite{bochkovskiy2020yolov4}。为避免几何变换明显偏离本实验拍摄场景，离线扩展限制旋转幅度，并与训练阶段的在线增强分开设置。
 
-YOLO11 由 Ultralytics 软件包提供，训练、验证、预测和模型导出使用统一接口，其中 n 规模模型面向轻量推理\cite{jocher2024yolo11}。鉴于 YOLO11 尚无独立的架构论文，本文以官方代码仓库标明具体模型版本；早期 YOLO 文献仅用于说明单阶段检测的基本思路。
+YOLO11 由 Ultralytics 软件包提供，训练、验证、预测与模型导出使用统一接口，其中 n 规模模型面向轻量推理\cite{jocher2024yolo11}。本文以官方代码仓库中的软件版本为准，早期 YOLO 文献仅用于说明其单阶段检测技术脉络。
 
 \subsection{数据资源、评价方法与通信框架}
 
-Open Images 收录了自然场景图像及多种标注，其目标检测子集包含大量多目标画面\cite{kuznetsova2020openimages}。实验从 V7 版本筛选与任务对应的五类图片，并将边界框转换为 YOLO 格式。模型评价采用 Precision、Recall、\mAPfifty{} 和 \mAPcoco{}。其中 \mAPcoco{} 沿用 COCO 的多 IoU 阈值计算方式\cite{lin2014coco}，各项数值由 Ultralytics 验证接口给出\cite{ultralyticsval}。
+Open Images 提供自然场景图像及多种标注，其目标检测子集包含大量多目标画面\cite{kuznetsova2020openimages}。实验使用 V7 版本中与任务对应的五类图片\cite{openimagesv7}，并将公开边界框转换为 YOLO 格式。评价采用 Precision、Recall、\mAPfifty{} 和 \mAPcoco{}；后者沿用 COCO 的多 IoU 阈值计算方式\cite{lin2014coco}，各项数值由 Ultralytics 验证接口计算\cite{ultralyticsval}。
 
-ROS2 通过主题传递传感器数据和机器人状态。发布者与订阅者约定主题名称和消息类型后即可交换数据，无需直接调用对方程序\cite{ros2topics}。目标检测因而可以作为独立节点运行，其余程序按需订阅数值结果或可视化图像。
-
-\section{系统设计与方法}
-
-\subsection{总体架构}
-
-图\ref{fig:pipeline}给出了程序流程。离线部分完成公开数据筛选、标签转换、数据划分和模型训练；在线部分读取图片、视频或 USB 摄像头画面，输出逐帧日志、带框结果与错误样本。ROS2 节点沿用相同的推理配置并封装检测消息。训练入口与推理入口彼此独立，更换输入源不会影响模型训练代码。
-
-\begin{figure*}[t]
-\centering
-\resizebox{0.98\textwidth}{!}{%
-\begin{tikzpicture}[
-  node distance=5mm and 7mm,
-  box/.style={draw,rounded corners=2pt,align=center,minimum height=9mm,minimum width=24mm,fill=blue!5,font=\small},
-  arrow/.style={-{Latex[length=2mm]},thick}
-]
-\node[box] (collect) {自主采集素材\\公开数据};
-\node[box,right=of collect] (label) {YOLO 标签转换\\来源记录};
-\node[box,right=of label] (qa) {划分与质量检查\\train/val/test};
-\node[box,right=of qa] (train) {YOLO11n\\迁移学习};
-\node[box,right=of train] (infer) {图片/视频/摄像头\\推理与保存};
-\node[box,right=of infer] (ros) {ROS2 topics\\JSON 与带框图像};
-\draw[arrow] (collect) -- (label);
-\draw[arrow] (label) -- (qa);
-\draw[arrow] (qa) -- (train);
-\draw[arrow] (train) -- (infer);
-\draw[arrow] (infer) -- (ros);
-\end{tikzpicture}
-}
-\caption{桌面目标检测系统的端到端处理流程。}
-\label{fig:pipeline}
-\end{figure*}
-
-每条检测记录包含类别编号、类别名称、置信度以及像素坐标边界框 $(x_1,y_1,x_2,y_2)$。图像缩放至 $640\times640$ 后输入网络，候选框经置信度筛选和非极大值抑制得到最终结果。结果同时用于绘制检测框和写入 CSV，带框图片或视频可按运行参数保存。
-
-\subsection{模型训练策略}
-
-YOLO11n 由已有的五类模型权重初始化，并在重新整理的数据上继续微调。正式训练共12轮，批量大小为32，输入尺寸为640，随机种子为0，同时开启确定性选项。优化器由 Ultralytics 自动选择，初始学习率参数、动量和权重衰减依次设为0.01、0.937和0.0005。
-
-训练阶段在线施加颜色与几何增强，其中色相、饱和度和明度参数分别为0.015、0.7和0.4，旋转范围为5度，平移与缩放比例为0.1和0.3。水平翻转和 Mosaic 的概率均为0.5，MixUp 关闭。训练结束后按验证集指标保存最佳权重，并保留最后一轮权重。
+ROS2 通过主题传递传感器数据和机器人状态。发布者与订阅者约定主题名称和消息类型后即可交换数据，无需直接调用对方程序\cite{ros2topics}。这种通信方式允许检测节点独立运行，下游模块按需订阅结构化目标信息或可视化图像。
 
 \section{数据集构建}
 
-\subsection{类别体系与标注}
+\subsection{类别与标注规则}
 
-五个类别依次为鼠标（mouse）、键盘（keyboard）、笔记本电脑（laptop）、杯子（cup）和头戴式耳机（headphones），类别编号为0至4。标签采用 YOLO 水平边界框格式，每行记录类别编号、归一化中心坐标及归一化宽高。对于打开的笔记本电脑，整机标注为 laptop，可见键盘区域另行标注为 keyboard；目标受到遮挡时，仅框选可见部分。
+检测类别依次为鼠标（mouse）、键盘（keyboard）、笔记本电脑（laptop）、杯子（cup）和头戴式耳机（headphones），类别编号为0至4。标签采用 Ultralytics YOLO 水平边界框格式，每行记录类别编号、归一化中心坐标及归一化宽高\cite{ultralyticsdataset}。打开的笔记本电脑以整机区域标注为 laptop，可见键盘区域另行标注为 keyboard；目标受到遮挡时，仅框选可见部分。公开数据沿用 Open Images 边界框，在构建阶段完成类别映射、格式转换和坐标合法性检查。
 
-数据划分见表\ref{tab:split}。5000张图像均有对应标签文件，共标注8507个目标框。训练集含4000张图像，验证集含350张，余下650张作为测试集。最佳权重按验证结果选取，测试集不参与训练过程。
+\subsection{来源构成与离线扩展}
 
-\begin{table}[t]
-\caption{数据集划分与目标框统计}
+数据集包含1000张自主采集来源样本和4000张 Open Images V7 图片\cite{openimagesv7}。自主采集部分以10张独立实拍母图为基础，每张母图形成1张仅统一至$1280\times960$像素的基准版本和99张确定性增强图像。增强参数由随机种子20260831及母图名称、版本号共同确定，包含$[-9^{\circ},9^{\circ}]$旋转、$[0.88,1.12]$尺度变换、水平或垂直方向不超过图像尺寸7\%的平移、概率为0.5的水平翻转，以及亮度、对比度、模糊和噪声扰动。母图哈希与每个版本的变换参数均写入来源记录。图\ref{fig:selfsamples}给出了四组基准版本及其增强结果。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{self_augmentation_examples.pdf}
+\caption{自主采集来源素材示例。上排（a）--（d）为四张母图的尺度统一版本，下排（e）--（h）为对应的确定性增强版本；边界框随几何变换同步更新。}
+\label{fig:selfsamples}
+\end{figure}
+
+\subsection{数据划分与质量检查}
+
+10张母图按8:1:1分配至训练、验证和测试集合，同一母图的全部版本仅进入一个集合。公开图片保留 Open Images 的原始来源划分，并在各划分内按稳定哈希抽样。最终训练集、验证集和测试集分别包含4000、350和650张图像，来源构成及目标框数量见表\ref{tab:split}。5000张图像均有同名标签文件，共计8507个目标框。
+
+\begin{table}[htbp]
+\caption{数据划分、来源构成与目标框统计}
 \label{tab:split}
 \centering
 \footnotesize
 \begin{tabular}{lrrrr}
 \toprule
-划分 & 图像 & 标签 & 空标签 & 目标框 \\
+划分 & 自采来源 & 公开数据 & 图像合计 & 目标框 \\
 \midrule
-Train & 4000 & 4000 & 0 & 6773 \\
-Validation & 350 & 350 & 0 & 627 \\
-Test & 650 & 650 & 0 & 1107 \\
+Train & 800 & 3200 & 4000 & 6773 \\
+Validation & 100 & 250 & 350 & 627 \\
+Test & 100 & 550 & 650 & 1107 \\
 \midrule
-合计 & 5000 & 5000 & 0 & 8507 \\
+合计 & 1000 & 4000 & 5000 & 8507 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{数据来源与划分控制}
+数据质量控制涵盖图像可读性、图像与标签配对、类别编号、归一化坐标、重复来源 ID、完全重复文件及母图跨集合情况；检查结果中未出现损坏图像、缺失标签或跨集合母图。五类目标框分布见表\ref{tab:classdist}。laptop 共2549个，占29.96\%；headphones 为871个，占10.24\%。类别数量并不均衡，因此评价除总体指标外还需比较逐类结果。
 
-5000张图片中，1000张属于自主采集来源素材，另外4000张来自 Open Images V7。自主采集部分以10张独立拍摄的母图为基础：每张母图先统一尺寸，再通过颜色、亮度、尺度、平移或轻微旋转生成99个版本，与母图共同构成100张素材。因此，1000张的统计口径包含实拍母图及其衍生图像，而非1000次独立拍摄。母图覆盖 mouse、keyboard 和 laptop，cup 与 headphones 由公开数据补充。公开图片保留原始来源 ID 与划分信息。
-
-同一母图的不同增强版本若分别进入训练集和测试集，会造成同源信息泄漏并抬高测试结果。为此，10张母图按8:1:1分配，同一母图生成的全部版本只进入一个集合。数据生成后依次检查图片可读性、图像与标签配对、类别编号及坐标有效性，并核对重复来源和跨集合母图。图\ref{fig:selfsamples}展示了部分自主采集来源素材及其标注，设定的图像变换未改变类别与边界框的对应关系。
-
-\begin{figure*}[t]
-\centering
-\includegraphics[trim=0 2140 0 0,clip,width=0.485\textwidth]{self_derived_contact_sheet.jpg}\hfill
-\includegraphics[trim=0 0 0 2140,clip,width=0.485\textwidth]{self_derived_contact_sheet.jpg}
-\caption{自主采集来源素材的增强与标注样例。}
-\label{fig:selfsamples}
-\end{figure*}
-
-各类目标框的统计结果见表\ref{tab:classdist}。laptop 共2549个，占29.96\%，而 headphones 为871个，占10.24\%。类别数量并不均衡，因此总体均值之外还需考察各类 Precision、Recall 和 AP。
-
-\begin{table}[t]
+\begin{table}[htbp]
 \caption{五类目标框分布}
 \label{tab:classdist}
 \centering
@@ -179,15 +189,88 @@ headphones & 871 & 10.24 \\
 \end{tabular}
 \end{table}
 
-\section{实验设置与评价方法}
+\section{检测系统与实现}
 
-\subsection{实验环境}
+\subsection{总体流程}
 
-训练与软件测试环境为 macOS，处理器为 Apple M4，计算后端采用 MPS。Python、PyTorch 和 Ultralytics 版本分别为3.12.4、2.13.0和8.4.133，训练与测试的输入尺寸均为640。第12轮权重在验证集上的 Precision、Recall、\mAPfifty{} 和 \mAPcoco{} 分别为0.7407、0.7512、0.7334和0.4621，据此选作后续测试模型。
+系统由数据构建、模型训练、通用推理和 ROS2 发布四部分组成，处理流程见图\ref{fig:pipeline}。训练入口读取数据配置并生成模型权重；推理入口接收图片、视频或 USB 摄像头画面，输出检测记录、带框结果和错误样本；ROS2 节点复用相同的模型与阈值配置，将检测结果封装为消息。训练、推理和通信模块共享类别映射及运行参数，并分别保留独立入口。
 
-\subsection{评价指标与测试协议}
+\begin{figure}[htbp]
+\centering
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=5mm and 7mm,
+  box/.style={draw,rounded corners=2pt,align=center,minimum height=9mm,minimum width=24mm,fill=blue!5,font=\small},
+  arrow/.style={-{Latex[length=2mm]},thick}
+]
+\node[box] (collect) {实拍母图\\Open Images V7};
+\node[box,right=of collect] (label) {标签转换\\来源记录};
+\node[box,right=of label] (qa) {母图级划分\\数据检查};
+\node[box,right=of qa] (train) {YOLO11n\\迁移学习};
+\node[box,right=of train] (infer) {通用推理\\结果保存};
+\node[box,right=of infer] (ros) {ROS2 发布\\JSON 与图像};
+\draw[arrow] (collect) -- (label);
+\draw[arrow] (label) -- (qa);
+\draw[arrow] (qa) -- (train);
+\draw[arrow] (train) -- (infer);
+\draw[arrow] (infer) -- (ros);
+\end{tikzpicture}
+}
+\caption{数据构建、模型训练、推理与 ROS2 结果发布流程。}
+\label{fig:pipeline}
+\end{figure}
 
-设真正例、假正例和假负例分别为 $TP$、$FP$ 和 $FN$，则 Precision 与 Recall 定义为
+\subsection{模型微调配置}
+
+模型以先前训练的五类 YOLO11n 权重 \path{models/expanded_v1/best.pt} 初始化，该检查点与本实验采用相同的类别顺序。正式训练共12轮，批量大小为32，输入尺寸为640，数据加载进程数为0，早停耐心值为4。训练在 MPS 后端执行，随机种子为0，并启用确定性计算和自动混合精度。优化器采用 Ultralytics 的自动选择策略，具体运行参数由训练目录中的 \path{args.yaml} 保存。
+
+在线增强参数包括0.015的色相变化、0.7的饱和度变化和0.4的明度变化，旋转、平移与缩放参数分别为5度、0.1和0.3，水平翻转概率为0.5。Mosaic 的初始概率为0.5，并在最后10轮关闭；MixUp 未启用。每轮结束后在验证集上计算指标，训练目录同时保存最后一轮权重与验证指标最优权重。
+
+\subsection{推理记录与 ROS2 接口}
+
+推理程序以640为输入尺寸参数，候选框经置信度筛选和非极大值抑制得到最终检测。每条记录包含类别编号、类别名称、置信度以及像素坐标边界框$(x_1,y_1,x_2,y_2)$，结果同时用于绘制检测框和写入 CSV。图片、视频、摄像头输入共用同一结果结构。
+
+检测程序另封装为 ROS2 节点。摄像头模式由节点直接读取 USB 视频帧，主题模式则订阅 \path{/camera/image_raw}。每帧推理后，\path{/object_detection/result} 以 \path{std_msgs/String} 承载 JSON，字段包括时间戳、帧号、按预测调用速率计算的指数平滑 FPS 和检测列表；\path{/object_detection/image} 以 \path{sensor_msgs/Image} 发布带框图像。数值结果与图像分开传输，使控制程序和可视化程序能够按需订阅同一检测节点\cite{ros2topics}。
+
+\subsection{Jetson 部署实现}
+
+训练所得验收权重 \texttt{best.pt} 部署于 Jetson Orin NX。实机运行采用 NVIDIA 版 PyTorch 2.5.0、CUDA GPU 设备0和 FP16 精度，模型输入固定为$640\times640$，confidence 与 NMS IoU 阈值分别为0.50和0.45。USB 摄像头 \path{/dev/video0} 的实际取帧分辨率为$640\times480$，检测节点在送入网络前由 Ultralytics 完成尺度变换和预处理。
+
+该设备已安装 TensorRT 10.7.0.23 运行库，但当前 Python 环境未安装 \texttt{tensorrt} binding，因而本次实测使用 \texttt{best.pt} 的 PyTorch FP16 后端，而非 TensorRT 序列化引擎。TensorRT 引擎通常需要针对目标 GPU 与运行环境构建\cite{nvidiatensorrt,nvidiatensorrtcompat}；本实验将已安装运行库与实际推理后端分开记录，避免把软件依赖的存在误写为 TensorRT 性能结果。
+
+\section{实验设置与评价协议}
+
+\subsection{训练与离线评价环境}
+
+训练与软件测试在 macOS、Apple M4 处理器上完成，计算后端采用 MPS。Python、PyTorch 和 Ultralytics 版本分别为3.12.4、2.13.0和8.4.133。第12轮权重在验证集上的 Precision、Recall、\mAPfifty{} 和 \mAPcoco{} 分别为0.7407、0.7512、0.7334和0.4621；其中 \mAPcoco{} 为12轮最高值，故选作后续测试模型。
+
+\subsection{Jetson 实机环境与运行配置}
+
+边缘端测试使用 NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super。设备保持 \texttt{MAXN\_SUPER} 功耗模式并采用动态调频，未启用 \texttt{jetson\_clocks} 的固定频率覆盖。实机环境、模型后端和输入设置见表\ref{tab:jetsonenv}。
+
+\begin{table}[htbp]
+\caption{Jetson 实机环境与运行配置}
+\label{tab:jetsonenv}
+\centering
+\small
+\begin{tabularx}{0.96\textwidth}{>{\bfseries}p{0.20\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+字段 & 实测或已核对值 \\
+\midrule
+设备与内存 & NVIDIA Jetson Orin NX Engineering Reference Developer Kit Super；16 GB，系统可见16031376 kB（约15.29 GiB） \\
+系统软件 & JetPack 6.2.1；L4T 36.4.4；CUDA runtime 12.6.77；TensorRT libraries 10.7.0.23；ROS2 Humble \\
+功耗配置 & \texttt{nvpmodel}: \texttt{MAXN\_SUPER}，mode 0；动态调频，\texttt{FreqOverride=0} \\
+模型与后端 & \path{models/experiment1_1000self_4000public_v1/best.pt}；YOLO11n；NVIDIA build PyTorch 2.5.0；CUDA GPU device 0 \\
+计算精度 & FP16 \\
+输入配置 & 模型输入$640\times640$；HDR CAMERA-A USB 摄像头 \path{/dev/video0}；实际取帧$640\times480$ \\
+检测阈值 & confidence 0.50；NMS IoU 0.45 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{评价指标}
+
+设真正例、假正例和假负例分别为$TP$、$FP$和$FN$，Precision 与 Recall 定义为
 \begin{equation}
 P=\frac{TP}{TP+FP},\qquad R=\frac{TP}{TP+FN}.
 \end{equation}
@@ -195,24 +278,41 @@ P=\frac{TP}{TP+FP},\qquad R=\frac{TP}{TP+FN}.
 \begin{equation}
 \mathrm{IoU}=\frac{|B_p\cap B_g|}{|B_p\cup B_g|},
 \end{equation}
-其中 $B_p$ 和 $B_g$ 分别为预测框与真实框。\mAPfifty{} 在 IoU 阈值0.5下计算各类别 AP 的均值，\mAPcoco{} 则在0.5至0.95、步长0.05的多个阈值上平均，因而对边界框定位更严格\cite{lin2014coco,ultralyticsval}。
+其中$B_p$和$B_g$分别表示预测框与真实框。\mAPfifty{} 在 IoU 阈值0.5下计算各类别 AP 的均值；\mAPcoco{} 则在0.5至0.95、步长0.05的多个阈值上平均，对边界框定位提出更严格要求\cite{lin2014coco,ultralyticsval}。
 
-测试分为三部分。第一部分在650张测试图像上统计总体与逐类指标，并生成 PR 曲线和混淆矩阵。第二部分从已保存的单目标图片中每类选取4张，共20张；当指定类别被检出时，该图计为识别正确。第三部分在同一段固定视频上测量速度，先运行20帧完成预热，再对后续130帧计时。计时覆盖读取、预处理、推理、后处理和绘制全过程，不局限于网络前向计算。
+\subsection{测试协议}
+
+测试由三项协议组成。首先，650张测试图像通过 Ultralytics 8.4.133 的 \texttt{model.val} 接口评价，参数为 \texttt{split=test}、\texttt{imgsz=640}、\texttt{batch=16} 和 \texttt{device=mps}，其余阈值沿用该版本的验证默认配置。该部分输出总体及逐类指标，并生成归一化混淆矩阵。
+
+其次，从已保存的单目标图片中每类选取4张，共20张，以0.5置信度阈值和0.45 NMS IoU 阈值进行预测。图像中最高置信度检测框的类别与预设类别一致时，记为类别判定正确；未检出目标或最高置信度类别不一致均记为错误。该正确率仅用于20样本验收，不与基于 IoU 匹配的测试集检测指标混用。
+
+最后，在 Jetson Orin NX 上使用 USB 摄像头测量实时性能。计时点设在摄像头完成取帧之后，先处理20帧用于预热，再统计后续200帧。每帧计时覆盖 Ultralytics \texttt{model.predict} 内部的预处理、GPU 推理与后处理，不包括摄像头读取、结果绘制、视频或日志保存以及 ROS2 消息发布。模型采用 PyTorch FP16 后端，输入尺寸、confidence 与 NMS IoU 阈值分别为640、0.50和0.45。
+
+ROS2 通信性能通过 \texttt{ros2 topic hz} 对 \path{/object_detection/result} 独立测量，滑动窗口包含200条消息，采样时间为15 s。该频率表示结果消息到达订阅端的实际速率，与节点 JSON 中按 \texttt{model.predict} 调用耗时计算的指数平滑 FPS 含义不同。两项结果分别用于描述模型预测调用性能和检测节点的实际结果发布能力。逐帧 benchmark 记录保存于 Jetson 端的 \path{outputs/benchmark/jetson_orin_nx_camera.csv}。
 
 \section{实验结果与分析}
 
-\subsection{测试集总体结果}
+\subsection{训练过程与总体检测结果}
 
-650张测试图像的检测结果列于表\ref{tab:metrics}。总体 Precision 为0.8385，Recall 为0.7697，表明漏检相较误检更为突出。\mAPfifty{} 达到0.8386，而采用0.5至0.95多阈值平均后，\mAPcoco{} 为0.5735。两项指标相差0.2651，反映出模型在较宽松 IoU 条件下能够识别多数目标，但边界框在严格定位标准下仍有明显损失。
+图\ref{fig:training}记录了12轮训练。三项训练损失总体下降，验证集损失存在波动；验证集 \mAPfifty{} 与 \mAPcoco{} 在第12轮分别达到0.7334和0.4621。第12轮两项 mAP 仍在上升，本次12轮训练内未出现明显的平台区间。
 
-\begin{table}[t]
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{training_curves.pdf}
+\caption{YOLO11n 微调过程。（a）训练损失；（b）验证损失；（c）验证集 Precision 与 Recall；（d）验证集平均精度。}
+\label{fig:training}
+\end{figure}
+
+650张测试图像的检测结果见表\ref{tab:metrics}。总体 Precision 为0.8385，Recall 为0.7697，后者表明模型对真实目标的覆盖程度低于已保留预测的准确程度。\mAPfifty{} 为0.8386，多阈值平均的 \mAPcoco{} 为0.5735，两者相差0.2651，说明模型在更严格的 IoU 标准下综合检测性能明显下降，边界定位质量对评价阈值较为敏感。
+
+\begin{table}[htbp]
 \caption{测试集总体与逐类检测指标}
 \label{tab:metrics}
 \centering
-\scriptsize
+\footnotesize
 \begin{tabular}{lrrrr}
 \toprule
-类别 & Precision & Recall & \mAPfifty{} & \mAPcoco{} \\
+类别 & $P$ & $R$ & AP$_{50}$ & AP$_{50:95}$ \\
 \midrule
 mouse & 0.9325 & 0.9101 & 0.9501 & 0.7546 \\
 keyboard & 0.8346 & 0.8469 & 0.9012 & 0.6361 \\
@@ -225,72 +325,65 @@ headphones & 0.6041 & 0.5978 & 0.6203 & 0.3419 \\
 \end{tabular}
 \end{table}
 
-\begin{figure*}[!t]
+\subsection{类别差异与错误表现}
+
+mouse 的结果最好，AP$_{50}$与 Recall 分别为0.9501和0.9101。keyboard 同时包含独立键盘和笔记本电脑的可见键盘区域，其 AP$_{50}$仍达到0.9012。laptop 的 Precision 为0.9121，但 Recall 为0.7529，AP$_{50:95}$进一步降至0.4599，指标组合显示其目标覆盖和严格 IoU 条件下的定位表现相对较弱。
+
+headphones 的 Precision、Recall 和 AP$_{50}$分别为0.6041、0.5978和0.6203，均为五类最低。该类目标框数量最少，样本中还存在展开、折叠及局部遮挡等外观差异。现有数据只能说明较少的样本量与较低指标同时出现，不能据此认定直接因果关系。
+
+测试集归一化混淆矩阵见图\ref{fig:confusion}。按真实类别归一化后，mouse、keyboard、laptop、cup 和 headphones 的对角线值依次为0.93、0.89、0.82、0.78和0.67。背景行中 cup 与 headphones 的数值分别为0.22和0.32，说明未与有效预测框匹配的真值目标在这两类中更为常见；显式类别间的非对角混淆相对较少。这一分布与 cup 和 headphones 相对较低的 Recall 一致。
+
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.88\textwidth]{results.png}
-\caption{YOLO11n 在12轮迁移学习中的损失和验证指标曲线。}
-\label{fig:training}
-\end{figure*}
-
-mouse 的表现最好，\mAPfifty{} 和 Recall 分别达到0.9501和0.9101。keyboard 的 \mAPfifty{} 为0.9012，说明将笔记本可见键盘与独立键盘归为同一类别后，模型仍能较好地学习其共同特征。laptop 的 Precision 达到0.9121，但 Recall 仅为0.7529，\mAPcoco{} 进一步降至0.4599。检查保存的检测图发现，笔记本受到遮挡、开合角度变化较大或靠近画面边缘时，整机框较易发生漏检或偏移。
-
-headphones 的 Precision、Recall 和 \mAPfifty{} 分别为0.6041、0.5978和0.6203，均为五类最低。该类标注框数量最少，样本还包含展开、折叠及局部遮挡等差异较大的形态。现有数据只能表明样本较少与指标较低同时出现，不能据此认定二者具有直接因果关系。不同姿态、尺度和遮挡程度是该类数据中需要重点覆盖的变化因素。
-
-\subsection{训练过程与20样本测试}
-
-图\ref{fig:training}记录了12轮训练过程。训练损失总体下降，验证集 mAP 在后几轮仍有提升，最佳权重出现在第12轮。验证损失虽有波动，但验证指标未出现连续下降。考虑到初始权重已在相同五类目标上训练，本实验采用较短周期继续微调。
-
-20张样本中有19张识别正确，正确率为95\%，高于实验要求的80\%。唯一的错误样本属于 laptop，模型未输出达到置信度阈值的 laptop 检测框。这与测试集上 laptop 的高 Precision、低 Recall 特征一致，主要错误形式为未生成有效检测框。该样本已单独保存，可结合背景、目标尺度和遮挡情况进一步分析。
-
-图\ref{fig:confusion}给出了650张测试图像上的归一化混淆矩阵，用于观察各类别的正确识别、相互混淆和背景漏检情况。
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.92\columnwidth]{confusion_matrix_normalized.png}
-\caption{650张测试图像上的归一化混淆矩阵。}
+\includegraphics[width=0.58\textwidth]{test_confusion_matrix.pdf}
+\caption{650张测试图像上的归一化混淆矩阵。列为真实类别，行为预测类别。}
 \label{fig:confusion}
 \end{figure}
 
-\subsection{连续视频性能}
+保存结果中的代表性 laptop 错误表现为目标未检出或边界框偏移。由于本实验未对遮挡、视角和画面位置等错误因素逐项计数，这些图像仅作为典型案例保存，不用于推断各因素的发生比例。
 
-固定视频共记录130个计时帧，模型推理平均耗时10.087 ms。计入视频读取与结果绘制后，平均单帧耗时为16.554 ms，对应60.409 FPS。最低瞬时速度为34.733 FPS，最大单帧推理耗时为13.450 ms。由平均耗时可见，网络前向之外的处理约占6.467 ms，主要涉及视频读取、图像预处理、边界框绘制和结果整理。在本机测试条件下，完整处理速度全程高于5 FPS。主要结果汇总于表\ref{tab:summary}。
+\subsection{20样本类别判定}
 
-\begin{table}[t]
-\caption{主要实验结果汇总}
+20张单目标样本中，最高置信度预测类别与预设类别一致的样本为19张，正确率为95\%，高于实验要求的80\%。唯一错误样本的预设类别为 laptop，在0.5置信度阈值下没有生成有效检测框。该样本已记录为漏检，并单独保存错误图像。
+
+\subsection{Jetson 实时检测与 ROS2 发布性能}
+
+Jetson 实机在20帧预热后统计200个摄像头帧，\texttt{model.predict} 平均调用耗时为25.951 ms，对应38.534 FPS；最低逐帧预测调用速率为37.952 FPS。Ultralytics 记录的平均网络推理耗时为20.575 ms，最大网络推理耗时为20.896 ms。调用耗时比网络推理耗时高5.376 ms，该差值包含预处理、后处理和预测接口调用开销。平均预测调用速率约为5 FPS 验收阈值的7.71倍，最低逐帧速率亦高于该阈值。
+
+\path{/object_detection/result} 在15 s测量窗口中的实际发布频率为29.99 Hz，与约30 FPS 的摄像头输入速率接近。该频率低于独立 benchmark 得到的模型预测调用速率，因为连续节点运行还涉及取帧、结果封装、绘框及图像消息处理。两项测量均超过5 FPS，表明模型推理与 ROS2 结果发布在当前配置下均满足实时性要求。主要检测与实机结果汇总于表\ref{tab:summary}。
+
+\begin{table}[htbp]
+\caption{主要检测结果与 Jetson 实机性能汇总}
 \label{tab:summary}
 \centering
 \footnotesize
-\begin{tabular}{p{0.48\columnwidth}p{0.39\columnwidth}}
+\begin{tabular}{p{0.48\textwidth}p{0.36\textwidth}}
 \toprule
 测试项目 & 结果 \\
 \midrule
 测试集规模 & 650张，1107个目标框 \\
 总体 \mAPfifty{} / \mAPcoco{} & 0.8386 / 0.5735 \\
-20样本正确率 & 19/20，95\% \\
-平均推理耗时 & 10.087 ms \\
-平均端到端速度 & 60.409 FPS \\
-最低瞬时速度 & 34.733 FPS \\
+20样本类别判定正确率 & 19/20，95\% \\
+Jetson 推理后端 & PyTorch FP16，CUDA device 0 \\
+Jetson 预热/计时帧数 & 20/200 \\
+平均网络推理耗时 & 20.575 ms \\
+平均 \texttt{model.predict} 调用耗时 & 25.951 ms \\
+平均/最低预测调用速率 & 38.534/37.952 FPS \\
+最大网络推理耗时 & 20.896 ms \\
+ROS2 结果主题频率 & 29.99 Hz（15 s，window 200） \\
+实时性要求与判定 & $\geq 5$ FPS，PASS \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\section{ROS2 通信与边缘部署设计}
-
-\subsection{检测节点与主题接口}
-
-检测程序封装为独立的 ROS2 节点。使用 USB 摄像头时，节点直接读取视频帧；接入已有相机驱动时，节点订阅 \texttt{/camera/image\_raw}。每帧推理结束后发布两个主题：\texttt{/object\_detection/result} 使用 JSON 字符串记录时间戳、帧号、FPS、类别编号、类别名称、置信度和边界框，\texttt{/object\_detection/image} 则以 \texttt{sensor\_msgs/Image} 传输带框图像。
-
-数值结果与可视化图像分开发布，控制程序只接收 JSON 即可获取目标信息，调试程序则订阅带框画面。ROS2 允许多个订阅者同时接收同一主题\cite{ros2topics}。运行时可用 \texttt{ros2 topic echo} 检查消息字段，以 \texttt{ros2 topic hz} 统计接收频率，并在 \texttt{rqt\_image\_view} 中查看检测画面。
-
-\subsection{边缘推理流程}
-
-部署模型采用训练生成的 \texttt{best.pt}。权重既可由 PyTorch 直接加载，也可导出为 ONNX，再通过 TensorRT 构建序列化引擎。TensorRT 根据目标 GPU 选择各层实现，运行时加载引擎完成推理\cite{nvidiatensorrt}。序列化引擎与操作系统、CPU 架构、GPU 型号及 TensorRT 版本相关，因而需在目标设备上生成，并固定输入尺寸与计算精度。
-
-部署配置沿用训练时的类别顺序与640像素输入。采用 FP16 时保持置信度阈值和 NMS 参数不变。测速前先处理若干预热帧，以排除首次加载和内核初始化的影响，随后统计固定帧数的端到端 FPS。若需进一步降低计算量，可比较640、512和416三种输入尺寸；每次改变尺寸后重新执行20张样本测试，以检验速度提升对识别正确率的影响。
-
 \FloatBarrier
-\IEEEtriggeratref{6}
-\bibliographystyle{IEEEtran}
+\clearpage
+\begingroup
+\small
+\setstretch{1.10}
+\setlength{\bibsep}{0.35em}
+\bibliographystyle{gbt7714-numerical}
 \bibliography{references}
+\endgroup
 
 \end{document}
