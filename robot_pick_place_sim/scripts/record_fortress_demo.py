@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import math
 from pathlib import Path
 import time
 
@@ -44,6 +45,8 @@ DISPLAY = {
 
 class DemoRecorder(Node):
     def __init__(self, output, fps, timeout):
+        if not math.isfinite(fps) or fps <= 0:
+            raise ValueError('fps must be positive and finite')
         super().__init__('fortress_demo_recorder')
         self.output = output
         self.fps = fps
@@ -58,6 +61,11 @@ class DemoRecorder(Node):
         self.first_frame = None
         self.last_frame = None
         self.frame_count = 0
+        self.received_frames = 0
+        self.repeated_frames = 0
+        self.dropped_frames = 0
+        self.first_received_at = None
+        self.last_received_at = None
         self.create_subscription(String, '/pick_place/state', self.on_state, 20)
         self.create_subscription(
             Image, '/demo_camera/image', self.on_image, qos_profile_sensor_data)
@@ -78,6 +86,15 @@ class DemoRecorder(Node):
     def on_image(self, message):
         if not self.started:
             return
+        now = time.monotonic()
+        self.received_frames += 1
+        self.last_received_at = now
+        if self.first_received_at is None:
+            self.first_received_at = now
+        target_index = int((now - self.first_received_at) * self.fps + 1e-6)
+        if target_index < self.frame_count:
+            self.dropped_frames += 1
+            return
         frame = self.bridge.imgmsg_to_cv2(message, 'bgr8')
         frame = self.decorate(frame)
         if self.writer is None:
@@ -89,9 +106,12 @@ class DemoRecorder(Node):
             if not self.writer.isOpened():
                 raise RuntimeError(f'cannot open video writer: {self.output}')
             self.first_frame = frame.copy()
-            for _ in range(round(self.fps * 1.2)):
-                self.writer.write(frame)
-                self.frame_count += 1
+        # Hold the PREVIOUS image across acquisition gaps. Never invent motion
+        # or compress slow real-world execution to the requested encoding FPS.
+        while self.frame_count < target_index:
+            self.writer.write(self.last_frame)
+            self.frame_count += 1
+            self.repeated_frames += 1
         self.writer.write(frame)
         self.last_frame = frame.copy()
         self.frame_count += 1
@@ -144,16 +164,26 @@ class DemoRecorder(Node):
 
     def stop(self, reason):
         if self.writer is not None:
-            if self.last_frame is not None:
-                for _ in range(round(self.fps * 1.8)):
-                    self.writer.write(self.last_frame)
-                    self.frame_count += 1
             self.writer.release()
             self.writer = None
-        print(json.dumps({
+        elapsed = ((self.last_received_at - self.first_received_at)
+                   if self.received_frames > 1 else 0)
+        report = {
             'output': str(self.output), 'frames': self.frame_count,
-            'fps': self.fps, 'terminal_state': reason,
-        }), flush=True)
+            'encoded_fps': self.fps, 'terminal_state': reason,
+            'received_frames': self.received_frames,
+            'repeated_frames': self.repeated_frames,
+            'dropped_for_encoding': self.dropped_frames,
+            'received_wall_seconds': elapsed,
+            'delivered_wall_fps': ((self.received_frames-1)/elapsed
+                                   if elapsed > 0 else None),
+            'video_seconds': self.frame_count/self.fps,
+            'timeline': 'wall time; repeated frames explicitly counted; no interpolation',
+        }
+        self.output.parent.mkdir(parents=True, exist_ok=True)
+        self.output.with_suffix('.recording.json').write_text(
+            json.dumps(report, indent=2) + '\n')
+        print(json.dumps(report), flush=True)
         rclpy.shutdown()
 
 
