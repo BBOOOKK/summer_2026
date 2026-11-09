@@ -1,0 +1,142 @@
+{
+  "nominal": {
+    "rmse_all": 0.11455603644790285,
+    "rmse_steady": 0.029524301953883024,
+    "max_steady": 0.029524914635743003,
+    "p95_steady": 0.029524300231681462,
+    "max_start": 0.7794100134883234,
+    "max_tilt": 40.129587530495904,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.021326224591802733,
+    "yaw_rmse_steady_deg": 5.642813625348099,
+    "max_quat_norm_error": 1.4235279621743757e-12
+  },
+  "smooth": {
+    "rmse_all": 0.031051317625384565,
+    "rmse_steady": 0.029524089696935044,
+    "max_steady": 0.029524374991579984,
+    "p95_steady": 0.029524357312225014,
+    "max_start": 0.05935777360871725,
+    "max_tilt": 7.789459341119842,
+    "rotor_abs_max": 91.3611937629873,
+    "negative_rotor_fraction": 0.03948683772075975,
+    "yaw_rmse_steady_deg": 5.642813477575653,
+    "max_quat_norm_error": 3.552713678800501e-15
+  },
+  "drag": {
+    "rmse_all": 0.1664613678650863,
+    "rmse_steady": 0.11345943498549417,
+    "max_steady": 0.1134596059400553,
+    "p95_steady": 0.11345958462622316,
+    "max_start": 0.7855540469748636,
+    "max_tilt": 40.15358734498438,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.018077307564145283,
+    "yaw_rmse_steady_deg": 6.107090471736448,
+    "max_quat_norm_error": 1.4235279621743757e-12
+  },
+  "compensated": {
+    "rmse_all": 0.11811925775566408,
+    "rmse_steady": 0.031705118623393445,
+    "max_steady": 0.03170592382381723,
+    "p95_steady": 0.03170517898245248,
+    "max_start": 0.7820346834472198,
+    "max_tilt": 40.29466919408946,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.01607797400866378,
+    "yaw_rmse_steady_deg": 6.101582254146512,
+    "max_quat_norm_error": 1.4233059175694507e-12
+  },
+  "slow": {
+    "rmse_all": 0.06411008975647309,
+    "rmse_steady": 0.034411638546542646,
+    "max_steady": 0.03441166232262683,
+    "p95_steady": 0.034411662322621196,
+    "max_start": 0.37174610615179565,
+    "max_tilt": 22.272701955243143,
+    "rotor_abs_max": 269.5222840232712,
+    "negative_rotor_fraction": 0.013495501499500167,
+    "yaw_rmse_steady_deg": 2.892313038612205,
+    "max_quat_norm_error": 5.824229987183571e-13
+  },
+  "fast": {
+    "rmse_all": 0.37634799769391286,
+    "rmse_steady": 0.24294151183508297,
+    "max_steady": 0.2429426819174867,
+    "p95_steady": 0.24294259105888566,
+    "max_start": 1.719623416482668,
+    "max_tilt": 63.8889761952747,
+    "rotor_abs_max": 795.0304842917109,
+    "negative_rotor_fraction": 0.022159280239920028,
+    "yaw_rmse_steady_deg": 14.665321637020734,
+    "max_quat_norm_error": 2.0174972803488345e-12
+  },
+  "undercomp": {
+    "rmse_all": 0.12628474846348625,
+    "rmse_steady": 0.04372135120991437,
+    "max_steady": 0.04372148904248869,
+    "p95_steady": 0.04372146012751329,
+    "max_start": 0.7838203934794434,
+    "max_tilt": 40.2240253011796,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.01741086304565145,
+    "yaw_rmse_steady_deg": 6.1044140914439,
+    "max_quat_norm_error": 1.4233059175694507e-12
+  },
+  "overcomp": {
+    "rmse_all": 0.15056837381546373,
+    "rmse_steady": 0.10489427775598269,
+    "max_steady": 0.10489443061214414,
+    "p95_steady": 0.10489427651016496,
+    "max_start": 0.7802303967547181,
+    "max_tilt": 40.364070011338804,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.016244585138287238,
+    "yaw_rmse_steady_deg": 6.098563113148257,
+    "max_quat_norm_error": 1.4233059175694507e-12
+  },
+  "hover": {
+    "rmse_all": 0.12879383134882666,
+    "rmse_steady": 2.1038127813847894e-07,
+    "max_steady": 1.529365440865053e-06,
+    "p95_steady": 4.020555398954858e-07,
+    "max_start": 0.8660254037844386,
+    "max_tilt": 9.941880292969516,
+    "rotor_abs_max": 265.0221654850009,
+    "negative_rotor_fraction": 0.010579806731089637,
+    "yaw_rmse_steady_deg": 2.2299611076292954e-13,
+    "max_quat_norm_error": 2.473576898864849e-13
+  },
+  "pulse": {
+    "rmse_all": 0.04646513438379597,
+    "rmse_steady": 0.05123550150870376,
+    "max_steady": 0.19755331139953372,
+    "p95_steady": 0.11298749503558612,
+    "max_start": 0.05483762505249873,
+    "max_tilt": 9.840809999933702,
+    "rotor_abs_max": 90.29839389729904,
+    "negative_rotor_fraction": 0.04231922692435855,
+    "yaw_rmse_steady_deg": 6.090445783953609,
+    "max_quat_norm_error": 2.220446049250313e-15
+  },
+  "lowdamping": {
+    "rmse_all": 0.1674233043273362,
+    "rmse_steady": 0.0322853055045785,
+    "max_steady": 0.032544289833437455,
+    "p95_steady": 0.032433813074844026,
+    "max_start": 0.9803300327838902,
+    "max_tilt": 31.144280063575064,
+    "rotor_abs_max": 368.6379479062451,
+    "negative_rotor_fraction": 0.026824391869376876,
+    "yaw_rmse_steady_deg": 5.642202141768468,
+    "max_quat_norm_error": 5.702105454474804e-13
+  },
+  "numerical_check": {
+    "max_position_difference_m": 1.2206795692750676e-12
+  },
+  "allocation": {
+    "rank_normal": 4,
+    "rank_reversed": 3,
+    "hover_rotor_rad_s": 49.52272205765753
+  }
+}

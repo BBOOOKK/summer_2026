@@ -1,6 +1,25 @@
 # summer_2026
 
-课程实验仓库。当前收录“实验一：桌面物体目标检测与识别”，包括数据集、YOLO 训练与推理程序、ROS2 节点、模型权重、测试结果、典型错误案例、结果视频、运行说明和实验报告。
+课程实验仓库，收录桌面物体目标检测与识别、机器人抓取仿真，以及 MIT VNAV LAB3 无人机轨迹规划与跟踪控制。
+
+## 实验导航
+
+| 项目 | 内容与入口 |
+| --- | --- |
+| 桌面物体识别 | [训练、推理、ROS2 与实验报告](desktop_object_detection/) |
+| 机器人抓取仿真 | [仿真程序与配置](robot_pick_place_sim/) |
+| LAB3 无人机轨迹跟踪 | [项目说明、报告、源码、数据与视频](Lab3/) |
+
+## LAB3 无人机轨迹规划与控制
+
+![LAB3 闭环轨迹跟踪总览](Lab3/lab3/report/figures/overview.png)
+
+LAB3 包含英文双栏报告、旋转表示与控制分配推导、十四种数值实验条件、ROS Noetic 控制器，以及官方 Unity 仿真中的飞行数据和 RViz 演示。
+
+- [阅读最终报告](Lab3/lab3/24020036035_ShuyuLi_LAB3_Report.pdf)
+- [下载完整交付包](Lab3/24020036035_ShuyuLi_LAB3.zip)
+- [观看 RViz 绕圈视频](https://drive.google.com/file/d/15DyX_9IlpTixtrpF2S3K7VUW3vkl9Vee/view?usp=sharing)
+- [查看编译步骤、实验结果与团队分工](Lab3/README.md)
 
 ## 实验一当前状态
 

@@ -1,0 +1,20 @@
+{
+  "bias_unfixed": {
+    "rmse_steady": 0.25027279360668436,
+    "height_mean": 1.7499866550356158,
+    "height_bias": -0.2500133449643842,
+    "height_rmse": 0.2500133449643841
+  },
+  "bias_fixed": {
+    "rmse_steady": 0.009201002888011971,
+    "height_mean": 1.9999999110463613,
+    "height_bias": -8.895363867722494e-08,
+    "height_rmse": 3.704578742632016e-07
+  },
+  "bias_none_ros": {
+    "rmse_steady": 0.011392927347761027,
+    "height_mean": 1.9999859762077077,
+    "height_bias": -1.4023792292316983e-05,
+    "height_rmse": 1.4023792302039316e-05
+  }
+}

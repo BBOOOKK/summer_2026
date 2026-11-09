@@ -1,0 +1,17 @@
+.DS_Store
+._*
+__MACOSX/
+.BetterZipTempFolder*/
+__pycache__/
+*.py[cod]
+.venv/
+build/
+devel/
+install/
+logs/
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz

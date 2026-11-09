@@ -1,0 +1,9 @@
+LAB3 RViz flight — Shuyu Li, 24020036035
+
+Google Drive video:
+https://drive.google.com/file/d/15DyX_9IlpTixtrpF2S3K7VUW3vkl9Vee/view?usp=sharing
+
+Local recording: rviz_drone_flight.mp4
+Duration: 75.0 s
+Resolution: 1152 x 720
+Content: live RViz visualization of the reference circle, reconstructed flight path, vehicle pose, and tracking-error overlay while the compiled ROS Noetic controller drives the official MIT LAB3 Unity simulator.

@@ -1,0 +1,37 @@
+\documentclass[border=3pt]{standalone}
+\usepackage{mathptmx,graphicx,tikz}
+\usetikzlibrary{arrows.meta}
+\definecolor{positive}{HTML}{1F77B4}
+\definecolor{negative}{HTML}{D62728}
+\newcommand{\dronepanel}[3]{%
+\begin{scope}[xshift=#1cm]
+\node at (0,0) {\includegraphics[width=5.0cm]{figures/quadcopter_top.png}};
+\node[font=\fontsize{10}{12}\selectfont] at (0,2.85) {#2};
+\draw[-{Stealth[length=2mm]},black,line width=.55pt,
+ preaction={draw=white,line width=2pt}] (.38,0)--(2.45,0) node[right] {$x$};
+\draw[-{Stealth[length=2mm]},black,line width=.55pt,
+ preaction={draw=white,line width=2pt}] (0,.55)--(0,2.10) node[above] {$y$};
+\foreach \cx/\cy/\num/\sgn in {1.33/1.33/1/1,-1.33/1.33/2/-1,-1.33/-1.33/3/#3,1.33/-1.33/4/{-#3}}{
+  \pgfmathtruncatemacro{\direction}{\sgn}
+  \ifnum\direction=1
+    \def\rotcolor{positive}\def\signtext{+}
+    \draw[-{Stealth[length=2mm]},positive,line width=1.1pt,
+      preaction={draw=white,line width=2.3pt}]
+      (\cx+.48,\cy) arc[start angle=0,end angle=-285,radius=.48];
+  \else
+    \def\rotcolor{negative}\def\signtext{-}
+    \draw[-{Stealth[length=2mm]},negative,line width=1.1pt,
+      preaction={draw=white,line width=2.3pt}]
+      (\cx+.48,\cy) arc[start angle=0,end angle=285,radius=.48];
+  \fi
+  \node[fill=white,draw=\rotcolor,line width=.6pt,rounded corners=1pt,
+    inner sep=2pt,font=\fontsize{11}{12}\selectfont,text=\rotcolor]
+    at (\cx,\cy+.69) {\num\quad$\signtext$};
+}
+\end{scope}}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+\dronepanel{0}{(a) Standard layout, rank 4}{1}
+\dronepanel{6.2}{(b) Rotors 3 and 4 reversed, rank 3}{-1}
+\end{tikzpicture}
+\end{document}

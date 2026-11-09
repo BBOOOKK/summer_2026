@@ -1,0 +1,46 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz/Grid
+      Name: Ground grid
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 24
+      Color: 85; 100; 118
+      Alpha: 0.35
+      Line Style:
+        Value: Lines
+        Line Width: 0.02
+    - Class: rviz/MarkerArray
+      Name: Live flight and reference
+      Enabled: true
+      Marker Topic: /flight_visuals
+      Queue Size: 10
+  Enabled: true
+  Global Options:
+    Background Color: 18; 27; 42
+    Fixed Frame: world
+    Frame Rate: 30
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 18
+      Focal Point: {X: 0, Y: 0, Z: 1.7}
+      Pitch: 0.67
+      Yaw: 0.8
+      Near Clip Distance: 0.01
+      Target Frame: world
+      Name: Current View
+Window Geometry:
+  Width: 1440
+  Height: 900
+  X: 0
+  Y: 0
+  Hide Left Dock: true
+  Hide Right Dock: true

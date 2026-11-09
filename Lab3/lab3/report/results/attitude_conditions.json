@@ -1,0 +1,8 @@
+{
+  "lower_attitude_gain": {
+    "kR": 50
+  },
+  "higher_rate_gain": {
+    "kOmega": 40
+  }
+}

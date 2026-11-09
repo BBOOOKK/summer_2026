@@ -1,0 +1,11 @@
+<launch>
+  <node name="traj_publisher" pkg="controller_pkg" type="traj_publisher"><param name="time_scale" value="4.0"/></node>
+  <node name="controller_node" pkg="controller_pkg" type="controller_node"/>
+  <!-- Retuned for Unity altitude bias: higher kz + integral on z -->
+  <param name="kx" type="double" value="2.5" />
+  <param name="kz" type="double" value="4.0" />
+  <param name="kv" type="double" value="3.0" />
+  <param name="ki_z" type="double" value="1.5" />
+  <param name="kr" type="double" value="4" />
+  <param name="komega" type="double" value="1.2" />
+</launch>

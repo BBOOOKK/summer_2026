@@ -1,0 +1,21 @@
+LAB3 — Deliverable 1: Transformations in Practice
+Shuyu Li | 24020036035
+
+A. Message vs. tf
+1. tf2::fromMsg(quat_msg, quat_tf);
+2. geometry_msgs::Quaternion quat_msg = tf2::toMsg(quat_tf);
+3. quat_tf.w();
+
+B. Conversion
+1. tf2::getYaw(quat_t);
+2. Eigen::Quaterniond q(quat_msg.w, quat_msg.x, quat_msg.y, quat_msg.z);
+   Eigen::Matrix3d R = q.normalized().toRotationMatrix();
+
+The Eigen quaternion constructor uses (w, x, y, z). ROS message fields
+are named x, y, z, w. R maps body-frame coordinates to the world frame.
+The incoming quaternion must be nonzero before normalization.
+
+Required headers:
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/utils.h>
+#include <Eigen/Geometry>

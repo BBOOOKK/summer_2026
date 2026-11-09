@@ -1,0 +1,30 @@
+{
+  "source": "Archived summary of an earlier official MIT LAB3 Unity post-fix flight",
+  "record_type": "historical_summary",
+  "raw_csv": null,
+  "current_flight_results": "unity_reflight_metrics.json",
+  "mission_window_s": [20.0, 100.0],
+  "samples": 3326,
+  "completed_revolutions": 3.18,
+  "position_rmse_sample_m": 0.0107,
+  "position_rmse_time_weighted_m": 0.0107,
+  "position_max_m": 0.0156,
+  "radial_rmse_m": 0.0007,
+  "height_rmse_sample_m": 0.0037,
+  "height_rmse_time_weighted_m": 0.0037,
+  "height_bias_m": 0.00002,
+  "vertical_mse_share_pct": 11.9,
+  "yaw_rmse_sample_deg": 4.30,
+  "yaw_rmse_time_weighted_deg": 4.30,
+  "state_interval_min_s": 0.020,
+  "state_interval_median_s": 0.020,
+  "state_interval_max_s": 0.120,
+  "controller_gains": {
+    "kx": 2.5,
+    "kz": 4.0,
+    "kv": 3.0,
+    "ki_z": 1.5,
+    "kR": 4.0,
+    "kOmega": 1.2
+  }
+}

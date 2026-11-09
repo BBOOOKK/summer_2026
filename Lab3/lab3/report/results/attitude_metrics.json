@@ -1,0 +1,53 @@
+{
+  "lower_attitude_gain": {
+    "rmse_all": 0.18360187704709385,
+    "rmse_steady": 0.05925163923339777,
+    "max_steady": 0.06430858538601184,
+    "p95_steady": 0.061160750199548405,
+    "max_start": 1.0175880410497073,
+    "max_tilt": 35.427928681277045,
+    "rotor_abs_max": 319.04709144903103,
+    "negative_rotor_fraction": 0.04865044985004998,
+    "yaw_rmse_steady_deg": 11.347953784943314,
+    "max_quat_norm_error": 2.431388423929093e-13,
+    "predicted_yaw_deg": 11.536959032815489,
+    "local_poles": [
+      -17.071067811865476,
+      -2.9289321881345245
+    ]
+  },
+  "higher_rate_gain": {
+    "rmse_all": 0.1727020692465355,
+    "rmse_steady": 0.059330613329432784,
+    "max_steady": 0.061311665962371156,
+    "p95_steady": 0.06012137737832462,
+    "max_start": 0.9816164313569208,
+    "max_tilt": 33.81893128297655,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.03707097634121959,
+    "yaw_rmse_steady_deg": 11.347211342537337,
+    "max_quat_norm_error": 2.779998453661392e-13,
+    "predicted_yaw_deg": 11.536959032815489,
+    "local_poles": [
+      -37.32050807568878,
+      -2.6794919243112267
+    ]
+  },
+  "nominal": {
+    "rmse_all": 0.11455603644790285,
+    "rmse_steady": 0.029524301953883024,
+    "max_steady": 0.029524914635743003,
+    "p95_steady": 0.029524300231681462,
+    "max_start": 0.7794100134883234,
+    "max_tilt": 40.129587530495904,
+    "rotor_abs_max": 453.9103359961885,
+    "negative_rotor_fraction": 0.021326224591802733,
+    "yaw_rmse_steady_deg": 5.642813625348099,
+    "max_quat_norm_error": 1.4235279621743757e-12,
+    "predicted_yaw_deg": 5.739170477266787,
+    "local_poles": [
+      -10.000000080890675,
+      -9.999999919109325
+    ]
+  }
+}

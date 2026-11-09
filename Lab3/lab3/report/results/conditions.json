@@ -1,0 +1,46 @@
+{
+  "nominal": {},
+  "smooth": {
+    "smooth": true
+  },
+  "drag": {
+    "drag": 1
+  },
+  "compensated": {
+    "drag": 1,
+    "comp": 1
+  },
+  "slow": {
+    "drag": 1,
+    "scale": 4
+  },
+  "fast": {
+    "drag": 1,
+    "scale": 1
+  },
+  "undercomp": {
+    "drag": 1,
+    "comp": 0.5
+  },
+  "overcomp": {
+    "drag": 1,
+    "comp": 1.5
+  },
+  "hover": {
+    "hover": true,
+    "offset": [
+      0.5,
+      -0.5,
+      -0.5
+    ]
+  },
+  "pulse": {
+    "smooth": true,
+    "drag": 1,
+    "comp": 1,
+    "pulse": true
+  },
+  "lowdamping": {
+    "kv": 2
+  }
+}

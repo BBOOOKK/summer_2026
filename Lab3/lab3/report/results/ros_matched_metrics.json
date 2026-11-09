@@ -1,0 +1,32 @@
+{
+  "ros_matched": {
+    "rmse_all": 0.01444199586393617,
+    "rmse_steady": 0.011392927347761027,
+    "height_mean_steady": 1.9999859762077077,
+    "height_bias_steady": -1.4023792292316983e-05,
+    "height_rmse_steady": 1.4023792302039316e-05,
+    "yaw_rmse_steady_deg": 4.296747592329535,
+    "radial_rmse_steady": 0.0034550522018702077,
+    "max_steady": 0.011393452194738916
+  },
+  "ros_matched_integral": {
+    "rmse_all": 0.014442148674972332,
+    "rmse_steady": 0.01139291871337759,
+    "height_mean_steady": 2.000000011828314,
+    "height_bias_steady": 1.1828313883910369e-08,
+    "height_rmse_steady": 4.6691536943033573e-08,
+    "yaw_rmse_steady_deg": 4.296747592330711,
+    "radial_rmse_steady": 0.003455052216764536,
+    "max_steady": 0.011393443298879787
+  },
+  "num_nominal_slow": {
+    "rmse_all": 0.005003628286989972,
+    "rmse_steady": 0.003848016624642416,
+    "height_mean_steady": 1.9999968892814473,
+    "height_bias_steady": -3.110718552745695e-06,
+    "height_rmse_steady": 3.1107185522767783e-06,
+    "yaw_rmse_steady_deg": 2.863039121990229,
+    "radial_rmse_steady": 0.0008523252949337873,
+    "max_steady": 0.0038480166247532623
+  }
+}

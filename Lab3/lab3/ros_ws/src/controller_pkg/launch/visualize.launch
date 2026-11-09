@@ -1,0 +1,6 @@
+<launch>
+  <node name="flight_visualizer" pkg="controller_pkg" type="flight_visualizer.py" output="screen"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find controller_pkg)/rviz/flight.rviz">
+    <env name="DISABLE_ROS1_EOL_WARNINGS" value="1"/>
+  </node>
+</launch>
