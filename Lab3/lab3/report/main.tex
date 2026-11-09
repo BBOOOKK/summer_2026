@@ -626,6 +626,13 @@ I also carried responsibility for testing whether the integrated system could ex
 The standard allocation matrix has rank four. Reversing rotors 3 and 4 reduces its rank to three and couples pitch and yaw. Across fourteen numerical conditions, smooth timing reduces startup error, drag compensation reduces steady tracking offset, and the ratio of attitude gains accounts for the observed heading lag. With both timing and compensation, peak startup error is \JointStart\ m and steady-state RMSE is \JointSteady\ m under drag. After the force pulse, tracking returns to within one centimeter of the unperturbed trajectory in 2.17 s. The new Unity flight covered \FlightLaps\ laps at a commanded 1.25 m/s. Sample-weighted and time-weighted position RMSE were \FlightPos\ m and \FlightTimePos\ m. Radial and heading RMSE were \FlightRad\ m and \FlightYaw$^\circ$, respectively.
 
 
+\section*{PROJECT MATERIALS}
+The report, controller source, numerical experiments, flight data and submission package are available in the \href{https://github.com/BBOOOKK/summer_2026/tree/main/Lab3}{LAB3 project directory} of the course repository:
+\begin{center}
+\url{https://github.com/BBOOOKK/summer_2026}
+\end{center}
+The \href{https://drive.google.com/file/d/15DyX_9IlpTixtrpF2S3K7VUW3vkl9Vee/view?usp=sharing}{75 s RViz flight video} shows the vehicle completing the circular trajectory. Its public viewing link is also provided in \texttt{rviz\_drone\_flight.txt} alongside the local recording.
+
 \begin{thebibliography}{9}
 \bibitem{lab} MIT SPARK, \href{https://vnav.mit.edu/labs_2023/lab3/exercises.html}{Visual Navigation for Autonomous Vehicles: Lab 3 Exercises} 2023.
 \bibitem{tf2} ROS, \href{https://github.com/ros/geometry2/tree/noetic-devel}{geometry2: tf2 and tf2\_geometry\_msgs} noetic-devel.
