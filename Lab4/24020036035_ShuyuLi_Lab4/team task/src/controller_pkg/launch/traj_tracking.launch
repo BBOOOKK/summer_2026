@@ -1,0 +1,22 @@
+
+<launch>
+  <!-- Launch desired trajectory -->
+  <node name="traj_publisher" pkg="controller_pkg" type="traj_publisher"/>
+
+  <!-- Launch our controller -->
+  <node name="controller_node" pkg="controller_pkg" type="controller_node"/>
+
+  <!-- Controller gains -->
+  <arg name="static_pose" default="false" />
+  <arg name="yaw_rate_feedforward" default="false" />
+  <param name="static_pose" value="$(arg static_pose)" />
+  <param name="yaw_rate_feedforward" value="$(arg yaw_rate_feedforward)" />
+  <param name="kx" type="double" value="4" />
+  <param name="kv" type="double" value="3" />
+  <param name="kr" type="double" value="3" />
+  <param name="komega" type="double" value="1" />
+  <param name="control_hz" type="double" value="100" />
+  <param name="trajectory_hz" type="double" value="50" />
+  <param name="max_rotor_speed" type="double" value="1000" />
+
+</launch>

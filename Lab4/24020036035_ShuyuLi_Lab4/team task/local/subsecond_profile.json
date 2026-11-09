@@ -1,0 +1,18 @@
+{
+  "mode": "rigid_reference",
+  "scale": 1,
+  "gate_to_gate_ms": 639.703977,
+  "reference": "results/reference_subsecond/rigid_15_32_30_corridor_native_global32/reference.csv",
+  "no_render_interpolation": true,
+  "params": {
+    "pilot_feedback_scale": 0.3,
+    "pilot_axis_feedback": false,
+    "pilot_position_gain": 40,
+    "pilot_velocity_gain": 12,
+    "pilot_attitude_gain": 12,
+    "pilot_synchronous": true,
+    "pilot_motor_compensation": 0,
+    "pilot_open_loop": false,
+    "pilot_max_rotor_speed": 2000
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "timing_definition": "Ordered forward gate 1 to gate 12 crossings in simulation time",
+  "native_physics_step_s": 0.02,
+  "gate_to_gate_s": 0.639703796,
+  "launch_to_finish_s": 0.9398433810000011,
+  "trajectory_execution": {
+    "native_samples": 78,
+    "position_rmse_m": 0.07120381250494374,
+    "maximum_position_error_m": 0.09952696326762835
+  },
+  "gate_to_gate": {
+    "native_samples": 31,
+    "position_rmse_m": 0.06267463127170578,
+    "maximum_position_error_m": 0.08867627443972778
+  },
+  "minimum_point_to_aperture_edge_m": 0.28700833253311264,
+  "peak_native_pose_speed_m_s": 435.34177331256785,
+  "saved_valid_0640_runs": 13,
+  "repeat_range_us": 57.16199999994842,
+  "reference_alignment": "Linear interpolation of saved reference at native state timestamps"
+}

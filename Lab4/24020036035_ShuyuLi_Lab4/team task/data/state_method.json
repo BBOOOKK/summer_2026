@@ -1,0 +1,9 @@
+{
+  "position": "Unmodified native Unity metadata pose",
+  "velocity": "Backward difference of successive native post-step poses; raw metadata velocity is one FixedUpdate older",
+  "angular_velocity": "SO(3) difference of successive native poses",
+  "dt": 0.02,
+  "physics_parameters_modified": false,
+  "collisions_enabled": true,
+  "rotor_limit_rad_s": 2000
+}

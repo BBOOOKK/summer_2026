@@ -1,6 +1,6 @@
 # summer_2026
 
-课程实验仓库，收录桌面物体目标检测与识别、机器人抓取仿真，以及 MIT VNAV LAB3 无人机轨迹规划与跟踪控制。
+机器人集成课程实验仓库，收录桌面物体检测、机械臂抓取仿真，以及 MIT VNAV LAB3 轨迹跟踪与 LAB4 无人机竞速。
 
 ## 实验导航
 
@@ -8,7 +8,21 @@
 | --- | --- |
 | 桌面物体识别 | [训练、推理、ROS2 与实验报告](desktop_object_detection/) |
 | 机器人抓取仿真 | [仿真程序与配置](robot_pick_place_sim/) |
+| 机械臂抓取接口 | [关节控制与抓取说明](robot_grasp_joint/README.md) |
 | LAB3 无人机轨迹跟踪 | [项目说明、报告、源码、数据与视频](Lab3/) |
+| LAB4 无人机竞速 | [成绩、报告、飞行视频与图表复现](Lab4/README.md) |
+
+## LAB4 · 无人机控制与竞速
+
+![LAB4 规划、控制与 Unity 实测成绩](Lab4/docs/assets/overview.png)
+
+| 首门至末门仿真时间 | 按序通过 | 计时区间位置 RMSE |
+|---:|---:|---:|
+| **0.639704 s** | **12 / 12** | **0.06267 m** |
+
+单段与多段轨迹优化、时长缩放、控制响应分析，以及 Unity 赛道实测结果均收录于 LAB4。提供英文双栏报告、代码、图表源码、飞行视频和 rosbag。
+
+[查看 LAB4 报告](Lab4/24020036035_ShuyuLi_Lab4/24020036035_ShuyuLi_LAB4_Report.pdf) · [观看飞行视频](Lab4/24020036035_ShuyuLi_Lab4/team%20task/flight.mp4) · [运行与复现](Lab4/README.md#rebuild-the-figures-and-report)
 
 ## LAB3 无人机轨迹规划与控制
 
@@ -34,6 +48,8 @@ LAB3 包含英文双栏报告、旋转表示与控制分配推导、十四种数
 
 ## 目录
 
+- `Lab3/`：无人机轨迹跟踪、控制分配、ROS/Unity 飞行数据与报告。
+- `Lab4/`：无人机轨迹优化、竞速控制、实验数据、报告与图表源码。
 - `data/`：500 张 P05 历史基线原图、YOLO 标签和逐图来源记录。
 - `desktop_object_detection/`：训练、推理、评估、ROS2、模型、结果和文档。
 - `desktop_object_detection/datasets/experiment1_1000self_4000public_v1/`：当前 1,000 + 4,000 验收版数据。

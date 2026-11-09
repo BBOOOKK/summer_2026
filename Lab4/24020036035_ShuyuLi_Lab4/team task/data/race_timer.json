@@ -1,0 +1,139 @@
+{
+  "phase": "FINISHED",
+  "gates_passed": 12,
+  "gates_total": 12,
+  "sample_stamp_ns": 12977909999,
+  "elapsed_ns": 639703796,
+  "elapsed_ms": 639.703796,
+  "display": "0.640 s",
+  "start_stamp_ns": 7558048584,
+  "finish_stamp_ns": 8197752380,
+  "crossings": [
+    {
+      "gate": 1,
+      "stamp_ns": 7558048584,
+      "elapsed_ms": 0.0,
+      "horizontal_m": -0.15241777679913288,
+      "vertical_m": 0.10503015871100654,
+      "bracket_ms": 20.0,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.044051414701212266
+    },
+    {
+      "gate": 2,
+      "stamp_ns": 7577992806,
+      "elapsed_ms": 19.944222,
+      "horizontal_m": 0.14301607934235194,
+      "vertical_m": -0.14758993838747939,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": -0.12045951753839587
+    },
+    {
+      "gate": 3,
+      "stamp_ns": 7677503898,
+      "elapsed_ms": 119.455314,
+      "horizontal_m": 0.0934751615079462,
+      "vertical_m": -0.19991647684150382,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": -0.0017926151020539614
+    },
+    {
+      "gate": 4,
+      "stamp_ns": 7757779391,
+      "elapsed_ms": 199.730807,
+      "horizontal_m": -0.1699648179949971,
+      "vertical_m": 0.09850446296076794,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.0004614923267889728
+    },
+    {
+      "gate": 5,
+      "stamp_ns": 7777850051,
+      "elapsed_ms": 219.801467,
+      "horizontal_m": 0.042702659732716974,
+      "vertical_m": -0.04693647675137955,
+      "bracket_ms": 20.000001,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.00011823009932477873
+    },
+    {
+      "gate": 6,
+      "stamp_ns": 7797916767,
+      "elapsed_ms": 239.868183,
+      "horizontal_m": 0.12519152641905765,
+      "vertical_m": -0.2039325638628987,
+      "bracket_ms": 20.000001,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": -0.0005174106667367344
+    },
+    {
+      "gate": 7,
+      "stamp_ns": 7878009144,
+      "elapsed_ms": 319.96056,
+      "horizontal_m": 0.14058344057073288,
+      "vertical_m": 0.09873942460016107,
+      "bracket_ms": 20.000001,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.0021765931970757217
+    },
+    {
+      "gate": 8,
+      "stamp_ns": 7938284423,
+      "elapsed_ms": 380.235839,
+      "horizontal_m": -0.15287898410021292,
+      "vertical_m": -0.18993114500571728,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.08629720338909594
+    },
+    {
+      "gate": 9,
+      "stamp_ns": 7977986079,
+      "elapsed_ms": 419.937495,
+      "horizontal_m": -0.13575710776292543,
+      "vertical_m": 0.09792930176249232,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": -0.06898211426183215
+    },
+    {
+      "gate": 10,
+      "stamp_ns": 8058270114,
+      "elapsed_ms": 500.22153,
+      "horizontal_m": -0.1539607763593253,
+      "vertical_m": -0.19515560348147012,
+      "bracket_ms": 20.0,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": -0.002607051435255109
+    },
+    {
+      "gate": 11,
+      "stamp_ns": 8177908953,
+      "elapsed_ms": 619.860369,
+      "horizontal_m": 0.09704208290269699,
+      "vertical_m": 0.08072401385569658,
+      "bracket_ms": 19.999999,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 5.76938468129784e-11
+    },
+    {
+      "gate": 12,
+      "stamp_ns": 8197752380,
+      "elapsed_ms": 639.703796,
+      "horizontal_m": -0.21299166746688736,
+      "vertical_m": -0.12878382224757476,
+      "bracket_ms": 20.0,
+      "interpolation": "cubic Hermite actual position + velocity",
+      "hermite_minus_linear_ms": 0.0009817863963457185
+    }
+  ],
+  "valid": true,
+  "collisions": [],
+  "max_sample_gap_ms": 20.001001,
+  "ignored_timestamps": 0,
+  "clock": "Odometry.header.stamp: simulator time",
+  "precision_note": "1 ms display; sub-frame interpolation of sampled actual positions/velocities; not native 1 ms measurement accuracy"
+}

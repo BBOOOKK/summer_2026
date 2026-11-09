@@ -1,0 +1,14 @@
+<launch>
+  <node name="trajectory_generation_node" pkg="trajectory_generation" type="trajectory_generation_node" output="screen">
+    <param name="time_scale" value="$(arg time_scale)" />
+  </node>
+  <node name="controller_node" pkg="controller_pkg" type="controller_node" />
+  <param name="kx" value="6" />
+  <param name="kv" value="4" />
+  <param name="kr" value="8" />
+  <param name="komega" value="1.5" />
+  <param name="control_hz" value="100" />
+  <param name="max_rotor_speed" value="1000" />
+  <param name="yaw_rate_feedforward" value="true" />
+  <arg name="time_scale" default="0.4" />
+</launch>

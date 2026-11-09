@@ -1,0 +1,369 @@
+{
+  "stop_tracking_12s": {
+    "duration": 12.0,
+    "tau": 0.12,
+    "limit": 4,
+    "rmse": 0.33490074187212193,
+    "max_error": 0.5923819694242041,
+    "end_error": 0.4763412720698068,
+    "sat_percent": 77.0512286547272
+  },
+  "ablation": [
+    {
+      "duration": 12.0,
+      "tau": 0,
+      "limit": null,
+      "rmse": 3.832167537094163e-06,
+      "max_error": 7.140686631065538e-06,
+      "end_error": 1.1418655899694328e-10,
+      "sat_percent": 0.0,
+      "configuration": "Ideal response"
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.12,
+      "limit": null,
+      "rmse": 0.04563882732844352,
+      "max_error": 0.09295687718508384,
+      "end_error": 0.04439345897709562,
+      "sat_percent": 0.0,
+      "configuration": "Lag only"
+    },
+    {
+      "duration": 12.0,
+      "tau": 0,
+      "limit": 4,
+      "rmse": 3.832167537094163e-06,
+      "max_error": 7.140686631065538e-06,
+      "end_error": 1.1418655899694328e-10,
+      "sat_percent": 0.0,
+      "configuration": "Saturation only"
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.04563882732844352,
+      "max_error": 0.09295687718508384,
+      "end_error": 0.04439345897709562,
+      "sat_percent": 0.0,
+      "configuration": "Lag + saturation"
+    },
+    {
+      "duration": 10.2,
+      "tau": 0,
+      "limit": null,
+      "rmse": 5.30382839499941e-06,
+      "max_error": 9.883278213817136e-06,
+      "end_error": 1.8585470249087017e-10,
+      "sat_percent": 0.0,
+      "configuration": "Ideal response"
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.12,
+      "limit": null,
+      "rmse": 0.07039920087930572,
+      "max_error": 0.1428977298838988,
+      "end_error": 0.04498960466909824,
+      "sat_percent": 0.0,
+      "configuration": "Lag only"
+    },
+    {
+      "duration": 10.2,
+      "tau": 0,
+      "limit": 4,
+      "rmse": 0.05125954554236634,
+      "max_error": 0.18662036500245893,
+      "end_error": 0.003307434679987779,
+      "sat_percent": 12.444879960803528,
+      "configuration": "Saturation only"
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.1454418971023003,
+      "max_error": 0.3921111101873221,
+      "end_error": 0.2120500112245046,
+      "sat_percent": 36.59970602645762,
+      "configuration": "Lag + saturation"
+    },
+    {
+      "duration": 8.4,
+      "tau": 0,
+      "limit": null,
+      "rmse": 7.819999194452803e-06,
+      "max_error": 1.457274277394813e-05,
+      "end_error": 3.3861316145755624e-10,
+      "sat_percent": 0.0,
+      "configuration": "Ideal response"
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.12,
+      "limit": null,
+      "rmse": 0.11591893305975184,
+      "max_error": 0.23249936389556503,
+      "end_error": 0.029372093555321558,
+      "sat_percent": 0.0,
+      "configuration": "Lag only"
+    },
+    {
+      "duration": 8.4,
+      "tau": 0,
+      "limit": 4,
+      "rmse": 0.6280821337640174,
+      "max_error": 1.4650149740849403,
+      "end_error": 0.3180496581214404,
+      "sat_percent": 53.95597858417609,
+      "configuration": "Saturation only"
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 1.1720369844618947,
+      "max_error": 2.4791737615078633,
+      "end_error": 0.4216570038765448,
+      "sat_percent": 75.19333729922666,
+      "configuration": "Lag + saturation"
+    }
+  ],
+  "sensitivity": [
+    {
+      "duration": 8.4,
+      "tau": 0.04,
+      "limit": 4,
+      "rmse": 0.7490011698435584,
+      "max_error": 1.624728372275839,
+      "end_error": 0.28364582555534784,
+      "sat_percent": 60.49970255800119
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.04,
+      "limit": 4,
+      "rmse": 0.06511741448912621,
+      "max_error": 0.23899858666801743,
+      "end_error": 0.006053559343629071,
+      "sat_percent": 20.284174424301813
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.04,
+      "limit": 4,
+      "rmse": 0.01449986714226345,
+      "max_error": 0.029357996191805645,
+      "end_error": 0.012477414436551551,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 13.8,
+      "tau": 0.04,
+      "limit": 4,
+      "rmse": 0.010040209166565074,
+      "max_error": 0.02037355493261744,
+      "end_error": 0.010816555047947271,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 15.6,
+      "tau": 0.04,
+      "limit": 4,
+      "rmse": 0.00721414918547481,
+      "max_error": 0.01462854102770794,
+      "end_error": 0.008790238474569825,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.08,
+      "limit": 4,
+      "rmse": 0.9332323221597268,
+      "max_error": 1.9612823013174419,
+      "end_error": 0.3093146158299632,
+      "sat_percent": 66.8054729327781
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.08,
+      "limit": 4,
+      "rmse": 0.09277023967601013,
+      "max_error": 0.30682242335275184,
+      "end_error": 0.041461328566345025,
+      "sat_percent": 28.564429201371876
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.08,
+      "limit": 4,
+      "rmse": 0.02968759803878138,
+      "max_error": 0.060305061801414296,
+      "end_error": 0.027259046714386028,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 13.8,
+      "tau": 0.08,
+      "limit": 4,
+      "rmse": 0.02042256164447129,
+      "max_error": 0.041512247546259276,
+      "end_error": 0.023113536666848858,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 15.6,
+      "tau": 0.08,
+      "limit": 4,
+      "rmse": 0.014610999884420262,
+      "max_error": 0.029650604341895804,
+      "end_error": 0.018491340834716704,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 1.1720369844618947,
+      "max_error": 2.4791737615078633,
+      "end_error": 0.4216570038765448,
+      "sat_percent": 75.19333729922666
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.1454418971023003,
+      "max_error": 0.3921111101873221,
+      "end_error": 0.2120500112245046,
+      "sat_percent": 36.59970602645762
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.04563882732844352,
+      "max_error": 0.09295687718508384,
+      "end_error": 0.04439345897709562,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 13.8,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.031177869631621235,
+      "max_error": 0.06345843499757003,
+      "end_error": 0.03693073325382824,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 15.6,
+      "tau": 0.12,
+      "limit": 4,
+      "rmse": 0.022204052304862387,
+      "max_error": 0.04508365997649146,
+      "end_error": 0.029121415959052436,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.18,
+      "limit": 4,
+      "rmse": 1.6040155088733457,
+      "max_error": 3.2744433372627215,
+      "end_error": 0.7811946376294522,
+      "sat_percent": 80.19036287923855
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.18,
+      "limit": 4,
+      "rmse": 0.3202133937114055,
+      "max_error": 0.725316300875345,
+      "end_error": 0.71119532366676,
+      "sat_percent": 48.5546300832925
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.18,
+      "limit": 4,
+      "rmse": 0.07121282766752049,
+      "max_error": 0.14536404510660936,
+      "end_error": 0.07462715339480222,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 13.8,
+      "tau": 0.18,
+      "limit": 4,
+      "rmse": 0.048101404443815304,
+      "max_error": 0.09797360325996335,
+      "end_error": 0.060633385851315454,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 15.6,
+      "tau": 0.18,
+      "limit": 4,
+      "rmse": 0.03400346661816007,
+      "max_error": 0.06904036256121371,
+      "end_error": 0.04686338733439666,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 8.4,
+      "tau": 0.24,
+      "limit": 4,
+      "rmse": 1.940660327839191,
+      "max_error": 4.040010781509117,
+      "end_error": 0.6381210027243649,
+      "sat_percent": 84.59250446162999
+    },
+    {
+      "duration": 10.2,
+      "tau": 0.24,
+      "limit": 4,
+      "rmse": 0.7144755126917466,
+      "max_error": 1.5458556310978973,
+      "end_error": 1.2739079991465072,
+      "sat_percent": 77.16805487506124
+    },
+    {
+      "duration": 12.0,
+      "tau": 0.24,
+      "limit": 4,
+      "rmse": 0.0991902091544264,
+      "max_error": 0.20219109803216856,
+      "end_error": 0.11034038116671835,
+      "sat_percent": 1.2078300708038316
+    },
+    {
+      "duration": 13.8,
+      "tau": 0.24,
+      "limit": 4,
+      "rmse": 0.06614083736005552,
+      "max_error": 0.13447619445529826,
+      "end_error": 0.08813524485294538,
+      "sat_percent": 0.0
+    },
+    {
+      "duration": 15.6,
+      "tau": 0.24,
+      "limit": 4,
+      "rmse": 0.04637302522945026,
+      "max_error": 0.09399111021468327,
+      "end_error": 0.06689155227735484,
+      "sat_percent": 0.0
+    }
+  ],
+  "refined_aggressive": {
+    "duration": 8.4,
+    "tau": 0.12,
+    "limit": 4,
+    "rmse": 1.1722250755116643,
+    "max_error": 2.4792307833308986,
+    "end_error": 0.4216763174746397,
+    "sat_percent": 75.15620351085987
+  }
+}

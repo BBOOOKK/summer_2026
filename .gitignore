@@ -21,5 +21,13 @@ desktop_object_detection/datasets/p05_expanded_v1/sources/
 # Local-only scratch files
 work/
 
+# LAB4 local environment and generated report previews
+.venv-lab4/
+Lab4/**/report/build/
+Lab4/**/report/source/figures/icra_*.png
+Lab4/**/report/source/figures/team_*.png
+Lab4/**/report/source/figures/pipeline_*.png
+Lab4/**/report/source/figures/*.svg
+
 # Training runs duplicate the canonical weights stored under models/.
 desktop_object_detection/outputs/training/*/weights/

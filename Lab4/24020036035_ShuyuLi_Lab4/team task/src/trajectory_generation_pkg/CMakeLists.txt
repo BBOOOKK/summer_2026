@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(trajectory_generation)
+add_compile_options(-std=c++14)
+find_package(catkin REQUIRED COMPONENTS roscpp nav_msgs geometry_msgs trajectory_msgs
+  tf eigen_conversions mav_trajectory_generation)
+catkin_package()
+include_directories(${catkin_INCLUDE_DIRS} /usr/include/eigen3)
+add_executable(trajectory_generation_node src/trajectory_generation_node.cpp)
+add_dependencies(trajectory_generation_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(trajectory_generation_node ${catkin_LIBRARIES})

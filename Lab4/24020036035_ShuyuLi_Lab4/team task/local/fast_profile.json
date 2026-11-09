@@ -1,0 +1,33 @@
+{
+  "scale": 0.095,
+  "controller": {
+    "attitude_accel_feedforward": 0.0,
+    "feedback_attitude_rate": true,
+    "minimum_vertical_force": 4.0,
+    "yaw_kr": 25,
+    "yaw_komega": 3,
+    "prioritize_thrust_tilt": true,
+    "kz": 36.0,
+    "kvz": 10.0,
+    "drag_compensation": false,
+    "drag_scale": 1.0,
+    "attitude_rate_feedforward": true,
+    "kx": 36.0,
+    "kv": 10.0,
+    "kr": 80.0,
+    "komega": 8.0,
+    "yaw_rate_feedforward": true,
+    "max_rotor_speed": 1000.0,
+    "control_hz": 100.0
+  },
+  "planner": {
+    "first_segment_factor": 2.21,
+    "exit_distance": 4.0,
+    "exit_duration": 1.5,
+    "exit_speed": 8.0,
+    "segment_factors": "1,1.3,0.95,0.95,0.95,1.04,1,1,1.3,0.95,0.95,0.95",
+    "vertical_derivative_order": 4,
+    "vertical_gate_velocities": ""
+  },
+  "gate_to_gate_ms": 5909.048646
+}

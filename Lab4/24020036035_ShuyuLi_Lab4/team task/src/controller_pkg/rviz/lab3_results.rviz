@@ -1,0 +1,84 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz/Grid
+      Name: Ground grid (1 m)
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 16
+      Color: 75; 85; 105
+      Alpha: 0.45
+      Reference Frame: world
+    - Class: rviz/Path
+      Name: Desired trajectory (gold)
+      Enabled: true
+      Topic: /lab3/desired_path
+      Color: 255; 185; 60
+      Alpha: 1
+      Buffer Length: 1
+      Line Style: Billboards
+      Line Width: 0.055
+      Pose Style: None
+    - Class: rviz/Path
+      Name: Actual trajectory (cyan)
+      Enabled: true
+      Topic: /lab3/actual_path
+      Color: 50; 220; 255
+      Alpha: 1
+      Buffer Length: 1
+      Line Style: Billboards
+      Line Width: 0.035
+      Pose Style: None
+    - Class: rviz/MarkerArray
+      Name: UAV and live metrics
+      Enabled: true
+      Marker Topic: /lab3/markers
+      Queue Size: 1
+    - Class: rviz/TF
+      Name: Body and desired frames
+      Enabled: true
+      Show Names: false
+      Show Axes: true
+      Show Arrows: false
+      Marker Scale: 0.6
+      Frames:
+        All Enabled: false
+        av-desired:
+          Value: true
+        base_link_gt:
+          Value: true
+        world:
+          Value: true
+  Enabled: true
+  Global Options:
+    Fixed Frame: world
+    Background Color: 16; 23; 37
+    Frame Rate: 10
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Name: Current View
+      Distance: 20
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 1
+      Pitch: 0.8
+      Yaw: 0.8
+      Target Frame: world
+      Near Clip Distance: 0.01
+Window Geometry:
+  Width: 960
+  Height: 640
+  X: 0
+  Y: 0
+  Hide Left Dock: false
+  Hide Right Dock: true

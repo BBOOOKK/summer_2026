@@ -1,0 +1,36 @@
+{
+  "model_success": true,
+  "uniform_20ms": true,
+  "rotor_limit_rad_s": 2000.0,
+  "race_s": 0.6400000000000001,
+  "entry_s": 0.3,
+  "exit_s": 0.6,
+  "gate_indices": [
+    15,
+    16,
+    21,
+    25,
+    26,
+    27,
+    31,
+    34,
+    36,
+    40,
+    46,
+    47
+  ],
+  "arguments": {
+    "race_steps": 32,
+    "entry_steps": 15,
+    "exit_steps": 30,
+    "initial": "lab4/results/reference_subsecond/rigid_30_40_30_corridor_time_rotor2000_all",
+    "corridor": true,
+    "time_opt": false,
+    "all_time_opt": false,
+    "schedule": "lab4/results/reference_subsecond/rigid_30_40_30_corridor_time_rotor2000_all",
+    "label": "native_global32",
+    "rotor_limit": 2000.0,
+    "safe_stop": true,
+    "start_z": 2.0
+  }
+}
