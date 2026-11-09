@@ -46,7 +46,7 @@
 \newcommand{\figone}[3]{\begin{figure}[!tbp]\centering\includegraphics[width=\columnwidth]{figures/#1.pdf}\caption{#2}\label{#3}\end{figure}}
 \newcommand{\figwide}[3]{\begin{figure*}[!tbp]\centering\includegraphics[width=\textwidth]{figures/#1.pdf}\caption{#2}\label{#3}\end{figure*}}
 \title{\LARGE\bf LAB4: Polynomial Trajectory Optimization and Unity Flight Evaluation for Drone Racing}
-\author{Shuyu Li\thanks{Robot Integration Project course. Student ID: 24020036035. Laboratory report, November 9, 2026.}}
+\author{Shuyu Li\thanks{Robot Integration Project course. Student ID: 24020036035. Laboratory report, November 9, 2026. Code and data: \url{https://github.com/BBOOOKK/summer_2026/tree/main/Lab4}.}}
 \IEEEaftertitletext{%
 \begin{minipage}{\textwidth}\centering
 \begin{tikzpicture}[box/.style={draw=black,fill=white,line width=0.7pt,text width=27mm,inner sep=1.1mm,minimum height=29mm,align=center,font=\rmfamily\scriptsize},>=Stealth,node distance=6mm]
@@ -691,7 +691,7 @@ Gate-passage assessment uses crossing interpolation together with the simulator'
 The original Unity XML and all 458 published state messages contain matching stored positions.
 Recomputed crossings give 639.703797 ms with Hermite interpolation and 639.746866 ms with linear interpolation, both rounding to 0.640 s.
 Figure~\ref{fig:teamframes} shows native frames immediately after the detected crossings, with interpolated event times in the panel titles and native-step times on the HUD.
-The submission includes a flight video and the complete rosbag.
+The \href{https://github.com/BBOOOKK/summer_2026}{course repository} hosts the \href{https://github.com/BBOOOKK/summer_2026/tree/main/Lab4}{LAB4 code and report sources}, the \href{https://github.com/BBOOOKK/summer_2026/blob/main/Lab4/24020036035_ShuyuLi_Lab4/team\%20task/flight.mp4}{Unity flight video}, and the \href{https://github.com/BBOOOKK/summer_2026/blob/main/Lab4/24020036035_ShuyuLi_Lab4/team\%20task/data/race.bag}{complete rosbag}.
 
 Thirteen saved valid runs round to 0.640 s.
 Their elapsed times span 639.703796--639.760958 ms, a range of 57.162~$\mu$s.
